@@ -24,7 +24,7 @@ services:
     ports:
       - "3000:3000"
 
-    command: sleep infinity
+    command: bin/rails server -b 0.0.0.0 -p 3000
 
     environment:
       <<: *rails_env
@@ -38,6 +38,9 @@ services:
       context: ..
       dockerfile: .devcontainer/Dockerfile
     command: bundle exec sidekiq
+    volumes:
+      - ..:/workspace:cached
+      - bundle_cache:/bundle
     restart: unless-stopped
     environment:
       <<: *rails_env
