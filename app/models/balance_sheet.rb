@@ -41,8 +41,8 @@ class BalanceSheet
     net_worth_series_builder.net_worth_series(period: period)
   end
 
-  def expenses_by_category_series(period: Period.last_365_days)
-    categorised_series_builder.categorised_series(period: period)
+  def expenses_by_category_series(period: Period.last_365_days, current_category_id:)
+    categorised_series_builder.categorised_series(period: period, current_category_id:)
   end
 
   def currency

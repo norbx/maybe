@@ -3,11 +3,11 @@ class BalanceSheet::CategorisedSeriesBuilder
     @family = family
   end
 
-  def categorised_series(period: Period.last_365_days)
+  def categorised_series(period: Period.last_365_days, current_category_id:)
     Rails.cache.fetch(cache_key(period)) do
       builder = Balance::CategorisedChartSeriesBuilder.new(
         account_ids: visible_account_ids,
-        category_ids: Array(Category.find_by(name: "Żywność i chemia domowa").id),
+        category_ids: Array(current_category_id),
         currency: family.currency,
         period: period,
         interval: "1 month",

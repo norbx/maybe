@@ -68,6 +68,10 @@ class Category < ApplicationRecord
       )
     end
 
+    def as_options
+      select { _1.parent_id.present? }.map { |category| [ category.name, category.id ] }
+    end
+
     private
       def default_categories
         [

@@ -1,7 +1,7 @@
-<%# locals: (balance_sheet:, period:, **args) %>
+<%# locals: (balance_sheet:, period:, current_category_id:, **args) %>
 
-<div id="net-worth-chart">
-  <% series = balance_sheet.expenses_by_category_series(period: period) %>
+<div id="expenses-by-category-chart">
+  <% series = balance_sheet.expenses_by_category_series(period: period, current_category_id: current_category_id) %>
   <div class="flex justify-between gap-4 px-4">
     <div class="space-y-2">
       <div class="space-y-2">
@@ -25,6 +25,11 @@
       <%= form.select :period,
                     Period.as_options,
                     { selected: period.key },
+                    data: { "auto-submit-form-target": "auto" },
+                    class: "bg-container border border-secondary font-medium rounded-lg px-3 py-2 text-sm pr-7 cursor-pointer text-primary focus:outline-hidden focus:ring-0" %>
+      <%= form.select :current_category_id,
+                    Category.as_options,
+                    { selected: current_category_id },
                     data: { "auto-submit-form-target": "auto" },
                     class: "bg-container border border-secondary font-medium rounded-lg px-3 py-2 text-sm pr-7 cursor-pointer text-primary focus:outline-hidden focus:ring-0" %>
     <% end %>

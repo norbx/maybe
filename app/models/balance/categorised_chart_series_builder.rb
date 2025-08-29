@@ -16,7 +16,7 @@ class Balance::CategorisedChartSeriesBuilder
   end
 
   private
-    attr_reader :account_ids, :currency, :period, :favorable_direction, :category_ids
+    attr_reader :account_ids, :category_ids, :currency, :period, :favorable_direction
 
     def interval
       @interval || period.interval
