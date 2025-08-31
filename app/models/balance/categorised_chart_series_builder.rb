@@ -73,36 +73,54 @@ class Balance::CategorisedChartSeriesBuilder
     def query
       <<~SQL
         WITH dates AS (
-          SELECT generate_series(DATE :start_date, DATE :end_date, :interval::interval)::date AS date
+          SELECT generate_series(DATE :start_date - (:interval::interval * 11), DATE :end_date, :interval::interval)::date AS date
           UNION DISTINCT
           SELECT :end_date::date  -- Ensure end date is included
+        ),
+        aggregated AS (
+          SELECT
+            d.date date,
+            cat.category_name category_name,
+            TRUNC(SUM(en.amount), 2) current
+          FROM dates d
+          CROSS JOIN accounts
+          LEFT JOIN LATERAL (
+            SELECT e.amount, t.category_id category_id
+            FROM entries e
+            LEFT JOIN transactions t
+              ON t.id = e.entryable_id
+            WHERE e.account_id = accounts.id
+              AND e.date < d.date
+              AND e.date >= (d.date - INTERVAL :interval)
+              AND e.entryable_type = 'Transaction'
+          ) en ON TRUE
+          LEFT JOIN LATERAL (
+            SELECT c.id id, c.name category_name
+            FROM categories c
+            WHERE c.id = en.category_id
+          ) cat ON TRUE
+          WHERE accounts.id = ANY(array[:account_ids]::uuid[])
+            AND cat.id = ANY(array[:category_ids]::uuid[])
+          GROUP BY d.date, cat.category_name
+        ),
+        with_ma AS (
+          SELECT date,
+                category_name,
+                current,
+                TRUNC(AVG(current) OVER(ORDER BY date ROWS BETWEEN 12 PRECEDING AND CURRENT ROW), 2) moving_average
+          FROM aggregated
+        ),
+        latest_12 AS (
+          SELECT *
+          FROM with_ma
+          WHERE date >= :start_date::date - (:interval::interval * 11)
+            AND date < :end_date::date
+          ORDER BY date DESC
+          LIMIT 12
         )
-        SELECT
-          d.date,
-          cat.category_name,
-          TRUNC(SUM(en.amount), 2) current,
-          TRUNC(AVG(SUM(en.amount)) OVER(ORDER BY d.date ROWS BETWEEN 12 PRECEDING AND CURRENT ROW), 2) moving_average
-        FROM dates d
-        CROSS JOIN accounts
-        LEFT JOIN LATERAL (
-          SELECT e.amount, t.category_id category_id
-          FROM entries e
-          LEFT JOIN transactions t
-          ON t.id = e.entryable_id
-          WHERE e.account_id = accounts.id
-            AND e.date < d.date
-            AND e.date >= (d.date - INTERVAL :interval)
-            AND e.entryable_type = 'Transaction'
-        ) en ON TRUE
-        LEFT JOIN LATERAL (
-          SELECT c.id id, c.name category_name
-          FROM categories c
-          WHERE c.id = en.category_id
-        ) cat ON TRUE
-        WHERE accounts.id = ANY(array[:account_ids]::uuid[])
-        AND cat.id = ANY(array[:category_ids]::uuid[])
-        GROUP BY d.date, cat.category_name
-        ORDER BY d.date
+        SELECT *
+        FROM latest_12
+        ORDER BY date
       SQL
     end
 end
