@@ -88,11 +88,6 @@ class Period
     def as_options
       all.map { |period| [ period.label_short, period.key ] }
     end
-
-    def as_categorisable_options
-      all.select { |period| period.key.in?(%w[last_365_days last_5_years]) }
-      .map { |period| [ period.label_short, period.key ] }
-    end
   end
 
   PERIODS.each do |key, period|
