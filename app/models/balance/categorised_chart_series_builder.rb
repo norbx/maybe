@@ -77,31 +77,32 @@ class Balance::CategorisedChartSeriesBuilder
           UNION DISTINCT
           SELECT :end_date::date  -- Ensure end date is included
         ),
+        date_categories AS (
+          SELECT d.date, c.id AS category_id, c.name AS category_name
+          FROM dates d
+          CROSS JOIN categories c
+          WHERE c.id = ANY(array[:category_ids]::uuid[])
+        ),
         aggregated AS (
           SELECT
-            d.date date,
-            cat.category_name category_name,
-            TRUNC(SUM(en.amount), 2) current
-          FROM dates d
-          CROSS JOIN accounts
+            dc.date date,
+            dc.category_name,
+            COALESCE(TRUNC(SUM(en.amount), 2), 0) current
+          FROM date_categories dc
+          CROSS JOIN accounts a
           LEFT JOIN LATERAL (
-            SELECT e.amount, t.category_id category_id
+            SELECT e.amount
             FROM entries e
             LEFT JOIN transactions t
               ON t.id = e.entryable_id
-            WHERE e.account_id = accounts.id
-              AND e.date < d.date
-              AND e.date >= (d.date - INTERVAL :interval)
+            WHERE e.account_id = a.id
+              AND t.category_id = dc.category_id
+              AND e.date < dc.date
+              AND e.date >= (dc.date - INTERVAL :interval)
               AND e.entryable_type = 'Transaction'
           ) en ON TRUE
-          LEFT JOIN LATERAL (
-            SELECT c.id id, c.name category_name
-            FROM categories c
-            WHERE c.id = en.category_id
-          ) cat ON TRUE
-          WHERE accounts.id = ANY(array[:account_ids]::uuid[])
-            AND cat.id = ANY(array[:category_ids]::uuid[])
-          GROUP BY d.date, cat.category_name
+          WHERE a.id = ANY(array[:account_ids]::uuid[])
+          GROUP BY dc.date, dc.category_name
         ),
         with_ma AS (
           SELECT date,
