@@ -73,9 +73,12 @@ class Balance::CategorisedChartSeriesBuilder
     def query
       <<~SQL
         WITH dates AS (
-          SELECT generate_series(DATE :start_date - (:interval::interval * 11), DATE :end_date, :interval::interval)::date AS date
-          UNION DISTINCT
-          SELECT :end_date::date  -- Ensure end date is included
+          SELECT (date_trunc('month', (gs)) + INTERVAL '1 month - 1 day') AS date
+          FROM generate_series(
+            date_trunc('month', DATE :start_date::date - INTERVAL '12 months'),
+            date_trunc('month', DATE :end_date::date),
+            :interval::interval
+          ) AS gs
         ),
         date_categories AS (
           SELECT d.date, c.id AS category_id, c.name AS category_name
@@ -97,25 +100,25 @@ class Balance::CategorisedChartSeriesBuilder
               ON t.id = e.entryable_id
             WHERE e.account_id = a.id
               AND t.category_id = dc.category_id
-              AND e.date < dc.date
-              AND e.date >= (dc.date - INTERVAL :interval)
+              AND e.date <= (date_trunc('month', dc.date) + INTERVAL '1 month - 1 day')
+              AND e.date > (date_trunc('month', dc.date - INTERVAL :interval) + INTERVAL '1 month - 1 day')
               AND e.entryable_type = 'Transaction'
           ) en ON TRUE
           WHERE a.id = ANY(array[:account_ids]::uuid[])
-          GROUP BY dc.date, dc.category_name
+          GROUP BY dc.date, category_name
         ),
         with_ma AS (
           SELECT date,
                 category_name,
                 current,
-                TRUNC(AVG(current) OVER(ORDER BY date ROWS BETWEEN 12 PRECEDING AND CURRENT ROW), 2) moving_average
+                TRUNC(AVG(current) OVER(ORDER BY date ROWS BETWEEN 11 PRECEDING AND CURRENT ROW), 2) moving_average
           FROM aggregated
         ),
         latest_12 AS (
           SELECT *
           FROM with_ma
-          WHERE date >= :start_date::date - (:interval::interval * 11)
-            AND date < :end_date::date
+          WHERE date >= (date_trunc('month', (:start_date::date - INTERVAL '12 months')) + INTERVAL '1 month - 1 day')
+            AND date <= (date_trunc('month', :end_date::date) + INTERVAL '1 month - 1 day')
           ORDER BY date DESC
           LIMIT 12
         )
