@@ -75,8 +75,8 @@ class Balance::CategorisedChartSeriesBuilder
         WITH dates AS (
           SELECT (date_trunc('month', (gs)) + INTERVAL '1 month - 1 day') AS date
           FROM generate_series(
-            date_trunc('month', DATE :start_date::date - INTERVAL '12 months'),
-            date_trunc('month', DATE :end_date::date),
+            date_trunc('month', DATE :start_date::date - INTERVAL '13 months'),
+            date_trunc('month', DATE :end_date::date - INTERVAL '1 month'),
             :interval::interval
           ) AS gs
         ),
@@ -125,16 +125,16 @@ class Balance::CategorisedChartSeriesBuilder
                 LAG(moving_average) OVER(ORDER BY date) AS previous_moving_average
           FROM with_ma
         ),
-        latest_12 AS (
+        latest_13 AS (
           SELECT *
           FROM with_previous_ma
           WHERE date >= (date_trunc('month', (:start_date::date - INTERVAL '12 months')) + INTERVAL '1 month - 1 day')
             AND date <= (date_trunc('month', :end_date::date) + INTERVAL '1 month - 1 day')
           ORDER BY date DESC
-          LIMIT 12
+          LIMIT 13
         )
         SELECT *
-        FROM latest_12
+        FROM latest_13
         ORDER BY date
       SQL
     end

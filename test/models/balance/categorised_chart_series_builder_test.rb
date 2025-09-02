@@ -29,9 +29,11 @@ class Balance::CategorisedChartSeriesBuilderTest < ActiveSupport::TestCase
       favorable_direction: "down"
     )
 
-    assert_equal 12, builder.balance_series.values.size # 12 months even if 11 of them show 0 expenses
+    assert_equal 13, builder.balance_series.values.size
 
     expected = [
+      0.0,  150.0,
+      0.0,    0.0,
       0.0,    0.0,
       0.0,    0.0,
       0.0,    0.0,
@@ -42,8 +44,7 @@ class Balance::CategorisedChartSeriesBuilderTest < ActiveSupport::TestCase
   -1250.0, -900.0,
       0.0, 1250.0,
    -200.0, -200.0,
-      0.0,  200.0,
-   -100.0, -100.0
+      0.0,  200.0, # Latest month taken into account is July, as August is not over yet
     ]
 
     assert_equal expected, builder.balance_series.values.map { |v| [ v.value.amount.to_f, v.trend.value.amount.to_f ] }.flatten
