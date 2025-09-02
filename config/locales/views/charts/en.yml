@@ -1,0 +1,6 @@
+---
+en:
+  charts:
+    expenses_by_category_chart:
+      title: Monthly spending
+      data_not_available: Data not available for the selected period
