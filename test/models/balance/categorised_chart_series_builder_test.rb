@@ -7,7 +7,7 @@ class Balance::CategorisedChartSeriesBuilderTest < ActiveSupport::TestCase
     travel_to("2025-08-30")
   end
 
-  test "monthly categorised entries with 12 month rolling average" do
+  test "monthly categorised entries with month to month trend" do
     account = accounts(:depository)
     account.entries.destroy_all
     category = Category.create!(name: "Food & Dining", family: account.family)
@@ -32,20 +32,20 @@ class Balance::CategorisedChartSeriesBuilderTest < ActiveSupport::TestCase
     assert_equal 12, builder.balance_series.values.size # 12 months even if 11 of them show 0 expenses
 
     expected = [
-      0.0, -50.0, # includes previous entries: -150 on 2024-06-15 and -450 on 2024-04-22
-      0.0, -50.0,
-      0.0, -50.0,
-      0.0, -50.0,
-      0.0, -50.0,
-      0.0, -50.0,
-   -350.0, -79.16,
-  -1250.0, -145.83,
-      0.0, -145.83,
-   -200.0, -150.0,
-      0.0, -150.0,
-   -100.0, -158.33
+      0.0,    0.0,
+      0.0,    0.0,
+      0.0,    0.0,
+      0.0,    0.0,
+      0.0,    0.0,
+      0.0,    0.0,
+   -350.0, -350.0,
+  -1250.0, -900.0,
+      0.0, 1250.0,
+   -200.0, -200.0,
+      0.0,  200.0,
+   -100.0, -100.0
     ]
 
-    assert_equal expected, builder.balance_series.values.map { |v| [ v.value.amount, v.trend.previous.amount ] }.flatten
+    assert_equal expected, builder.balance_series.values.map { |v| [ v.value.amount.to_f, v.trend.value.amount.to_f ] }.flatten
   end
 end

@@ -30,7 +30,7 @@ class Balance::CategorisedChartSeriesBuilder
           value: Money.new(datum.current, currency),
           trend: Trend.new(
             current: Money.new(datum.current, currency),
-            previous: Money.new(datum.moving_average, currency),
+            previous: Money.new(datum.previous, currency),
             favorable_direction: favorable_direction
           )
         )
@@ -107,16 +107,27 @@ class Balance::CategorisedChartSeriesBuilder
           WHERE a.id = ANY(array[:account_ids]::uuid[])
           GROUP BY dc.date, category_name
         ),
+        with_previous AS (
+          SELECT *,
+                LAG(current) OVER(ORDER BY date) AS previous
+          FROM aggregated
+        ),
         with_ma AS (
           SELECT date,
                 category_name,
                 current,
+                previous,
                 TRUNC(AVG(current) OVER(ORDER BY date ROWS BETWEEN 11 PRECEDING AND CURRENT ROW), 2) moving_average
-          FROM aggregated
+          FROM with_previous
+        ),
+        with_previous_ma AS (
+          SELECT *,
+                LAG(moving_average) OVER(ORDER BY date) AS previous_moving_average
+          FROM with_ma
         ),
         latest_12 AS (
           SELECT *
-          FROM with_ma
+          FROM with_previous_ma
           WHERE date >= (date_trunc('month', (:start_date::date - INTERVAL '12 months')) + INTERVAL '1 month - 1 day')
             AND date <= (date_trunc('month', :end_date::date) + INTERVAL '1 month - 1 day')
           ORDER BY date DESC
