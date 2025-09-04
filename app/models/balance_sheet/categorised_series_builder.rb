@@ -4,7 +4,7 @@ class BalanceSheet::CategorisedSeriesBuilder
   end
 
   def categorised_series(period: Period.last_365_days, current_category_id:)
-    Rails.cache.fetch(cache_key(period)) do
+    Rails.cache.fetch(cache_key(period, current_category_id)) do
       builder = Balance::CategorisedChartSeriesBuilder.new(
         account_ids: visible_account_ids,
         category_ids: Array(current_category_id),
@@ -25,11 +25,12 @@ class BalanceSheet::CategorisedSeriesBuilder
       @visible_account_ids ||= family.accounts.visible.with_attached_logo.pluck(:id)
     end
 
-    def cache_key(period)
+    def cache_key(period, category_id)
       key = [
         "balance_sheet_categorised_series",
         period.start_date,
-        period.end_date
+        period.end_date,
+        category_id
       ].compact.join("_")
 
       family.build_cache_key(
