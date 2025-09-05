@@ -17,5 +17,11 @@ class Family::SyncCompleteEvent
       partial: "pages/dashboard/net_worth_chart",
       locals: { balance_sheet: family.balance_sheet, period: Period.last_30_days }
     )
+
+    family.broadcast_replace(
+      target: "expenses-by-category-chart",
+      partial: "charts/expenses_by_category_chart",
+      locals: { balance_sheet: family.balance_sheet, period: Period.last_365_days, current_category_id: family.categories.last.id }
+    )
   end
 end

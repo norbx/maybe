@@ -38,6 +38,9 @@ services:
       context: ..
       dockerfile: .devcontainer/Dockerfile
     command: bundle exec sidekiq
+    volumes:
+      - ..:/workspace:cached
+      - bundle_cache:/bundle
     restart: unless-stopped
     environment:
       <<: *rails_env
