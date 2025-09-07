@@ -37,7 +37,7 @@ module Security::Provided
   end
 
   def find_or_fetch_price(date: Date.current, cache: true)
-    price = prices.find_by(date: date)
+    price = prices.last
 
     return price if price.present?
 
