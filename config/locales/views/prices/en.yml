@@ -1,0 +1,10 @@
+---
+en:
+  prices:
+    form:
+      security: Security
+      new: New Price
+    create:
+      success: Price was successfully created.
+      failure: There was an error when creating the price.
+

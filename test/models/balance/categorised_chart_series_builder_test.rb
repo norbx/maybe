@@ -44,7 +44,7 @@ class Balance::CategorisedChartSeriesBuilderTest < ActiveSupport::TestCase
   -1250.0, -900.0,
       0.0, 1250.0,
    -200.0, -200.0,
-      0.0,  200.0, # Latest month taken into account is July, as August is not over yet
+      0.0,  200.0 # Latest month taken into account is July, as August is not over yet
     ]
 
     assert_equal expected, builder.balance_series.values.map { |v| [ v.value.amount.to_f, v.trend.value.amount.to_f ] }.flatten
