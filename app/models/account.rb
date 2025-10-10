@@ -114,6 +114,10 @@ class Account < ApplicationRecord
             .order(amount: :desc)
   end
 
+  def current_securities
+    current_holdings.includes(:security).map(&:security).uniq
+  end
+
   def start_date
     first_entry_date = entries.minimum(:date) || Date.current
     first_entry_date - 1.day

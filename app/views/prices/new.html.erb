@@ -1,0 +1,6 @@
+<%= render DS::Dialog.new do |dialog| %>
+  <% dialog.with_header(title: "New stock price") %>
+  <% dialog.with_body do %>
+    <%= render "prices/form", model: @model, account: @account %>
+  <% end %>
+<% end %>

@@ -139,6 +139,8 @@ Rails.application.routes.draw do
 
   resources :accountable_sparklines, only: :show, param: :accountable_type
 
+  resources :prices, only: %i[new create]
+
   direct :entry do |entry, options|
     if entry.new_record?
       route_for entry.entryable_name.pluralize, options
