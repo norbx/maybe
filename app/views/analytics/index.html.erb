@@ -1,7 +1,7 @@
 <div class="w-full space-y-6 pb-24">
   <% if Current.family.accounts.any? %>
     <section class="bg-container py-4 rounded-xl shadow-border-xs">
-      <%= render partial: "charts/expenses_by_category_chart", locals: {
+      <%= render partial: "analytics/expenses_by_category_chart", locals: {
         balance_sheet: @balance_sheet,
         period: @period,
         current_category_id: @current_category_id

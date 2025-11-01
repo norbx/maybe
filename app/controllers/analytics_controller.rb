@@ -1,4 +1,4 @@
-class ChartsController < ApplicationController
+class AnalyticsController < ApplicationController
   include Periodable
 
   def index
