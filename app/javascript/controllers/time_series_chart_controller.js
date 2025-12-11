@@ -57,6 +57,8 @@ export default class extends Controller {
       date_formatted: d.date_formatted,
       value: d.value,
       trend: d.trend,
+      moving_average: d.moving_average,
+      moving_average_trend: d.moving_average_trend,
     }));
   }
 
@@ -103,6 +105,7 @@ export default class extends Controller {
   }
 
   _drawChart() {
+    this._drawMovingAverageLine();
     this._drawTrendline();
 
     if (this.useLabelsValue) {
@@ -128,6 +131,28 @@ export default class extends Controller {
       .attr("stroke-linejoin", "round")
       .attr("stroke-linecap", "round")
       .attr("stroke-width", this.strokeWidthValue);
+  }
+
+  _drawMovingAverageLine() {
+    const avgPoints = this._normalDataPoints.filter(d => d.moving_average != null);
+
+    console.log(this._normalDataPoints)
+    if (avgPoints.length < 2) return;
+
+    const avgLine = d3.line()
+      .x(d => this._d3XScale(d.date))
+      .y(d => this._d3YScale(this._extractNumericValue(d.moving_average)));
+
+    this._d3Group
+      .append("path")
+      .datum(avgPoints)
+      .attr("fill", "none")
+      .attr("stroke", "var(--color-gray-600)")
+      .attr("stroke-dasharray", "4, 4")
+      .attr("d", avgLine)
+      .attr("stroke-linejoin", "round")
+      .attr("stroke-linecap", "round")
+      .attr("stroke-width", 1);
   }
 
   _installTrendlineSplit() {
@@ -380,7 +405,7 @@ export default class extends Controller {
       <div class="flex items-center gap-4">
         <div class="flex items-center gap-2 text-primary">
           <div class="flex items-center justify-center h-4 w-4">
-            ${this._getTrendIcon(datum)}
+            ${this._getTrendIcon(datum.trend)}
           </div>
           ${this._extractFormattedValue(datum.trend.current)}
         </div>
@@ -395,24 +420,46 @@ export default class extends Controller {
         `
         }
       </div>
+
+      <div style="margin-bottom: 4px; color: var(--color-gray-500);">
+        12 month avg:
+      </div>
+      <div class="flex items-center gap-4">
+        <div class="flex items-center gap-2 text-primary">
+          <div class="flex items-center justify-center h-4 w-4">
+            ${this._getTrendIcon(datum.moving_average_trend)}
+          </div>
+          ${this._extractFormattedValue(datum.moving_average_trend.current)}
+        </div>
+
+        ${
+          datum.moving_average_trend.value === 0
+            ? `<span class="w-20"></span>`
+            : `
+          <span style="color: ${datum.moving_average_trend.color};">
+            ${this._extractFormattedValue(datum.moving_average_trend.value)} (${datum.moving_average_trend.percent_formatted})
+          </span>
+        `
+        }
+      </div>
     `;
   }
 
-  _getTrendIcon(datum) {
+  _getTrendIcon(trend) {
     const isIncrease =
-      Number(datum.trend.previous.amount) < Number(datum.trend.current.amount);
+      Number(trend.previous.amount) < Number(trend.current.amount);
     const isDecrease =
-      Number(datum.trend.previous.amount) > Number(datum.trend.current.amount);
+      Number(trend.previous.amount) > Number(trend.current.amount);
 
     if (isIncrease) {
-      return `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="${datum.trend.color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-up-right-icon lucide-arrow-up-right"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>`;
+      return `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="${trend.color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-up-right-icon lucide-arrow-up-right"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>`;
     }
 
     if (isDecrease) {
-      return `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="${datum.trend.color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-down-right-icon lucide-arrow-down-right"><path d="m7 7 10 10"/><path d="M17 7v10H7"/></svg>`;
+      return `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="${trend.color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-down-right-icon lucide-arrow-down-right"><path d="m7 7 10 10"/><path d="M17 7v10H7"/></svg>`;
     }
 
-    return `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="${datum.trend.color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-minus-icon lucide-minus"><path d="M5 12h14"/></svg>`;
+    return `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="${trend.color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-minus-icon lucide-minus"><path d="M5 12h14"/></svg>`;
   }
 
   _getDatumValue = (datum) => {

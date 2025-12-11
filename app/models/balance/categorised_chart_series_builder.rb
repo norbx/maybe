@@ -32,6 +32,12 @@ class Balance::CategorisedChartSeriesBuilder
             current: Money.new(datum.current, currency),
             previous: Money.new(datum.previous, currency),
             favorable_direction: favorable_direction
+          ),
+          moving_average: Money.new(datum.moving_average, currency),
+          moving_average_trend: Trend.new(
+            current: Money.new(datum.moving_average, currency),
+            previous: Money.new(datum.previous_moving_average, currency),
+            favorable_direction: favorable_direction
           )
         )
       end
