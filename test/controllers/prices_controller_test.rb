@@ -12,7 +12,7 @@ class PricesControllerTest < ActionDispatch::IntegrationTest
       balance: 0,
       currency: "USD",
       accountable: Investment.new,
-      holdings: [holdings(:one)]
+      holdings: [ holdings(:one) ]
     )
     @holding = @account.holdings.first
 
