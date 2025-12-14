@@ -42,7 +42,7 @@ module Security::Provided
     return price if price.present?
 
     # Make sure we have a data provider before fetching
-    return nil unless provider.present?
+    return prices.last unless provider.present?
     response = provider.fetch_security_price(
       symbol: ticker,
       exchange_operating_mic: exchange_operating_mic,
