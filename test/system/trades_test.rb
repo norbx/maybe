@@ -30,6 +30,8 @@ class TradesTest < ApplicationSystemTestCase
 
     visit_trades
 
+    refresh
+
     within_trades do
       assert_text "Buy #{shares_qty}.0 shares of AAPL"
     end
@@ -50,6 +52,8 @@ class TradesTest < ApplicationSystemTestCase
     click_button "Add transaction"
 
     visit_trades
+
+    refresh
 
     within_trades do
       assert_text "Sell #{qty}.0 shares of AAPL"
