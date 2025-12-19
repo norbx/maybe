@@ -1,9 +1,9 @@
 ---
-description: 
-globs: 
+description:
+globs:
 alwaysApply: true
 ---
-This rule serves as high-level documentation for how you should write code for the Maybe codebase. 
+This rule serves as high-level documentation for how you should write code for the Maybe codebase.
 
 ## Project Tech Stack
 
@@ -15,10 +15,10 @@ This rule serves as high-level documentation for how you should write code for t
   - Lucide Icons for icons
   - OpenAI for AI chat
 - Database: PostgreSQL
-- Jobs: Sidekiq + Redis
+- Jobs: SolidQueue + Redis
 - External
   - Payments: Stripe
-  - User bank data syncing: Plaid 
+  - User bank data syncing: Plaid
   - Market data: Synth (our custom API)
 
 ## Project conventions
@@ -31,7 +31,7 @@ Dependencies are a natural part of building software, but we aim to minimize the
 
 - Push Rails to its limits before adding new dependencies
 - When a new dependency is added, there must be a strong technical or business reason to add it
-- When adding dependencies, you should favor old and reliable over new and flashy 
+- When adding dependencies, you should favor old and reliable over new and flashy
 
 ### Convention 2: Leverage POROs and concerns over "service objects"
 
