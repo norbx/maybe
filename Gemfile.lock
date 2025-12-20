@@ -546,6 +546,11 @@ GEM
     skylight (6.0.4)
       activesupport (>= 5.2.0)
     smart_properties (1.17.0)
+    solid_cable (3.0.12)
+      actioncable (>= 7.2)
+      activejob (>= 7.2)
+      activerecord (>= 7.2)
+      railties (>= 7.2)
     solid_queue (1.2.4)
       activejob (>= 7.1)
       activerecord (>= 7.1)
@@ -680,6 +685,7 @@ DEPENDENCIES
   sentry-ruby
   simplecov
   skylight
+  solid_cable (~> 3.0)
   solid_queue (~> 1.2)
   stackprof
   stimulus-rails
