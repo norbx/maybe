@@ -34,6 +34,9 @@ gem "hotwire_combobox"
 gem "solid_queue", "~> 1.2"
 gem "mission_control-jobs"
 
+# WebSockets
+gem "solid_cable", "~> 3.0"
+
 # Monitoring
 gem "vernier"
 gem "rack-mini-profiler"
