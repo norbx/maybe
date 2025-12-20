@@ -109,3 +109,6 @@ scripts/
 
 # Development data
 data/*
+
+# Cache data
+/db/schema_cache.yml

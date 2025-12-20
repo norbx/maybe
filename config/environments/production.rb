@@ -72,9 +72,7 @@ Rails.application.configure do
   # Prevent health checks from clogging up the logs.
   config.silence_healthcheck_path = "/up"
 
-  if ENV["CACHE_REDIS_URL"].present?
-    config.cache_store = :redis_cache_store, { url: ENV["CACHE_REDIS_URL"] }
-  end
+  config.cache_store = :solid_cache_store
 
   config.action_mailer.perform_caching = false
   config.action_mailer.deliver_later_queue_name = :high_priority
