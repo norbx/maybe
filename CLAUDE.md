@@ -5,7 +5,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Common Development Commands
 
 ### Development Server
-- `bin/dev` - Start development server (Rails, Sidekiq, Tailwind CSS watcher)
+- `bin/dev` - Start development server (Rails, SolidQueue, Tailwind CSS watcher)
 - `bin/rails server` - Start Rails server only
 - `bin/rails console` - Open Rails console
 
@@ -96,11 +96,11 @@ Two primary data ingestion methods:
    - Custom field mapping with transformation rules
 
 ### Background Processing
-Sidekiq handles asynchronous tasks:
+SolidQueue handles asynchronous tasks:
 - Account syncing (`SyncAccountsJob`)
 - Import processing (`ImportDataJob`)
 - AI chat responses (`CreateChatResponseJob`)
-- Scheduled maintenance via sidekiq-cron
+- Scheduled maintenance via SolidQueue recurring jobs
 
 ### Frontend Architecture
 - **Hotwire Stack**: Turbo + Stimulus for reactive UI without heavy JavaScript
@@ -261,7 +261,7 @@ test "syncs balances" do
 end
 
 # BAD - Testing ActiveRecord functionality
-test "saves balance" do 
+test "saves balance" do
   balance_record = Balance.new(balance: 100, currency: "USD")
   assert balance_record.save
 end

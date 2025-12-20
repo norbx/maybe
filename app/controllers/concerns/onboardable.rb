@@ -26,6 +26,7 @@ module Onboardable
       return false if path.starts_with?("/onboarding")
       return false if path.starts_with?("/users")
       return false if path.starts_with?("/api")  # Exclude API endpoints from onboarding redirects
+      return false if path.starts_with?("/jobs")
 
       [
         new_registration_path,

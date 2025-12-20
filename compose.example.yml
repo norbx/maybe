@@ -62,18 +62,6 @@ services:
     networks:
       - maybe_net
 
-  worker:
-    image: ghcr.io/maybe-finance/maybe:latest
-    command: bundle exec sidekiq
-    restart: unless-stopped
-    depends_on:
-      redis:
-        condition: service_healthy
-    environment:
-      <<: *rails_env
-    networks:
-      - maybe_net
-
   db:
     image: postgres:16
     restart: unless-stopped

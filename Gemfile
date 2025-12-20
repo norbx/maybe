@@ -31,15 +31,14 @@ gem "lookbook", "2.3.11"
 gem "hotwire_combobox"
 
 # Background Jobs
-gem "sidekiq"
-gem "sidekiq-cron"
+gem "solid_queue", "~> 1.2"
+gem "mission_control-jobs"
 
 # Monitoring
 gem "vernier"
 gem "rack-mini-profiler"
 gem "sentry-ruby"
 gem "sentry-rails"
-gem "sentry-sidekiq"
 gem "logtail-rails"
 gem "skylight", groups: [ :production ]
 
