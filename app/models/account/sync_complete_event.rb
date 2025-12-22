@@ -44,10 +44,10 @@ class Account::SyncCompleteEvent
       return [] unless account_group.present?
 
       [
-        [ account_group.classification.to_sym, false ],
-        [ :all, false ],
-        [ account_group.classification.to_sym, true ],
-        [ :all, true ]
+        [account_group.classification.to_sym, false],
+        [:all, false],
+        [account_group.classification.to_sym, true],
+        [:all, true]
       ]
     end
 

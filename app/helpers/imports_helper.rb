@@ -52,7 +52,7 @@ module ImportsHelper
 
     border = row.errors.key?(field) ? "border-destructive" : "border-transparent"
 
-    [ base, border ].join(" ")
+    [base, border].join(" ")
   end
 
   def cell_is_valid?(row, field)

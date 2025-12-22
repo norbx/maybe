@@ -55,7 +55,7 @@ class Settings::ProfilesControllerTest < ActionDispatch::IntegrationTest
 
     sign_in @admin
 
-    assert_difference [ "User.count", "Invitation.count" ], -1 do
+    assert_difference ["User.count", "Invitation.count"], -1 do
       delete settings_profile_path(user_id: @member)
     end
 

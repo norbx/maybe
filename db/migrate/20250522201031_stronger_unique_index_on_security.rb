@@ -1,6 +1,6 @@
 class StrongerUniqueIndexOnSecurity < ActiveRecord::Migration[7.2]
   def change
-    remove_index :securities, [ :ticker, :exchange_operating_mic ], unique: true
+    remove_index :securities, [:ticker, :exchange_operating_mic], unique: true
 
     # Matches our ActiveRecord validation:
     # - uppercase ticker

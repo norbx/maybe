@@ -73,7 +73,7 @@ class HoldingTest < ActiveSupport::TestCase
       create_holding(security2, 1.day.ago.to_date, 5)
       nvda = create_holding(security2, Date.current, 30)
 
-      [ amzn, nvda ]
+      [amzn, nvda]
     end
 
     def create_holding(security, date, qty)

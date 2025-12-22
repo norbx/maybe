@@ -8,7 +8,7 @@ class Provider::Openai::AutoMerchantDetector
   def auto_detect_merchants
     response = client.responses.create(parameters: {
       model: "gpt-4.1-mini",
-      input: [ { role: "developer", content: developer_message } ],
+      input: [{ role: "developer", content: developer_message }],
       text: {
         format: {
           type: "json_schema",
@@ -67,20 +67,20 @@ class Provider::Openai::AutoMerchantDetector
                   enum: transactions.map { |t| t[:id] }
                 },
                 business_name: {
-                  type: [ "string", "null" ],
+                  type: ["string", "null"],
                   description: "The detected business name of the transaction, or `null` if uncertain"
                 },
                 business_url: {
-                  type: [ "string", "null" ],
+                  type: ["string", "null"],
                   description: "The URL of the detected business, or `null` if uncertain"
                 }
               },
-              required: [ "transaction_id", "business_name", "business_url" ],
+              required: ["transaction_id", "business_name", "business_url"],
               additionalProperties: false
             }
           }
         },
-        required: [ "merchants" ],
+        required: ["merchants"],
         additionalProperties: false
       }
     end

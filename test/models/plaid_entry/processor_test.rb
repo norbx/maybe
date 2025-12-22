@@ -27,7 +27,7 @@ class PlaidEntry::ProcessorTest < ActiveSupport::TestCase
       category_matcher: @category_matcher
     )
 
-    assert_difference [ "Entry.count", "Transaction.count", "ProviderMerchant.count" ], 1 do
+    assert_difference ["Entry.count", "Transaction.count", "ProviderMerchant.count"], 1 do
       processor.process
     end
 
@@ -76,7 +76,7 @@ class PlaidEntry::ProcessorTest < ActiveSupport::TestCase
       category_matcher: @category_matcher
     )
 
-    assert_no_difference [ "Entry.count", "Transaction.count", "ProviderMerchant.count" ] do
+    assert_no_difference ["Entry.count", "Transaction.count", "ProviderMerchant.count"] do
       processor.process
     end
 

@@ -351,7 +351,7 @@ module LanguagesHelper
   }.freeze
 
   def country_options
-    COUNTRY_MAPPING.keys.map { |key| [ COUNTRY_MAPPING[key], key ] }
+    COUNTRY_MAPPING.keys.map { |key| [COUNTRY_MAPPING[key], key] }
   end
 
   def language_options
@@ -359,17 +359,17 @@ module LanguagesHelper
       .reject { |locale| EXCLUDED_LOCALES.include?(locale.to_s) }
       .map do |locale|
         label = LANGUAGE_MAPPING[locale.to_sym] || locale.to_s.humanize
-        [ "#{label} (#{locale})", locale ]
+        ["#{label} (#{locale})", locale]
       end
       .sort_by { |label, locale| label }
   end
 
   def timezone_options
     ActiveSupport::TimeZone.all
-      .sort_by { |tz| [ tz.utc_offset, tz.name ] }
+      .sort_by { |tz| [tz.utc_offset, tz.name] }
       .map do |tz|
         name = tz.name.split(" - ").first.gsub(" (US & Canada)", "")
-        [ "(#{tz.formatted_offset}) #{name}", tz.tzinfo.identifier ]
+        ["(#{tz.formatted_offset}) #{name}", tz.tzinfo.identifier]
       end
   end
 end

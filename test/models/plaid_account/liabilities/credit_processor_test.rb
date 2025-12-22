@@ -17,7 +17,7 @@ class PlaidAccount::Liabilities::CreditProcessorTest < ActiveSupport::TestCase
     @plaid_account.update!(raw_liabilities_payload: {
       credit: {
         minimum_payment_amount: 100,
-        aprs: [ { apr_percentage: 15.0 } ]
+        aprs: [{ apr_percentage: 15.0 }]
       }
     })
 

@@ -67,7 +67,7 @@ class IncomeStatement
 
       uncategorized_category = family.categories.uncategorized
 
-      category_totals = [ *categories, uncategorized_category ].map do |category|
+      category_totals = [*categories, uncategorized_category].map do |category|
         subcategory = categories.find { |c| c.id == category.parent_id }
 
         parent_category_total = totals.select { |t| t.category_id == category.id }&.sum(&:total) || 0

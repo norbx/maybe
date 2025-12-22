@@ -11,6 +11,6 @@ class CreateValuations < ActiveRecord::Migration[7.2]
     end
 
     # Since all dates are daily (no concept of time of day), limit account to 1 valuation per day
-    add_index :valuations, [ :account_id, :date ], unique: true
+    add_index :valuations, [:account_id, :date], unique: true
   end
 end

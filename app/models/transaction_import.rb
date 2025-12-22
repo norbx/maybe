@@ -43,7 +43,7 @@ class TransactionImport < Import
   end
 
   def mapping_steps
-    base = [ Import::CategoryMapping, Import::TagMapping ]
+    base = [Import::CategoryMapping, Import::TagMapping]
     base << Import::AccountMapping if account.nil?
     base
   end

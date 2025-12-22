@@ -26,7 +26,7 @@ class Family::AutoCategorizerTest < ActiveSupport::TestCase
     @llm_provider.expects(:auto_categorize).returns(provider_response).once
 
     assert_difference "DataEnrichment.count", 2 do
-      Family::AutoCategorizer.new(@family, transaction_ids: [ txn1.id, txn2.id, txn3.id ]).auto_categorize
+      Family::AutoCategorizer.new(@family, transaction_ids: [txn1.id, txn2.id, txn3.id]).auto_categorize
     end
 
     assert_equal test_category, txn1.reload.category

@@ -35,7 +35,7 @@ class Series
         start_date: start_date,
         end_date: end_date,
         interval: interval,
-        values: [ nil, *ordered ].each_cons(2).map do |prev_value, curr_value|
+        values: [nil, *ordered].each_cons(2).map do |prev_value, curr_value|
           Value.new(
             date: curr_value[:date],
             date_formatted: I18n.l(curr_value[:date], format: :long),

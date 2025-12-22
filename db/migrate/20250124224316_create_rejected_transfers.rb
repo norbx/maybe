@@ -6,7 +6,7 @@ class CreateRejectedTransfers < ActiveRecord::Migration[7.2]
       t.timestamps
     end
 
-    add_index :rejected_transfers, [ :inflow_transaction_id, :outflow_transaction_id ], unique: true
+    add_index :rejected_transfers, [:inflow_transaction_id, :outflow_transaction_id], unique: true
 
     reversible do |dir|
       dir.up do

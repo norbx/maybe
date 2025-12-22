@@ -17,7 +17,7 @@ class Settings::ApiKeysControllerTest < ActionDispatch::IntegrationTest
       user: @user,
       name: "Test API Key",
       display_key: "test_key_123",
-      scopes: [ "read" ]
+      scopes: ["read"]
     )
 
     get settings_api_key_path
@@ -34,7 +34,7 @@ class Settings::ApiKeysControllerTest < ActionDispatch::IntegrationTest
       user: @user,
       name: "Existing API Key",
       display_key: "existing_key_123",
-      scopes: [ "read" ]
+      scopes: ["read"]
     )
 
     get new_settings_api_key_path
@@ -65,7 +65,7 @@ class Settings::ApiKeysControllerTest < ActionDispatch::IntegrationTest
       user: @user,
       name: "Old API Key",
       display_key: "old_key_123",
-      scopes: [ "read" ]
+      scopes: ["read"]
     )
 
     post settings_api_key_path, params: {
@@ -122,7 +122,7 @@ end
       user: @user,
       name: "Test API Key",
       display_key: "test_key_123",
-      scopes: [ "read" ]
+      scopes: ["read"]
     )
 
     delete settings_api_key_path

@@ -57,7 +57,7 @@ class Balance::ForwardCalculator < Balance::BaseCalculator
     end
 
     def calc_end_date
-      [ account.entries.order(:date).last&.date, account.holdings.order(:date).last&.date ].compact.max || Date.current
+      [account.entries.order(:date).last&.date, account.holdings.order(:date).last&.date].compact.max || Date.current
     end
 
     # Negative entries amount on an "asset" account means, "account value has increased"

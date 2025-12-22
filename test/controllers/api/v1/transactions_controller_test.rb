@@ -16,14 +16,14 @@ class Api::V1::TransactionsControllerTest < ActionDispatch::IntegrationTest
     @api_key = ApiKey.create!(
       user: @user,
       name: "Test Read-Write Key",
-      scopes: [ "read_write" ],
+      scopes: ["read_write"],
       display_key: "test_rw_#{SecureRandom.hex(8)}"
     )
 
     @read_only_api_key = ApiKey.create!(
       user: @user,
       name: "Test Read-Only Key",
-      scopes: [ "read" ],
+      scopes: ["read"],
       display_key: "test_ro_#{SecureRandom.hex(8)}",
       source: "mobile"  # Use different source to allow multiple keys
     )

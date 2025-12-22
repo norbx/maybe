@@ -5,6 +5,6 @@ class AddMicToSecurities < ActiveRecord::Migration[7.2]
 
     remove_column :securities, :stock_exchange_id, :uuid
 
-    add_index :securities, [ :ticker, :exchange_mic ], unique: true
+    add_index :securities, [:ticker, :exchange_mic], unique: true
   end
 end

@@ -15,14 +15,14 @@ class PlaidItem::WebhookProcessor
       return
     end
 
-    case [ webhook_type, webhook_code ]
-    when [ "TRANSACTIONS", "SYNC_UPDATES_AVAILABLE" ]
+    case [webhook_type, webhook_code]
+    when ["TRANSACTIONS", "SYNC_UPDATES_AVAILABLE"]
       plaid_item.sync_later
-    when [ "INVESTMENTS_TRANSACTIONS", "DEFAULT_UPDATE" ]
+    when ["INVESTMENTS_TRANSACTIONS", "DEFAULT_UPDATE"]
       plaid_item.sync_later
-    when [ "HOLDINGS", "DEFAULT_UPDATE" ]
+    when ["HOLDINGS", "DEFAULT_UPDATE"]
       plaid_item.sync_later
-    when [ "ITEM", "ERROR" ]
+    when ["ITEM", "ERROR"]
       if error["error_code"] == "ITEM_LOGIN_REQUIRED"
         plaid_item.update!(status: :requires_update)
       end

@@ -7,7 +7,7 @@ class CreateGoodJobProcessLockIndexes < ActiveRecord::Migration[7.2]
     reversible do |dir|
       dir.up do
         unless connection.index_name_exists?(:good_jobs, :index_good_jobs_on_priority_scheduled_at_unfinished_unlocked)
-          add_index :good_jobs, [ :priority, :scheduled_at ],
+          add_index :good_jobs, [:priority, :scheduled_at],
                     order: { priority: "ASC NULLS LAST", scheduled_at: :asc },
                     where: "finished_at IS NULL AND locked_by_id IS NULL",
                     name: :index_good_jobs_on_priority_scheduled_at_unfinished_unlocked,
@@ -22,7 +22,7 @@ class CreateGoodJobProcessLockIndexes < ActiveRecord::Migration[7.2]
         end
 
         unless connection.index_name_exists?(:good_job_executions, :index_good_job_executions_on_process_id_and_created_at)
-          add_index :good_job_executions, [ :process_id, :created_at ],
+          add_index :good_job_executions, [:process_id, :created_at],
                     name: :index_good_job_executions_on_process_id_and_created_at,
                     algorithm: :concurrently
         end

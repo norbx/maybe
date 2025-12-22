@@ -39,11 +39,11 @@ class UI::AccountPage < ApplicationComponent
   def tabs
     case account.accountable_type
     when "Investment"
-      [ :activity, :holdings ]
+      [:activity, :holdings]
     when "Property", "Vehicle", "Loan"
-      [ :activity, :overview ]
+      [:activity, :overview]
     else
-      [ :activity ]
+      [:activity]
     end
   end
 

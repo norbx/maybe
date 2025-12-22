@@ -33,7 +33,7 @@ class Security::Price::ImporterTest < ActiveSupport::TestCase
     db_prices = Security::Price.where(security: @security, date: 2.days.ago.to_date..Date.current).order(:date)
 
     assert_equal 3, db_prices.count
-    assert_equal [ 150, 155, 160 ], db_prices.map(&:price)
+    assert_equal [150, 155, 160], db_prices.map(&:price)
   end
 
   test "syncs diff when some prices already exist" do
@@ -61,7 +61,7 @@ class Security::Price::ImporterTest < ActiveSupport::TestCase
 
     db_prices = Security::Price.where(security: @security).order(:date)
     assert_equal 4, db_prices.count
-    assert_equal [ 140, 145, 150, 150 ], db_prices.map(&:price)
+    assert_equal [140, 145, 150, 150], db_prices.map(&:price)
   end
 
   test "no provider calls when all prices exist" do
@@ -109,7 +109,7 @@ class Security::Price::ImporterTest < ActiveSupport::TestCase
     ).import_provider_prices
 
     db_prices = Security::Price.where(security: @security).order(:date)
-    assert_equal [ 150, 155, 160 ], db_prices.map(&:price)
+    assert_equal [150, 155, 160], db_prices.map(&:price)
   end
 
   test "clamps end_date to today when future date is provided" do

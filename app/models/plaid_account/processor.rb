@@ -75,12 +75,12 @@ class PlaidAccount::Processor
     end
 
     def process_liabilities
-      case [ plaid_account.plaid_type, plaid_account.plaid_subtype ]
-      when [ "credit", "credit card" ]
+      case [plaid_account.plaid_type, plaid_account.plaid_subtype]
+      when ["credit", "credit card"]
         PlaidAccount::Liabilities::CreditProcessor.new(plaid_account).process
-      when [ "loan", "mortgage" ]
+      when ["loan", "mortgage"]
         PlaidAccount::Liabilities::MortgageProcessor.new(plaid_account).process
-      when [ "loan", "student" ]
+      when ["loan", "student"]
         PlaidAccount::Liabilities::StudentLoanProcessor.new(plaid_account).process
       end
     rescue => e

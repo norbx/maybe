@@ -27,7 +27,7 @@ class TransferMatchesControllerTest < ActionDispatch::IntegrationTest
   test "creates transfer for target account" do
     inflow_transaction = create_transaction(amount: 100, account: accounts(:depository))
 
-    assert_difference [ "Transfer.count", "Entry.count", "Transaction.count" ], 1 do
+    assert_difference ["Transfer.count", "Entry.count", "Transaction.count"], 1 do
       post transaction_transfer_match_path(inflow_transaction), params: {
         transfer_match: {
           method: "new",

@@ -31,7 +31,7 @@ class Family::DataExporterTest < ActiveSupport::TestCase
     assert zip_data.is_a?(StringIO)
 
     # Check that the zip contains all expected files
-    expected_files = [ "accounts.csv", "transactions.csv", "trades.csv", "categories.csv", "all.ndjson" ]
+    expected_files = ["accounts.csv", "transactions.csv", "trades.csv", "categories.csv", "all.ndjson"]
 
     Zip::File.open_buffer(zip_data) do |zip|
       actual_files = zip.entries.map(&:name)

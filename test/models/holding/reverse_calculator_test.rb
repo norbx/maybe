@@ -36,12 +36,12 @@ class Holding::ReverseCalculatorTest < ActiveSupport::TestCase
 
       create_trade(voo, qty: 10, date: "2025-01-03", price: 500, account: @account)
 
-      expected = [ [ "2025-01-02", 0 ], [ "2025-01-03", 5000 ], [ "2025-01-04", 5000 ] ]
+      expected = [["2025-01-02", 0], ["2025-01-03", 5000], ["2025-01-04", 5000]]
       # Mock snapshot with the holdings we created
       snapshot = OpenStruct.new(to_h: { voo.id => 10 })
       calculated = Holding::ReverseCalculator.new(@account, portfolio_snapshot: snapshot).calculate
 
-      assert_equal expected, calculated.sort_by(&:date).map { |b| [ b.date.to_s, b.amount ] }
+      assert_equal expected, calculated.sort_by(&:date).map { |b| [b.date.to_s, b.amount] }
     end
   end
 

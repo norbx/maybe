@@ -78,7 +78,7 @@ class PlaidAccount::Investments::SecurityResolver
     # These help identify these "special case" securities for various calculations.
     #
     def known_plaid_brokerage_cash_tickers
-      [ "CUR:USD" ]
+      ["CUR:USD"]
     end
 
     def brokerage_cash?(plaid_security)

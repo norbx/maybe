@@ -63,7 +63,7 @@ class ExchangeRate::ImporterTest < ActiveSupport::TestCase
 
     db_rates = ExchangeRate.order(:date)
     assert_equal 4, db_rates.count
-    assert_equal [ 1.2, 1.25, 1.3, 1.3 ], db_rates.map(&:rate)
+    assert_equal [1.2, 1.25, 1.3, 1.3], db_rates.map(&:rate)
   end
 
   test "no provider calls when all rates exist" do
@@ -113,7 +113,7 @@ class ExchangeRate::ImporterTest < ActiveSupport::TestCase
     ).import_provider_rates
 
     db_rates = ExchangeRate.where(from_currency: "USD", to_currency: "EUR").order(:date)
-    assert_equal [ 1.3, 1.4, 1.5 ], db_rates.map(&:rate)
+    assert_equal [1.3, 1.4, 1.5], db_rates.map(&:rate)
   end
 
   test "clamps end_date to today when future date is provided" do

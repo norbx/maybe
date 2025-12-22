@@ -6,8 +6,8 @@ class PlaidAccount::Transactions::ProcessorTest < ActiveSupport::TestCase
   end
 
   test "processes added and modified plaid transactions" do
-    added_transactions = [ { "transaction_id" => "123" } ]
-    modified_transactions = [ { "transaction_id" => "456" } ]
+    added_transactions = [{ "transaction_id" => "123" }]
+    modified_transactions = [{ "transaction_id" => "456" }]
 
     @plaid_account.update!(raw_transactions_payload: {
       added: added_transactions,
@@ -49,12 +49,12 @@ class PlaidAccount::Transactions::ProcessorTest < ActiveSupport::TestCase
     @plaid_account.update!(raw_transactions_payload: {
       added: [],
       modified: [],
-      removed: [ { "transaction_id" => destroyable_transaction_id } ]
+      removed: [{ "transaction_id" => destroyable_transaction_id }]
     })
 
     processor = PlaidAccount::Transactions::Processor.new(@plaid_account)
 
-    assert_difference [ "Entry.count", "Transaction.count" ], -1 do
+    assert_difference ["Entry.count", "Transaction.count"], -1 do
       processor.process
     end
 

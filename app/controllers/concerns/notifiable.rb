@@ -43,9 +43,9 @@ module Notifiable
     def resolve_notifications(type, data)
       case type
       when "alert"
-        [ { partial: "shared/notifications/alert", locals: { message: data } } ]
+        [{ partial: "shared/notifications/alert", locals: { message: data } }]
       when "cta"
-        [ resolve_cta(data) ]
+        [resolve_cta(data)]
       when "notice"
         messages = Array(data)
         messages.map { |message| { partial: "shared/notifications/notice", locals: { message: message } } }

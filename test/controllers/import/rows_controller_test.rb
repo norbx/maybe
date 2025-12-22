@@ -11,7 +11,7 @@ class Import::RowsControllerTest < ActionDispatch::IntegrationTest
   test "show transaction row" do
     get import_row_path(@import, @row)
 
-    assert_row_fields(@row, [ :date, :name, :amount, :currency, :category, :tags, :account, :notes ])
+    assert_row_fields(@row, [:date, :name, :amount, :currency, :category, :tags, :account, :notes])
 
     assert_response :success
   end
@@ -22,7 +22,7 @@ class Import::RowsControllerTest < ActionDispatch::IntegrationTest
 
     get import_row_path(import, row)
 
-    assert_row_fields(row, [ :date, :ticker, :qty, :price, :currency, :account, :name, :account ])
+    assert_row_fields(row, [:date, :ticker, :qty, :price, :currency, :account, :name, :account])
 
     assert_response :success
   end
@@ -33,7 +33,7 @@ class Import::RowsControllerTest < ActionDispatch::IntegrationTest
 
     get import_row_path(import, row)
 
-    assert_row_fields(row, [ :entity_type, :name, :amount, :currency ])
+    assert_row_fields(row, [:entity_type, :name, :amount, :currency])
 
     assert_response :success
   end
@@ -44,7 +44,7 @@ class Import::RowsControllerTest < ActionDispatch::IntegrationTest
 
     get import_row_path(import, row)
 
-    assert_row_fields(row, [ :date, :name, :amount, :currency, :category, :tags, :account, :notes ])
+    assert_row_fields(row, [:date, :name, :amount, :currency, :category, :tags, :account, :notes])
 
     assert_response :success
   end

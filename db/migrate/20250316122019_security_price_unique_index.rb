@@ -20,7 +20,7 @@ class SecurityPriceUniqueIndex < ActiveRecord::Migration[7.2]
       end
     end
 
-    add_index :security_prices, [ :security_id, :date, :currency ], unique: true
+    add_index :security_prices, [:security_id, :date, :currency], unique: true
     change_column_null :security_prices, :date, false
     change_column_null :security_prices, :price, false
     change_column_null :security_prices, :currency, false

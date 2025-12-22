@@ -8,7 +8,7 @@ class Import::AccountTypeMapping < Import::Mapping
   end
 
   def selectable_values
-    Accountable::TYPES.map { |type| [ type.titleize, type ] }
+    Accountable::TYPES.map { |type| [type.titleize, type] }
   end
 
   def requires_selection?

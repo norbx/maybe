@@ -9,7 +9,7 @@ class ApiRateLimiterTest < ActiveSupport::TestCase
     @api_key = ApiKey.create!(
       user: @user,
       name: "Rate Limiter Test Key",
-      scopes: [ "read" ],
+      scopes: ["read"],
       display_key: "rate_limiter_test_#{SecureRandom.hex(8)}"
     )
     @rate_limiter = ApiRateLimiter.new(@api_key)
@@ -104,7 +104,7 @@ class ApiRateLimiterTest < ActiveSupport::TestCase
     other_api_key = ApiKey.create!(
       user: other_user,
       name: "Other API Key",
-      scopes: [ "read_write" ],
+      scopes: ["read_write"],
       display_key: "rate_limiter_other_#{SecureRandom.hex(8)}"
     )
 

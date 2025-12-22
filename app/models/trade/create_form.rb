@@ -20,7 +20,7 @@ class Trade::CreateForm
   private
     # Users can either look up a ticker from our provider (Synth) or enter a manual, "offline" ticker (that we won't fetch prices for)
     def security
-      ticker_symbol, exchange_operating_mic = ticker.present? ? ticker.split("|") : [ manual_ticker, nil ]
+      ticker_symbol, exchange_operating_mic = ticker.present? ? ticker.split("|") : [manual_ticker, nil]
 
       Security::Resolver.new(
         ticker_symbol,

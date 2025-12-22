@@ -334,7 +334,7 @@ class Demo::Generator
 
     # Helper method to get random accounts for transactions
     def random_checking_account
-      [ @chase_checking, @ally_checking ].sample
+      [@chase_checking, @ally_checking].sample
     end
 
     # ---------------------------------------------------------------------------
@@ -369,7 +369,7 @@ class Demo::Generator
 
       # Add quarterly investment dividends
       (3.years.ago.to_date..Date.current).each do |date|
-        next unless date.day == 15 && [ 3, 6, 9, 12 ].include?(date.month) # Quarterly
+        next unless date.day == 15 && [3, 6, 9, 12].include?(date.month) # Quarterly
         dividend_amount = -rand(800..1500)  # Negative for income
         create_transaction!(@chase_checking, dividend_amount, "Investment Dividends", @investment_income_cat, date)
       end
@@ -385,7 +385,7 @@ class Demo::Generator
       25.times do
         date = weighted_random_date
         amount = -rand(200..800)
-        income_types = [ "Cash Tips", "Selling Items", "Refund", "Rebate", "Gift Card Cash Out" ]
+        income_types = ["Cash Tips", "Selling Items", "Refund", "Rebate", "Gift Card Cash Out"]
         create_transaction!(@chase_checking, amount, income_types.sample, @freelance_cat, date)
       end
     end
@@ -427,7 +427,7 @@ class Demo::Generator
       120.times do  # Increased from 60
         date = weighted_random_date
         amount = rand(60..180) # Reduced max from 220
-        stores = [ "Whole Foods", "Trader Joe's", "Safeway", "Stop & Shop", "Fresh Market" ]
+        stores = ["Whole Foods", "Trader Joe's", "Safeway", "Stop & Shop", "Fresh Market"]
         create_transaction!(@chase_checking, amount, "#{stores.sample} Market", @groceries_cat, date)
       end
 
@@ -435,7 +435,7 @@ class Demo::Generator
       100.times do  # Increased from 50
         date = weighted_random_date
         amount = rand(25..65) # Reduced max from 80
-        restaurants = [ "Pizza Corner", "Sushi Place", "Italian Kitchen", "Mexican Grill", "Greek Taverna" ]
+        restaurants = ["Pizza Corner", "Sushi Place", "Italian Kitchen", "Mexican Grill", "Greek Taverna"]
         create_transaction!(@chase_checking, amount, restaurants.sample, @restaurants_cat, date)
       end
 
@@ -443,7 +443,7 @@ class Demo::Generator
       80.times do  # Increased from 40
         date = weighted_random_date
         amount = rand(8..20) # Reduced from 10-25
-        places = [ "Local Coffee", "Dunkin'", "Corner Deli", "Food Truck" ]
+        places = ["Local Coffee", "Dunkin'", "Corner Deli", "Food Truck"]
         create_transaction!(@chase_checking, amount, places.sample, @coffee_cat, date)
       end
     end
@@ -453,7 +453,7 @@ class Demo::Generator
       60.times do
         date = weighted_random_date
         amount = rand(35..75)
-        stations = [ "Shell", "Exxon", "BP", "Chevron", "Mobil", "Sunoco" ]
+        stations = ["Shell", "Exxon", "BP", "Chevron", "Mobil", "Sunoco"]
         create_transaction!(@chase_checking, amount, "#{stations.sample} Gas", @gas_cat, date)
       end
 
@@ -488,7 +488,7 @@ class Demo::Generator
       60.times do  # Increased from 25
         date = weighted_random_date
         amount = rand(15..60) # Reduced from 20-80
-        activities = [ "Movie Theater", "Sports Game", "Museum", "Comedy Club", "Bowling", "Mini Golf", "Arcade" ]
+        activities = ["Movie Theater", "Sports Game", "Museum", "Comedy Club", "Bowling", "Mini Golf", "Arcade"]
         create_transaction!(@chase_checking, amount, activities.sample, @entertainment_cat, date)
       end
     end
@@ -498,7 +498,7 @@ class Demo::Generator
       80.times do  # Increased from 40
         date = weighted_random_date
         amount = rand(30..90) # Reduced max from 120
-        stores = [ "Target.com", "Walmart", "Costco" ]
+        stores = ["Target.com", "Walmart", "Costco"]
         create_transaction!(@chase_checking, amount, "#{stores.sample} Purchase", @shopping_cat, date)
       end
 
@@ -506,7 +506,7 @@ class Demo::Generator
       60.times do  # Increased from 25
         date = weighted_random_date
         amount = rand(35..80) # Reduced max from 100
-        stores = [ "Target", "REI", "Barnes & Noble", "GameStop" ]
+        stores = ["Target", "REI", "Barnes & Noble", "GameStop"]
         create_transaction!(@chase_checking, amount, stores.sample, @shopping_cat, date)
       end
     end
@@ -516,7 +516,7 @@ class Demo::Generator
       45.times do  # Increased from 25
         date = weighted_random_date
         amount = rand(150..350) # Reduced from 180-450
-        providers = [ "Dr. Smith", "Dr. Johnson", "Dr. Williams", "Specialist Visit", "Urgent Care" ]
+        providers = ["Dr. Smith", "Dr. Johnson", "Dr. Williams", "Specialist Visit", "Urgent Care"]
         create_transaction!(@chase_checking, amount, providers.sample, @healthcare_cat, date)
       end
 
@@ -524,7 +524,7 @@ class Demo::Generator
       80.times do  # Increased from 40
         date = weighted_random_date
         amount = rand(12..65) # Reduced from 15-85
-        pharmacies = [ "CVS Pharmacy", "Walgreens", "Rite Aid", "Local Pharmacy" ]
+        pharmacies = ["CVS Pharmacy", "Walgreens", "Rite Aid", "Local Pharmacy"]
         create_transaction!(@chase_checking, amount, pharmacies.sample, @healthcare_cat, date)
       end
     end
@@ -536,7 +536,7 @@ class Demo::Generator
 
         # Smaller local trips from checking
         hotel_amount = rand(200..500)
-        hotels = [ "Local Hotel", "B&B", "Nearby Resort" ]
+        hotels = ["Local Hotel", "B&B", "Nearby Resort"]
         if rand < 0.3 && date > 3.years.ago.to_date # Some EUR transactions
           create_transaction!(@eu_checking, hotel_amount, hotels.sample, @travel_cat, date)
         else
@@ -549,7 +549,7 @@ class Demo::Generator
 
         # Local activities
         activity_amount = rand(50..150)
-        activities = [ "Local Tour", "Museum Tickets", "Activity Pass" ]
+        activities = ["Local Tour", "Museum Tickets", "Activity Pass"]
         create_transaction!(@chase_checking, activity_amount, activities.sample, @travel_cat, date + rand(1..7).days)
       end
     end
@@ -565,7 +565,7 @@ class Demo::Generator
       40.times do
         date = weighted_random_date
         amount = rand(25..80)
-        services = [ "Hair Salon", "Barber Shop", "Nail Salon" ]
+        services = ["Hair Salon", "Barber Shop", "Nail Salon"]
         create_transaction!(@chase_checking, amount, services.sample, @personal_care_cat, date)
       end
     end
@@ -691,7 +691,7 @@ class Demo::Generator
 
       # Quarterly HSA contributions
       (3.years.ago.to_date..Date.current).each do |date|
-        next unless date.day == 1 && [ 1, 4, 7, 10 ].include?(date.month) # Quarterly
+        next unless date.day == 1 && [1, 4, 7, 10].include?(date.month) # Quarterly
         amount = rand(1000..2000)
         create_transfer!(@chase_checking, @hsa_investment, amount, "HSA Contribution", date)
       end
@@ -839,7 +839,7 @@ class Demo::Generator
         merchant = if account == @amex_gold
           pick(%w[WholeFoods Starbucks UberEats Netflix LocalBistro AirBnB])
         else
-          pick([ "Delta Airlines", "Hilton Hotels", "Expedia", "Apple", "BestBuy", "Amazon" ])
+          pick(["Delta Airlines", "Hilton Hotels", "Expedia", "Apple", "BestBuy", "Amazon"])
         end
 
         create_transaction!(account, amount, merchant, random_expense_category, charge_date)
@@ -850,7 +850,7 @@ class Demo::Generator
     end
 
     def random_expense_category
-      [ @food_cat, @entertainment_cat, @shopping_cat, @travel_cat, @transportation_cat ].sample
+      [@food_cat, @entertainment_cat, @shopping_cat, @travel_cat, @transportation_cat].sample
     end
 
     def create_transaction!(account, amount, name, category, date)
@@ -989,16 +989,16 @@ class Demo::Generator
     # Generate additional baseline expenses to reach 8k-12k transaction target
     def generate_regular_expenses!
       expense_generators = [
-        ->(date) { create_transaction!(@chase_checking, jitter(rand(150..220), 0.05).round, pick([ "ConEd Electric", "National Grid", "Gas & Power" ]), @utilities_cat, date) },
-        ->(date) { create_transaction!(@chase_checking, jitter(rand(10..20), 0.1).round, pick([ "Spotify", "Netflix", "Hulu", "Apple One" ]), @entertainment_cat, date) },
-        ->(date) { create_transaction!(@chase_checking, jitter(rand(45..90), 0.1).round, pick([ "Whole Foods", "Trader Joe's", "Safeway" ])+" Market", @groceries_cat, date) },
-        ->(date) { create_transaction!(@chase_checking, jitter(rand(25..50), 0.1).round, pick([ "Shell Gas", "BP Gas", "Exxon" ]), @gas_cat, date) },
-        ->(date) { create_transaction!(@chase_checking, jitter(rand(15..40), 0.1).round, pick([ "Movie Streaming", "Book Purchase", "Mobile Game" ]), @entertainment_cat, date) }
+        ->(date) { create_transaction!(@chase_checking, jitter(rand(150..220), 0.05).round, pick(["ConEd Electric", "National Grid", "Gas & Power"]), @utilities_cat, date) },
+        ->(date) { create_transaction!(@chase_checking, jitter(rand(10..20), 0.1).round, pick(["Spotify", "Netflix", "Hulu", "Apple One"]), @entertainment_cat, date) },
+        ->(date) { create_transaction!(@chase_checking, jitter(rand(45..90), 0.1).round, pick(["Whole Foods", "Trader Joe's", "Safeway"])+" Market", @groceries_cat, date) },
+        ->(date) { create_transaction!(@chase_checking, jitter(rand(25..50), 0.1).round, pick(["Shell Gas", "BP Gas", "Exxon"]), @gas_cat, date) },
+        ->(date) { create_transaction!(@chase_checking, jitter(rand(15..40), 0.1).round, pick(["Movie Streaming", "Book Purchase", "Mobile Game"]), @entertainment_cat, date) }
       ]
 
       desired = 600  # Increased from 300 to help reach 8k
-      current = Entry.joins(:account).where(accounts: { id: [ @chase_checking.id ] }, entryable_type: "Transaction").count
-      to_create = [ desired - current, 0 ].max
+      current = Entry.joins(:account).where(accounts: { id: [@chase_checking.id] }, entryable_type: "Transaction").count
+      to_create = [desired - current, 0].max
 
       to_create.times do
         date = weighted_random_date
@@ -1024,7 +1024,7 @@ class Demo::Generator
       200.times do  # Reduced from 300
         date = weighted_random_date
         amount = rand(3..15)
-        stores = [ "7-Eleven", "Wawa", "Circle K", "Quick Stop", "Corner Store" ]
+        stores = ["7-Eleven", "Wawa", "Circle K", "Quick Stop", "Corner Store"]
         create_transaction!(@chase_checking, amount, stores.sample, @shopping_cat, date)
       end
 
@@ -1032,7 +1032,7 @@ class Demo::Generator
       120.times do  # Reduced from 200
         date = weighted_random_date
         amount = rand(1..10)
-        items = [ "App Store", "Google Play", "iTunes", "Steam", "Kindle Book" ]
+        items = ["App Store", "Google Play", "iTunes", "Steam", "Kindle Book"]
         create_transaction!(@chase_checking, amount, items.sample, @entertainment_cat, date)
       end
 
@@ -1040,14 +1040,14 @@ class Demo::Generator
       100.times do  # Reduced from 150
         date = weighted_random_date
         amount = rand(2..8)
-        create_transaction!(@chase_checking, amount, pick([ "Parking Meter", "Bridge Toll", "Tunnel Toll" ]), @transportation_cat, date)
+        create_transaction!(@chase_checking, amount, pick(["Parking Meter", "Bridge Toll", "Tunnel Toll"]), @transportation_cat, date)
       end
 
       # Small cash transactions (reduced)
       150.times do  # Reduced from 250
         date = weighted_random_date
         amount = rand(5..25)
-        vendors = [ "Food Truck", "Farmer's Market", "Street Vendor", "Tip", "Donation" ]
+        vendors = ["Food Truck", "Farmer's Market", "Street Vendor", "Tip", "Donation"]
         create_transaction!(@chase_checking, amount, vendors.sample, @misc_cat, date)
       end
 
@@ -1062,7 +1062,7 @@ class Demo::Generator
       120.times do  # Reduced from 180
         date = weighted_random_date
         amount = rand(2..8)
-        transit = [ "Metro Card", "Bus Fare", "Train Ticket", "Uber/Lyft" ]
+        transit = ["Metro Card", "Bus Fare", "Train Ticket", "Uber/Lyft"]
         create_transaction!(@chase_checking, amount, transit.sample, @transportation_cat, date)
       end
 
@@ -1102,18 +1102,18 @@ class Demo::Generator
         date = years_ago.years.ago.to_date - rand(0..364).days
 
         base_amount = rand(12..45)  # Reduced from 15-60
-        discount    = (1 - 0.02 * [ years_ago - 3, 0 ].max)
+        discount    = (1 - 0.02 * [years_ago - 3, 0].max)
         amount      = (base_amount * discount).round
 
-        account = [ @chase_checking, @ally_checking ].sample
-        category = pick([ @groceries_cat, @utilities_cat, @gas_cat, @restaurants_cat, @shopping_cat ])
+        account = [@chase_checking, @ally_checking].sample
+        category = pick([@groceries_cat, @utilities_cat, @gas_cat, @restaurants_cat, @shopping_cat])
 
         merchant = case category
         when @groceries_cat then pick(%w[Walmart Kroger Safeway]) + " Market"
-        when @utilities_cat then pick([ "Local Electric", "City Water", "Gas Co." ])
+        when @utilities_cat then pick(["Local Electric", "City Water", "Gas Co."])
         when @gas_cat then pick(%w[Shell Exxon BP])
-        when @restaurants_cat then pick([ "Diner", "Burger Grill", "Pizza Place" ])
-        else pick([ "General Store", "Department Shop", "Outlet" ])
+        when @restaurants_cat then pick(["Diner", "Burger Grill", "Pizza Place"])
+        else pick(["General Store", "Department Shop", "Outlet"])
         end
 
         create_transaction!(account, amount, merchant, category, date)
@@ -1126,30 +1126,30 @@ class Demo::Generator
         date = years_ago.years.ago.to_date - rand(0..364).days
 
         base_amount = rand(8..30)  # Reduced from 10-40
-        discount    = (1 - 0.03 * [ years_ago - 7, 0 ].max)  # More discount for very old
+        discount    = (1 - 0.03 * [years_ago - 7, 0].max)  # More discount for very old
         amount      = (base_amount * discount).round.clamp(5, 25)  # Reduced max from 35
 
         account = @chase_checking  # Just use main checking for simplicity
-        category = pick([ @groceries_cat, @gas_cat, @restaurants_cat ])
+        category = pick([@groceries_cat, @gas_cat, @restaurants_cat])
 
         merchant = case category
         when @groceries_cat then pick(%w[Walmart Kroger]) + " Market"
         when @gas_cat then pick(%w[Shell Exxon])
-        else pick([ "Old Diner", "Local Restaurant" ])
+        else pick(["Old Diner", "Local Restaurant"])
         end
 
         create_transaction!(account, amount, "#{merchant} (#{years_ago}y ago)", category, date)
       end
 
       # Additional small transactions to reach 8k minimum if needed
-      additional_needed = [ 400, 0 ].max  # Increased from 200
+      additional_needed = [400, 0].max  # Increased from 200
       additional_needed.times do
         years_ago = rand(4..12)
         date = years_ago.years.ago.to_date - rand(0..364).days
         amount = rand(6..20)  # Reduced from 8-25
 
-        account = [ @chase_checking, @ally_checking ].sample
-        category = pick([ @groceries_cat, @gas_cat, @utilities_cat ])
+        account = [@chase_checking, @ally_checking].sample
+        category = pick([@groceries_cat, @gas_cat, @utilities_cat])
 
         merchant = "Legacy #{pick(%w[Store Gas Electric])}"
         create_transaction!(account, amount, merchant, category, date)

@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   use_doorkeeper
   # MFA routes
-  resource :mfa, controller: "mfa", only: [ :new, :create ] do
+  resource :mfa, controller: "mfa", only: [:new, :create] do
     get :verify
     post :verify, to: "mfa#verify_code"
     delete :disable
@@ -52,14 +52,14 @@ Rails.application.routes.draw do
   end
 
   namespace :settings do
-    resource :profile, only: [ :show, :destroy ]
+    resource :profile, only: [:show, :destroy]
     resource :preferences, only: :show
     resource :hosting, only: %i[show update] do
       delete :clear_cache, on: :collection
     end
     resource :billing, only: :show
     resource :security, only: :show
-    resource :api_key, only: [ :show, :new, :create, :destroy ]
+    resource :api_key, only: [:show, :new, :create, :destroy]
   end
 
   resource :subscription, only: %i[new show create] do
@@ -197,7 +197,7 @@ Rails.application.routes.draw do
 
   resources :invite_codes, only: %i[index create]
 
-  resources :invitations, only: [ :new, :create, :destroy ] do
+  resources :invitations, only: [:new, :create, :destroy] do
     get :accept, on: :member
   end
 
@@ -210,12 +210,12 @@ Rails.application.routes.draw do
       post "auth/refresh", to: "auth#refresh"
 
       # Production API endpoints
-      resources :accounts, only: [ :index ]
-      resources :transactions, only: [ :index, :show, :create, :update, :destroy ]
-      resource :usage, only: [ :show ], controller: "usage"
+      resources :accounts, only: [:index]
+      resources :transactions, only: [:index, :show, :create, :update, :destroy]
+      resource :usage, only: [:show], controller: "usage"
 
-      resources :chats, only: [ :index, :show, :create, :update, :destroy ] do
-        resources :messages, only: [ :create ] do
+      resources :chats, only: [:index, :show, :create, :update, :destroy] do
+        resources :messages, only: [:create] do
           post :retry, on: :collection
         end
       end
@@ -235,7 +235,7 @@ Rails.application.routes.draw do
 
   resources :currencies, only: %i[show]
 
-  resources :impersonation_sessions, only: [ :create ] do
+  resources :impersonation_sessions, only: [:create] do
     post :join, on: :collection
     delete :leave, on: :collection
 

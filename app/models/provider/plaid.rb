@@ -19,7 +19,7 @@ class Provider::Plaid
         Plaid::WebhookVerificationKeyGetRequest.new(key_id: key_id)
       )
 
-      jwks = JWT::JWK::Set.new([ jwk_response.key.to_hash ])
+      jwks = JWT::JWK::Set.new([jwk_response.key.to_hash])
 
       jwks.filter! { |key| key[:use] == "sig" }
       jwks
@@ -28,7 +28,7 @@ class Provider::Plaid
     payload, _header = JWT.decode(
       verification_header, nil, true,
       {
-        algorithms: [ "ES256" ],
+        algorithms: ["ES256"],
         jwks: jwks_loader,
         verify_expiration: false
       }
@@ -56,7 +56,7 @@ class Provider::Plaid
     if access_token.present?
       request_params[:access_token] = access_token
     else
-      request_params[:products] = [ get_primary_product(accountable_type) ]
+      request_params[:products] = [get_primary_product(accountable_type)]
       request_params[:additional_consented_products] = get_additional_consented_products(accountable_type)
     end
 
@@ -151,7 +151,7 @@ class Provider::Plaid
       request = Plaid::InvestmentsHoldingsGetRequest.new({ access_token: access_token })
       response = client.investments_holdings_get(request)
 
-      [ response.holdings, response.securities ]
+      [response.holdings, response.securities]
     end
 
     def get_item_investment_transactions(access_token:, start_date:, end_date:)
@@ -176,7 +176,7 @@ class Provider::Plaid
         offset = transactions.length
       end
 
-      [ transactions, securities ]
+      [transactions, securities]
     end
 
     def get_primary_product(accountable_type)
@@ -195,7 +195,7 @@ class Provider::Plaid
     def get_additional_consented_products(accountable_type)
       return [] if eu?
 
-      MAYBE_SUPPORTED_PLAID_PRODUCTS - [ get_primary_product(accountable_type) ]
+      MAYBE_SUPPORTED_PLAID_PRODUCTS - [get_primary_product(accountable_type)]
     end
 
     def eu?
@@ -204,9 +204,9 @@ class Provider::Plaid
 
     def country_codes
       if eu?
-        [ "ES", "NL", "FR", "IE", "DE", "IT", "PL", "DK", "NO", "SE", "EE", "LT", "LV", "PT", "BE" ]  # EU supported countries
+        ["ES", "NL", "FR", "IE", "DE", "IT", "PL", "DK", "NO", "SE", "EE", "LT", "LV", "PT", "BE"]  # EU supported countries
       else
-        [ "US", "CA" ] # US + CA only
+        ["US", "CA"] # US + CA only
       end
     end
 end

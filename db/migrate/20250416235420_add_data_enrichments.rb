@@ -10,7 +10,7 @@ class AddDataEnrichments < ActiveRecord::Migration[7.2]
       t.timestamps
     end
 
-    add_index :data_enrichments, [ :enrichable_id, :enrichable_type, :source, :attribute_name ], unique: true
+    add_index :data_enrichments, [:enrichable_id, :enrichable_type, :source, :attribute_name], unique: true
 
     # Entries
     add_column :entries, :locked_attributes, :jsonb, default: {}

@@ -23,8 +23,8 @@ class User < ApplicationRecord
   enum :role, { member: "member", admin: "admin", super_admin: "super_admin" }, validate: true
 
   has_one_attached :profile_image do |attachable|
-    attachable.variant :thumbnail, resize_to_fill: [ 300, 300 ], convert: :webp, saver: { quality: 80 }
-    attachable.variant :small, resize_to_fill: [ 72, 72 ], convert: :webp, saver: { quality: 80 }, preprocessed: true
+    attachable.variant :thumbnail, resize_to_fill: [300, 300], convert: :webp, saver: { quality: 80 }
+    attachable.variant :small, resize_to_fill: [72, 72], convert: :webp, saver: { quality: 80 }, preprocessed: true
   end
 
   validate :profile_image_size
@@ -67,7 +67,7 @@ class User < ApplicationRecord
   end
 
   def display_name
-    [ first_name, last_name ].compact.join(" ").presence || email
+    [first_name, last_name].compact.join(" ").presence || email
   end
 
   def initial

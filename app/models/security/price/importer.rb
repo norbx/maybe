@@ -131,7 +131,7 @@ class Security::Price::Importer
         ids = Security::Price.upsert_all(
           batch,
           unique_by: %i[security_id date currency],
-          returning: [ "id" ]
+          returning: ["id"]
         )
         total_upsert_count += ids.count
       end
@@ -150,6 +150,6 @@ class Security::Price::Importer
     # Clamp to today (EST) so we never call our price API for a future date (our API is in EST/EDT timezone)
     def normalize_end_date(requested_end_date)
       today_est = Date.current.in_time_zone("America/New_York").to_date
-      [ requested_end_date, today_est ].min
+      [requested_end_date, today_est].min
     end
 end

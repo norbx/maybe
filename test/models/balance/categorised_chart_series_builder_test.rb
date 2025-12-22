@@ -21,8 +21,8 @@ class Balance::CategorisedChartSeriesBuilderTest < ActiveSupport::TestCase
     create_transaction(account:, amount: -100, date: Date.new(2025, 8, 30), category:, currency: "PLN")
 
     builder = Balance::CategorisedChartSeriesBuilder.new(
-      account_ids: [ account.id ],
-      category_ids: [ category.id ],
+      account_ids: [account.id],
+      category_ids: [category.id],
       currency: "PLN",
       period: Period.from_key("last_365_days"),
       interval: "1 month",
@@ -47,6 +47,6 @@ class Balance::CategorisedChartSeriesBuilderTest < ActiveSupport::TestCase
       0.0,  200.0 # Latest month taken into account is July, as August is not over yet
     ]
 
-    assert_equal expected, builder.balance_series.values.map { |v| [ v.value.amount.to_f, v.trend.value.amount.to_f ] }.flatten
+    assert_equal expected, builder.balance_series.values.map { |v| [v.value.amount.to_f, v.trend.value.amount.to_f] }.flatten
   end
 end

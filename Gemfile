@@ -44,7 +44,7 @@ gem "rack-mini-profiler"
 gem "sentry-ruby"
 gem "sentry-rails"
 gem "logtail-rails"
-gem "skylight", groups: [ :production ]
+gem "skylight", groups: [:production]
 
 # Active Storage
 gem "aws-sdk-s3", "~> 1.177.0", require: false
@@ -94,7 +94,7 @@ group :development, :test do
 end
 
 if ENV["BENCHMARKING_ENABLED"]
-  gem "dotenv-rails", groups: [ :production ]
+  gem "dotenv-rails", groups: [:production]
 end
 
 group :development do

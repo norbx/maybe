@@ -6,7 +6,7 @@ class ImpersonationSession < ApplicationRecord
 
   enum :status, { pending: "pending", in_progress: "in_progress", complete: "complete", rejected: "rejected" }
 
-  scope :initiated, -> { where(status: [ :pending, :in_progress ]) }
+  scope :initiated, -> { where(status: [:pending, :in_progress]) }
 
   validate :impersonator_is_super_admin
   validate :impersonated_is_not_super_admin

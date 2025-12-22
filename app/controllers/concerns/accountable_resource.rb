@@ -4,14 +4,14 @@ module AccountableResource
   included do
     include Periodable
 
-    before_action :set_account, only: [ :show, :edit, :update ]
+    before_action :set_account, only: [:show, :edit, :update]
     before_action :set_link_options, only: :new
   end
 
   class_methods do
     def permitted_accountable_attributes(*attrs)
       @permitted_accountable_attributes = attrs if attrs.any?
-      @permitted_accountable_attributes ||= [ :id ]
+      @permitted_accountable_attributes ||= [:id]
     end
   end
 

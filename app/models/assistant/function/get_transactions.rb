@@ -68,14 +68,14 @@ class Assistant::Function::GetTransactions < Assistant::Function
 
   def params_schema
     build_schema(
-      required: [ "order", "page", "page_size" ],
+      required: ["order", "page", "page_size"],
       properties: {
         page: {
           type: "integer",
           description: "Page number"
         },
         order: {
-          enum: [ "asc", "desc" ],
+          enum: ["asc", "desc"],
           description: "Order of the transactions by date"
         },
         search: {
@@ -89,7 +89,7 @@ class Assistant::Function::GetTransactions < Assistant::Function
         amount_operator: {
           type: "string",
           description: "Operator for amount (must be used with amount)",
-          enum: [ "equal", "less", "greater" ]
+          enum: ["equal", "less", "greater"]
         },
         start_date: {
           type: "string",

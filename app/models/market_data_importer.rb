@@ -74,8 +74,8 @@ class MarketDataImporter
            .group("entries.currency", "accounts.currency")
            .minimum("entries.date")
            .each do |(source, target), date|
-        key = [ source, target ]
-        pair_dates[key] = [ pair_dates[key], date ].compact.min
+        key = [source, target]
+        pair_dates[key] = [pair_dates[key], date].compact.min
       end
 
       # 2. ACCOUNT-BASED PAIRS – use the account's oldest entry date
@@ -87,10 +87,10 @@ class MarketDataImporter
              .find_each do |account|
         earliest_entry_date = account_first_entry_dates[account.id]
 
-        chosen_date = [ earliest_entry_date, default_start_date ].compact.min
+        chosen_date = [earliest_entry_date, default_start_date].compact.min
 
-        key = [ account.source, account.target ]
-        pair_dates[key] = [ pair_dates[key], chosen_date ].compact.min
+        key = [account.source, account.target]
+        pair_dates[key] = [pair_dates[key], chosen_date].compact.min
       end
 
       # Convert to array of hashes for ease of use
@@ -122,7 +122,7 @@ class MarketDataImporter
     end
 
     def set_mode!(mode)
-      valid_modes = [ :full, :snapshot ]
+      valid_modes = [:full, :snapshot]
 
       unless valid_modes.include?(mode.to_sym)
         raise InvalidModeError, "Invalid mode for MarketDataImporter, can only be :full or :snapshot, but was #{mode}"

@@ -6,14 +6,14 @@ module Account::Chartable
   end
 
   def balance_series(period: Period.last_30_days, view: :balance, interval: nil)
-    raise ArgumentError, "Invalid view type" unless [ :balance, :cash_balance, :holdings_balance ].include?(view.to_sym)
+    raise ArgumentError, "Invalid view type" unless [:balance, :cash_balance, :holdings_balance].include?(view.to_sym)
 
     @balance_series ||= {}
 
-    memo_key = [ period.start_date, period.end_date, interval ].compact.join("_")
+    memo_key = [period.start_date, period.end_date, interval].compact.join("_")
 
     builder = (@balance_series[memo_key] ||= Balance::ChartSeriesBuilder.new(
-      account_ids: [ id ],
+      account_ids: [id],
       currency: self.currency,
       period: period,
       favorable_direction: favorable_direction,

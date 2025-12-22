@@ -36,7 +36,7 @@ module Maybe
 
     config.view_component.preview_controller = "LookbooksController"
     config.lookbook.preview_display_options = {
-      theme: [ "light", "dark" ] # available in view as params[:theme]
+      theme: ["light", "dark"] # available in view as params[:theme]
     }
 
     # Enable Rack::Attack middleware for API rate limiting

@@ -47,7 +47,7 @@ class Transaction::SearchTest < ActiveSupport::TestCase
     )
 
     # Test transfer type filter (includes loan_payment)
-    transfer_results = Transaction::Search.new(@family, filters: { types: [ "transfer" ] }).transactions_scope
+    transfer_results = Transaction::Search.new(@family, filters: { types: ["transfer"] }).transactions_scope
     transfer_ids = transfer_results.pluck(:id)
 
     assert_includes transfer_ids, transfer_entry.entryable.id
@@ -57,7 +57,7 @@ class Transaction::SearchTest < ActiveSupport::TestCase
     assert_not_includes transfer_ids, standard_entry.entryable.id
 
     # Test expense type filter (excludes transfer kinds but includes one_time)
-    expense_results = Transaction::Search.new(@family, filters: { types: [ "expense" ] }).transactions_scope
+    expense_results = Transaction::Search.new(@family, filters: { types: ["expense"] }).transactions_scope
     expense_ids = expense_results.pluck(:id)
 
     assert_includes expense_ids, standard_entry.entryable.id
@@ -73,7 +73,7 @@ class Transaction::SearchTest < ActiveSupport::TestCase
       kind: "standard"
     )
 
-    income_results = Transaction::Search.new(@family, filters: { types: [ "income" ] }).transactions_scope
+    income_results = Transaction::Search.new(@family, filters: { types: ["income"] }).transactions_scope
     income_ids = income_results.pluck(:id)
 
     assert_includes income_ids, income_entry.entryable.id
@@ -82,7 +82,7 @@ class Transaction::SearchTest < ActiveSupport::TestCase
     assert_not_includes income_ids, transfer_entry.entryable.id
 
     # Test combined expense and income filter (excludes transfer kinds but includes one_time)
-    non_transfer_results = Transaction::Search.new(@family, filters: { types: [ "expense", "income" ] }).transactions_scope
+    non_transfer_results = Transaction::Search.new(@family, filters: { types: ["expense", "income"] }).transactions_scope
     non_transfer_ids = non_transfer_results.pluck(:id)
 
     assert_includes non_transfer_ids, standard_entry.entryable.id
@@ -114,7 +114,7 @@ class Transaction::SearchTest < ActiveSupport::TestCase
     )
 
     # Search for uncategorized transactions
-    uncategorized_results = Transaction::Search.new(@family, filters: { categories: [ "Uncategorized" ] }).transactions_scope
+    uncategorized_results = Transaction::Search.new(@family, filters: { categories: ["Uncategorized"] }).transactions_scope
     uncategorized_ids = uncategorized_results.pluck(:id)
 
     # Should include standard uncategorized transactions
@@ -142,7 +142,7 @@ class Transaction::SearchTest < ActiveSupport::TestCase
     )
 
     # Test new family-based API
-    search = Transaction::Search.new(@family, filters: { types: [ "expense" ] })
+    search = Transaction::Search.new(@family, filters: { types: ["expense"] })
     results = search.transactions_scope
     result_ids = results.pluck(:id)
 
@@ -159,7 +159,7 @@ class Transaction::SearchTest < ActiveSupport::TestCase
 
   test "family-based API requires family parameter" do
     assert_raises(NoMethodError) do
-      search = Transaction::Search.new({ types: [ "expense" ] })
+      search = Transaction::Search.new({ types: ["expense"] })
       search.transactions_scope  # This will fail when trying to call .transactions on a Hash
     end
   end
@@ -259,7 +259,7 @@ class Transaction::SearchTest < ActiveSupport::TestCase
     )
 
     # Filter by food category only
-    search = Transaction::Search.new(@family, filters: { categories: [ "Food & Drink" ] })
+    search = Transaction::Search.new(@family, filters: { categories: ["Food & Drink"] })
     totals = search.totals
 
     assert_equal 1, totals.count
@@ -282,7 +282,7 @@ class Transaction::SearchTest < ActiveSupport::TestCase
     )
 
     # Filter by expense type only
-    search = Transaction::Search.new(@family, filters: { types: [ "expense" ] })
+    search = Transaction::Search.new(@family, filters: { types: ["expense"] })
     totals = search.totals
 
     assert_equal 1, totals.count

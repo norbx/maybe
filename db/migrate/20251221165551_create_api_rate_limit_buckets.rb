@@ -8,7 +8,7 @@ class CreateApiRateLimitBuckets < ActiveRecord::Migration[8.0]
 
       t.timestamps
 
-      t.index [ :api_key_id, :window_start ], unique: true, name: "index_rate_limit_buckets_on_api_key_and_window"
+      t.index [:api_key_id, :window_start], unique: true, name: "index_rate_limit_buckets_on_api_key_and_window"
       t.index :expires_at, name: "index_rate_limit_buckets_on_expires_at"
     end
   end

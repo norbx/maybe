@@ -32,7 +32,7 @@ class Provider::Stripe
 
     session = client.v1.checkout.sessions.create(
       customer: customer.id,
-      line_items: [ { price: price_id_for(plan), quantity: 1 } ],
+      line_items: [{ price: price_id_for(plan), quantity: 1 }],
       mode: "subscription",
       allow_promotion_codes: true,
       success_url: success_url,

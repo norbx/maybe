@@ -47,7 +47,7 @@ class CreditCardsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "updates with credit card details" do
-    assert_no_difference [ "Account.count", "CreditCard.count" ] do
+    assert_no_difference ["Account.count", "CreditCard.count"] do
       patch credit_card_path(@account), params: {
         account: {
           name: "Updated Credit Card",

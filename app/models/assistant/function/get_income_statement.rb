@@ -52,7 +52,7 @@ class Assistant::Function::GetIncomeStatement < Assistant::Function
 
   def params_schema
     build_schema(
-      required: [ "start_date", "end_date" ],
+      required: ["start_date", "end_date"],
       properties: {
         start_date: {
           type: "string",

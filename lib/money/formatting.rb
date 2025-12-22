@@ -24,17 +24,17 @@ module Money::Formatting
   private
     def get_symbol
       if currency.symbol == "$" && currency.iso_code != "USD"
-        [ currency.iso_code.first(2), currency.symbol ].join
+        [currency.iso_code.first(2), currency.symbol].join
       else
         currency.symbol
       end
     end
 
     def locale_options(locale)
-      case [ currency.iso_code, locale.to_sym ]
-      when [ "EUR", :nl ], [ "EUR", :pt ]
+      case [currency.iso_code, locale.to_sym]
+      when ["EUR", :nl], ["EUR", :pt]
         { delimiter: ".", separator: ",", format: "%u %n" }
-      when [ "EUR", :en ], [ "EUR", :en_IE ]
+      when ["EUR", :en], ["EUR", :en_IE]
         { delimiter: ",", separator: "." }
       else
         {}

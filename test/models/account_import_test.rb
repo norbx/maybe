@@ -51,8 +51,8 @@ class AccountImportTest < ActiveSupport::TestCase
 
     # Verify accounts were created correctly
     accounts = @import.accounts.order(:name)
-    assert_equal [ "Main Checking", "Savings Account" ], accounts.pluck(:name)
-    assert_equal [ 1000.00, 5000.00 ], accounts.map { |a| a.balance.to_f }
+    assert_equal ["Main Checking", "Savings Account"], accounts.pluck(:name)
+    assert_equal [1000.00, 5000.00], accounts.map { |a| a.balance.to_f }
 
     # Verify valuations were created with correct fields
     accounts.each do |account|
@@ -72,7 +72,7 @@ class AccountImportTest < ActiveSupport::TestCase
   end
 
   test "mapping_steps returns account type mapping" do
-    assert_equal [ Import::AccountTypeMapping ], @import.mapping_steps
+    assert_equal [Import::AccountTypeMapping], @import.mapping_steps
   end
 
   test "dry_run returns expected counts" do

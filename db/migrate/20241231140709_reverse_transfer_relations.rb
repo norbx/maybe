@@ -6,7 +6,7 @@ class ReverseTransferRelations < ActiveRecord::Migration[7.2]
       t.string :status, null: false, default: "pending"
       t.text :notes
 
-      t.index [ :inflow_transaction_id, :outflow_transaction_id ], unique: true
+      t.index [:inflow_transaction_id, :outflow_transaction_id], unique: true
       t.timestamps
     end
 

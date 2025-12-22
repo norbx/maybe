@@ -116,7 +116,7 @@ class Api::V1::ChatsControllerTest < ActionDispatch::IntegrationTest
     plain_key = ApiKey.generate_secure_key
     api_key = @user.api_keys.build(
       name: "Test API Key",
-      scopes: [ "read_write" ]
+      scopes: ["read_write"]
     )
     api_key.key = plain_key
     api_key.save!

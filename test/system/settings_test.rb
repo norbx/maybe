@@ -5,15 +5,15 @@ class SettingsTest < ApplicationSystemTestCase
     sign_in @user = users(:family_admin)
 
     @settings_links = [
-      [ "Account", settings_profile_path ],
-      [ "Preferences", settings_preferences_path ],
-      [ "Accounts", accounts_path ],
-      [ "Tags", tags_path ],
-      [ "Categories", categories_path ],
-      [ "Merchants", family_merchants_path ],
-      [ "Imports", imports_path ],
-      [ "What's new", changelog_path ],
-      [ "Feedback", feedback_path ]
+      ["Account", settings_profile_path],
+      ["Preferences", settings_preferences_path],
+      ["Accounts", accounts_path],
+      ["Tags", tags_path],
+      ["Categories", categories_path],
+      ["Merchants", family_merchants_path],
+      ["Imports", imports_path],
+      ["What's new", changelog_path],
+      ["Feedback", feedback_path]
     ]
   end
 

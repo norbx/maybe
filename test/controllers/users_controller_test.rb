@@ -75,7 +75,7 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to root_url
 
     assert_not User.find(@member.id).active?
-    assert_enqueued_with(job: UserPurgeJob, args: [ @member ])
+    assert_enqueued_with(job: UserPurgeJob, args: [@member])
   end
 
   test "admin prevented from deactivating when other users are present" do
@@ -96,6 +96,6 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
 
     assert_redirected_to root_url
     assert_not User.find(@admin.id).active?
-    assert_enqueued_with(job: UserPurgeJob, args: [ @admin ])
+    assert_enqueued_with(job: UserPurgeJob, args: [@admin])
   end
 end

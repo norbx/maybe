@@ -9,7 +9,7 @@ class ApiKeyTest < ActiveSupport::TestCase
       user: @user,
       name: "Test API Key",
       key: "test_plain_key_123",
-      scopes: [ "read_write" ]
+      scopes: ["read_write"]
     )
   end
 
@@ -142,7 +142,7 @@ class ApiKeyTest < ActiveSupport::TestCase
       user: @user,
       name: "Second API Key",
       key: "another_key_123",
-      scopes: [ "read" ]
+      scopes: ["read"]
     )
 
     assert_not second_key.valid?
@@ -157,7 +157,7 @@ class ApiKeyTest < ActiveSupport::TestCase
       user: @user,
       name: "Second API Key",
       key: "another_key_123",
-      scopes: [ "read" ]
+      scopes: ["read"]
     )
 
     assert second_key.valid?
@@ -194,13 +194,13 @@ class ApiKeyTest < ActiveSupport::TestCase
   end
 
   test "should not allow multiple scopes" do
-    @api_key.scopes = [ "read", "read_write" ]
+    @api_key.scopes = ["read", "read_write"]
     assert_not @api_key.valid?
     assert_includes @api_key.errors[:scopes], "can only have one permission level"
   end
 
   test "should validate scope values" do
-    @api_key.scopes = [ "invalid_scope" ]
+    @api_key.scopes = ["invalid_scope"]
     assert_not @api_key.valid?
     assert_includes @api_key.errors[:scopes], "must be either 'read' or 'read_write'"
   end

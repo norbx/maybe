@@ -108,7 +108,7 @@ class DS::Buttonish < DesignSystemComponent
   end
 
   def icon_only?
-    variant.in?([ :icon, :icon_inverse ])
+    variant.in?([:icon, :icon_inverse])
   end
 
   private
@@ -147,10 +147,10 @@ class DS::Buttonish < DesignSystemComponent
     end
 
     def permitted_radius_override_classes
-      [ "rounded-full" ]
+      ["rounded-full"]
     end
 
     def permitted_display_override_classes
-      [ "hidden", "flex" ]
+      ["hidden", "flex"]
     end
 end

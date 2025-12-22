@@ -33,7 +33,7 @@ class Rule::ActionTest < ActiveSupport::TestCase
 
     assert_nil @txn1.reload.category
 
-    [ @txn2, @txn3 ].each do |transaction|
+    [@txn2, @txn3].each do |transaction|
       assert_equal @grocery_category.id, transaction.reload.category_id
     end
   end
@@ -54,8 +54,8 @@ class Rule::ActionTest < ActiveSupport::TestCase
 
     assert_equal [], @txn1.reload.tags
 
-    [ @txn2, @txn3 ].each do |transaction|
-      assert_equal [ tag ], transaction.reload.tags
+    [@txn2, @txn3].each do |transaction|
+      assert_equal [tag], transaction.reload.tags
     end
   end
 
@@ -75,7 +75,7 @@ class Rule::ActionTest < ActiveSupport::TestCase
 
     assert_not_equal merchant.id, @txn1.reload.merchant_id
 
-    [ @txn2, @txn3 ].each do |transaction|
+    [@txn2, @txn3].each do |transaction|
       assert_equal merchant.id, transaction.reload.merchant_id
     end
   end
@@ -96,7 +96,7 @@ class Rule::ActionTest < ActiveSupport::TestCase
 
     assert_not_equal new_name, @txn1.reload.entry.name
 
-    [ @txn2, @txn3 ].each do |transaction|
+    [@txn2, @txn3].each do |transaction|
       assert_equal new_name, transaction.reload.entry.name
     end
   end

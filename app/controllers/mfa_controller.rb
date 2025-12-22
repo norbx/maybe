@@ -1,6 +1,6 @@
 class MfaController < ApplicationController
   layout :determine_layout
-  skip_authentication only: [ :verify, :verify_code ]
+  skip_authentication only: [:verify, :verify_code]
 
   def new
     redirect_to root_path if Current.user.otp_required?

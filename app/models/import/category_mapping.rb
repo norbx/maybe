@@ -9,10 +9,10 @@ class Import::CategoryMapping < Import::Mapping
   end
 
   def selectable_values
-    family_categories = import.family.categories.alphabetically.map { |category| [ category.name, category.id ] }
+    family_categories = import.family.categories.alphabetically.map { |category| [category.name, category.id] }
 
     unless key.blank?
-      family_categories.unshift [ "Add as new category", CREATE_NEW_KEY ]
+      family_categories.unshift ["Add as new category", CREATE_NEW_KEY]
     end
 
     family_categories

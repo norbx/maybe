@@ -11,11 +11,11 @@ class Entry < ApplicationRecord
   accepts_nested_attributes_for :entryable
 
   validates :date, :name, :amount, :currency, presence: true
-  validates :date, uniqueness: { scope: [ :account_id, :entryable_type ] }, if: -> { valuation? }
+  validates :date, uniqueness: { scope: [:account_id, :entryable_type] }, if: -> { valuation? }
   validates :date, comparison: { greater_than: -> { min_supported_date } }
 
   scope :visible, -> {
-    joins(:account).where(accounts: { status: [ "draft", "active" ] })
+    joins(:account).where(accounts: { status: ["draft", "active"] })
   }
 
   scope :chronological, -> {
@@ -44,7 +44,7 @@ class Entry < ApplicationRecord
   end
 
   def sync_account_later
-    sync_start_date = [ date_previously_was, date ].compact.min unless destroyed?
+    sync_start_date = [date_previously_was, date].compact.min unless destroyed?
     account.sync_later(window_start_date: sync_start_date)
   end
 

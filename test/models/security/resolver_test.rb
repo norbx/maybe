@@ -25,7 +25,7 @@ class Security::ResolverTest < ActiveSupport::TestCase
 
     Security.expects(:search_provider)
             .with("NVDA", exchange_operating_mic: "XNAS", country_code: "US")
-            .returns([ near_miss, exact_match ])
+            .returns([near_miss, exact_match])
 
     assert_difference "Security.count", 1 do
       resolved = Security::Resolver.new("NVDA", exchange_operating_mic: "XNAS", country_code: "US").resolve
@@ -46,7 +46,7 @@ class Security::ResolverTest < ActiveSupport::TestCase
     # Return in reverse-priority order to prove the sorter works
     Security.expects(:search_provider)
             .with("TEST", exchange_operating_mic: "XNAS")
-            .returns([ other, preferred ])
+            .returns([other, preferred])
 
     assert_difference "Security.count", 1 do
       resolved = Security::Resolver.new("TEST", exchange_operating_mic: "XNAS").resolve

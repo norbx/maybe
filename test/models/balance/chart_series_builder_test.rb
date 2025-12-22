@@ -16,7 +16,7 @@ class Balance::ChartSeriesBuilderTest < ActiveSupport::TestCase
     create_balance(account: account, date: Date.current, balance: 1200)
 
     builder = Balance::ChartSeriesBuilder.new(
-      account_ids: [ account.id ],
+      account_ids: [account.id],
       currency: "USD",
       period: Period.last_30_days,
       interval: "1 day"
@@ -45,7 +45,7 @@ class Balance::ChartSeriesBuilderTest < ActiveSupport::TestCase
     create_balance(account: account, date: Date.current, balance: 1200)
 
     builder = Balance::ChartSeriesBuilder.new(
-      account_ids: [ account.id ],
+      account_ids: [account.id],
       currency: "EUR", # Will need to convert existing balances to EUR
       period: Period.custom(start_date: 2.days.ago.to_date, end_date: Date.current),
       interval: "1 day"
@@ -79,7 +79,7 @@ class Balance::ChartSeriesBuilderTest < ActiveSupport::TestCase
     create_balance(account: liability_account, date: Date.current, balance: 100)
 
     builder = Balance::ChartSeriesBuilder.new(
-      account_ids: [ asset_account.id, liability_account.id ],
+      account_ids: [asset_account.id, liability_account.id],
       currency: "USD",
       period: Period.custom(start_date: 4.days.ago.to_date, end_date: Date.current),
       interval: "1 day"
@@ -104,26 +104,26 @@ class Balance::ChartSeriesBuilderTest < ActiveSupport::TestCase
     create_balance(account: account, date: Date.current, balance: 500)
 
     builder = Balance::ChartSeriesBuilder.new(
-      account_ids: [ account.id ],
+      account_ids: [account.id],
       currency: "USD",
       period: Period.custom(start_date: 1.day.ago.to_date, end_date: Date.current),
       favorable_direction: "up"
     )
 
     # Since favorable direction is up and balances are liabilities, the values should be negative
-    expected = [ -1000, -500 ]
+    expected = [-1000, -500]
 
     assert_equal expected, builder.balance_series.map { |v| v.value.amount }
 
     builder = Balance::ChartSeriesBuilder.new(
-      account_ids: [ account.id ],
+      account_ids: [account.id],
       currency: "USD",
       period: Period.custom(start_date: 1.day.ago.to_date, end_date: Date.current),
       favorable_direction: "down"
     )
 
     # Since favorable direction is down and balances are liabilities, the values should be positive
-    expected = [ 1000, 500 ]
+    expected = [1000, 500]
 
     assert_equal expected, builder.balance_series.map { |v| v.value.amount }
   end

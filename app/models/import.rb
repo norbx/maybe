@@ -3,7 +3,7 @@ class Import < ApplicationRecord
 
   TYPES = %w[TransactionImport TradeImport AccountImport MintImport].freeze
   SIGNAGE_CONVENTIONS = %w[inflows_positive inflows_negative]
-  SEPARATORS = [ [ "Comma (,)", "," ], [ "Semicolon (;)", ";" ] ].freeze
+  SEPARATORS = [["Comma (,)", ","], ["Semicolon (;)", ";"]].freeze
 
   NUMBER_FORMATS = {
     "1,234.56" => { separator: ".", delimiter: "," },  # US/UK/Asia
@@ -47,7 +47,7 @@ class Import < ApplicationRecord
         (csv_str || "").strip,
         headers: true,
         col_sep: col_sep,
-        converters: [ ->(str) { str&.strip } ],
+        converters: [->(str) { str&.strip }],
         liberal_parsing: true
       )
     end

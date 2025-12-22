@@ -11,7 +11,7 @@ class PlaidItem::ImporterTest < ActiveSupport::TestCase
   test "imports item metadata" do
     item_data = OpenStruct.new(
       item_id: "item_1",
-      available_products: [ "transactions", "investments", "liabilities" ],
+      available_products: ["transactions", "investments", "liabilities"],
       billed_products: [],
       institution_id: "ins_1",
       institution_name: "First Platypus Bank",

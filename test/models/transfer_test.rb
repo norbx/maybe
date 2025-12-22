@@ -9,7 +9,7 @@ class TransferTest < ActiveSupport::TestCase
   end
 
   test "transfer destroyed if either transaction is destroyed" do
-    assert_difference [ "Transfer.count", "Transaction.count", "Entry.count" ], -1 do
+    assert_difference ["Transfer.count", "Transaction.count", "Entry.count"], -1 do
       @outflow.entry.destroy
     end
   end

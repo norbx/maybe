@@ -24,7 +24,7 @@ class Family::AutoMerchantDetectorTest < ActiveSupport::TestCase
     @llm_provider.expects(:auto_detect_merchants).returns(provider_response).once
 
     assert_difference "DataEnrichment.count", 2 do
-      Family::AutoMerchantDetector.new(@family, transaction_ids: [ txn1.id, txn2.id, txn3.id ]).auto_detect
+      Family::AutoMerchantDetector.new(@family, transaction_ids: [txn1.id, txn2.id, txn3.id]).auto_detect
     end
 
     assert_equal "McDonalds", txn1.reload.merchant.name

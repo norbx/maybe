@@ -9,6 +9,6 @@ class CreateAccountBalances < ActiveRecord::Migration[7.2]
       t.timestamps
     end
 
-    add_index :account_balances, [ :account_id, :date ], unique: true
+    add_index :account_balances, [:account_id, :date], unique: true
   end
 end
