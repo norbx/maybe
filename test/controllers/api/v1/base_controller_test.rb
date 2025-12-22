@@ -24,12 +24,12 @@ class Api::V1::BaseControllerTest < ActionDispatch::IntegrationTest
     )
 
     # Clear any existing rate limit data
-    Redis.new.del("api_rate_limit:#{@api_key.id}")
+    ApiRateLimitBucket.where(api_key: @api_key).delete_all
   end
 
   teardown do
-    # Clean up Redis data after each test
-    Redis.new.del("api_rate_limit:#{@api_key.id}")
+    # Clean up rate limit data after each test
+    ApiRateLimitBucket.where(api_key: @api_key).delete_all
   end
 
   test "should require authentication" do
@@ -420,7 +420,7 @@ class Api::V1::BaseControllerTest < ActionDispatch::IntegrationTest
       assert_response :success
       assert_equal "99", response.headers["X-RateLimit-Remaining"]
     ensure
-      Redis.new.del("api_rate_limit:#{other_api_key.id}")
+      ApiRateLimitBucket.where(api_key: other_api_key).delete_all
       other_api_key.destroy
     end
   end

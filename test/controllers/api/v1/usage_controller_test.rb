@@ -14,12 +14,12 @@ class Api::V1::UsageControllerTest < ActionDispatch::IntegrationTest
     )
 
     # Clear any existing rate limit data
-    Redis.new.del("api_rate_limit:#{@api_key.id}")
+    ApiRateLimitBucket.where(api_key: @api_key).delete_all
   end
 
   teardown do
-    # Clean up Redis data after each test
-    Redis.new.del("api_rate_limit:#{@api_key.id}")
+    # Clean up rate limit data after each test
+    ApiRateLimitBucket.where(api_key: @api_key).delete_all
   end
 
   test "should return usage information for API key authentication" do
@@ -68,7 +68,7 @@ class Api::V1::UsageControllerTest < ActionDispatch::IntegrationTest
       response_body = JSON.parse(response.body)
       assert_equal "insufficient_scope", response_body["error"]
     ensure
-      Redis.new.del("api_rate_limit:#{api_key_no_read.id}")
+      ApiRateLimitBucket.where(api_key: api_key_no_read).delete_all
       api_key_no_read.destroy
     end
   end

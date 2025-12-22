@@ -10,7 +10,6 @@ class ApiRateLimiter
 
   def initialize(api_key)
     @api_key = api_key
-    @redis = Redis.new
   end
 
   # Check if the API key has exceeded its rate limit
@@ -20,25 +19,32 @@ class ApiRateLimiter
 
   # Increment the request count for this API key
   def increment_request_count!
-    key = redis_key
-    current_time = Time.current.to_i
-    window_start = (current_time / 3600) * 3600 # Hourly window
+    window_start = current_window_start
+    expires_at = 2.hours.from_now
 
-    @redis.multi do |transaction|
-      # Use a sliding window with hourly buckets
-      transaction.hincrby(key, window_start.to_s, 1)
-      transaction.expire(key, 7200) # Keep data for 2 hours to handle sliding window
+    # Find or create the bucket for this hour window
+    bucket = ApiRateLimitBucket.find_or_create_by!(
+      api_key_id: @api_key.id,
+      window_start: window_start
+    ) do |b|
+      b.expires_at = expires_at
+      b.request_count = 0
     end
+
+    # Atomically increment the request count
+    bucket.increment!(:request_count)
   end
 
   # Get current request count within the current hour
   def current_count
-    key = redis_key
-    current_time = Time.current.to_i
-    window_start = (current_time / 3600) * 3600
+    window_start = current_window_start
 
-    count = @redis.hget(key, window_start.to_s)
-    count.to_i
+    bucket = ApiRateLimitBucket.find_by(
+      api_key_id: @api_key.id,
+      window_start: window_start
+    )
+
+    bucket&.request_count || 0
   end
 
   # Get the rate limit for this API key's tier
@@ -82,8 +88,8 @@ class ApiRateLimiter
 
   private
 
-    def redis_key
-      "api_rate_limit:#{@api_key.id}"
+    def current_window_start
+      (Time.current.to_i / 3600) * 3600
     end
 
     def determine_tier

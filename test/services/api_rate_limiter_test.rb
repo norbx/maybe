@@ -14,13 +14,13 @@ class ApiRateLimiterTest < ActiveSupport::TestCase
     )
     @rate_limiter = ApiRateLimiter.new(@api_key)
 
-    # Clear any existing rate limit data
-    Redis.new.del("api_rate_limit:#{@api_key.id}")
+    # Clear any existing rate limit buckets
+    ApiRateLimitBucket.where(api_key: @api_key).delete_all
   end
 
   teardown do
-    # Clean up Redis data after each test
-    Redis.new.del("api_rate_limit:#{@api_key.id}")
+    # Clean up rate limit buckets after each test
+    ApiRateLimitBucket.where(api_key: @api_key).delete_all
   end
 
   test "should have default rate limit" do
@@ -117,7 +117,7 @@ class ApiRateLimiterTest < ActiveSupport::TestCase
     assert_equal 1, @rate_limiter.current_count
     assert_equal 2, other_rate_limiter.current_count
   ensure
-    Redis.new.del("api_rate_limit:#{other_api_key.id}")
+    ApiRateLimitBucket.where(api_key: other_api_key).delete_all
     other_api_key.destroy
   end
 
