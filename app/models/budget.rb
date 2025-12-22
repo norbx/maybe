@@ -52,7 +52,7 @@ class Budget < ApplicationRecord
         # Allow going back to either the earliest entry date OR 2 years ago, whichever is earlier
         two_years_ago = 2.years.ago.beginning_of_month
         oldest_entry_date = family.oldest_entry_date.beginning_of_month
-        [ two_years_ago, oldest_entry_date ].min
+        [two_years_ago, oldest_entry_date].min
       end
   end
 
@@ -85,7 +85,7 @@ class Budget < ApplicationRecord
 
   def uncategorized_budget_category
     budget_categories.uncategorized.tap do |bc|
-      bc.budgeted_spending = [ available_to_allocate, 0 ].max
+      bc.budgeted_spending = [available_to_allocate, 0].max
       bc.currency = family.currency
     end
   end
@@ -134,7 +134,7 @@ class Budget < ApplicationRecord
     unused_segment_id = "unused"
 
     # Continuous gray segment for empty budgets
-    return [ { color: "var(--budget-unallocated-fill)", amount: 1, id: unused_segment_id } ] unless allocations_valid?
+    return [{ color: "var(--budget-unallocated-fill)", amount: 1, id: unused_segment_id }] unless allocations_valid?
 
     segments = budget_categories.map do |bc|
       { color: bc.category.color, amount: budget_category_actual_spending(bc), id: bc.id }

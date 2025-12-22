@@ -1,5 +1,5 @@
 class StyledFormBuilder < ActionView::Helpers::FormBuilder
-  class_attribute :text_field_helpers, default: field_helpers - [ :label, :check_box, :radio_button, :fields_for, :fields, :hidden_field, :file_field ]
+  class_attribute :text_field_helpers, default: field_helpers - [:label, :check_box, :radio_button, :fields_for, :fields, :hidden_field, :file_field]
 
   text_field_helpers.each do |selector|
     class_eval <<-RUBY_EVAL, __FILE__, __LINE__ + 1
@@ -84,7 +84,7 @@ class StyledFormBuilder < ActionView::Helpers::FormBuilder
       label_element = build_label(method, options)
       field_element = yield({ class: "form-field__input" }.merge(html_options))
 
-      container_classes = [ "form-field", options[:container_class] ].compact
+      container_classes = ["form-field", options[:container_class]].compact
 
       @template.tag.div class: container_classes do
         if options[:label_tooltip]

@@ -60,7 +60,7 @@ namespace :securities do
   end
 
   desc "De-duplicate securities based on ticker + exchange_operating_mic"
-  task :deduplicate, [ :dry_run ] => :environment do |_t, args|
+  task :deduplicate, [:dry_run] => :environment do |_t, args|
     dry_run = args[:dry_run].present?
     puts "Starting securities de-duplication... #{dry_run ? '(DRY RUN)' : ''}"
 

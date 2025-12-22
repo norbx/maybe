@@ -31,7 +31,7 @@ class PlaidAccount::Investments::TransactionsProcessorTest < ActiveSupport::Test
 
     processor = PlaidAccount::Investments::TransactionsProcessor.new(@plaid_account, security_resolver: @security_resolver)
 
-    assert_difference [ "Entry.count", "Trade.count" ], 1 do
+    assert_difference ["Entry.count", "Trade.count"], 1 do
       processor.process
     end
 
@@ -64,7 +64,7 @@ class PlaidAccount::Investments::TransactionsProcessorTest < ActiveSupport::Test
 
     processor = PlaidAccount::Investments::TransactionsProcessor.new(@plaid_account, security_resolver: @security_resolver)
 
-    assert_difference [ "Entry.count", "Transaction.count" ], 1 do
+    assert_difference ["Entry.count", "Transaction.count"], 1 do
       processor.process
     end
 
@@ -97,7 +97,7 @@ class PlaidAccount::Investments::TransactionsProcessorTest < ActiveSupport::Test
 
     processor = PlaidAccount::Investments::TransactionsProcessor.new(@plaid_account, security_resolver: @security_resolver)
 
-    assert_difference [ "Entry.count", "Transaction.count" ], 1 do
+    assert_difference ["Entry.count", "Transaction.count"], 1 do
       processor.process
     end
 
@@ -134,7 +134,7 @@ class PlaidAccount::Investments::TransactionsProcessorTest < ActiveSupport::Test
 
     processor = PlaidAccount::Investments::TransactionsProcessor.new(@plaid_account, security_resolver: @security_resolver)
 
-    assert_difference [ "Entry.count", "Trade.count" ], 1 do
+    assert_difference ["Entry.count", "Trade.count"], 1 do
       processor.process
     end
 
@@ -168,7 +168,7 @@ class PlaidAccount::Investments::TransactionsProcessorTest < ActiveSupport::Test
 
     processor = PlaidAccount::Investments::TransactionsProcessor.new(@plaid_account, security_resolver: @security_resolver)
 
-    assert_difference [ "Entry.count", "Transaction.count" ], 1 do
+    assert_difference ["Entry.count", "Transaction.count"], 1 do
       processor.process
     end
 

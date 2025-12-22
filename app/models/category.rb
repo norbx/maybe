@@ -69,26 +69,26 @@ class Category < ApplicationRecord
     end
 
     def as_options
-      select { _1.parent_id.present? }.map { |category| [ category.name, category.id ] }
+      select { _1.parent_id.present? }.map { |category| [category.name, category.id] }
     end
 
     private
       def default_categories
         [
-          [ "Income", "#e99537", "circle-dollar-sign", "income" ],
-          [ "Loan Payments", "#6471eb", "credit-card", "expense" ],
-          [ "Fees", "#6471eb", "credit-card", "expense" ],
-          [ "Entertainment", "#df4e92", "drama", "expense" ],
-          [ "Food & Drink", "#eb5429", "utensils", "expense" ],
-          [ "Shopping", "#e99537", "shopping-cart", "expense" ],
-          [ "Home Improvement", "#6471eb", "house", "expense" ],
-          [ "Healthcare", "#4da568", "pill", "expense" ],
-          [ "Personal Care", "#4da568", "pill", "expense" ],
-          [ "Services", "#4da568", "briefcase", "expense" ],
-          [ "Gifts & Donations", "#61c9ea", "hand-helping", "expense" ],
-          [ "Transportation", "#df4e92", "bus", "expense" ],
-          [ "Travel", "#df4e92", "plane", "expense" ],
-          [ "Rent & Utilities", "#db5a54", "lightbulb", "expense" ]
+          ["Income", "#e99537", "circle-dollar-sign", "income"],
+          ["Loan Payments", "#6471eb", "credit-card", "expense"],
+          ["Fees", "#6471eb", "credit-card", "expense"],
+          ["Entertainment", "#df4e92", "drama", "expense"],
+          ["Food & Drink", "#eb5429", "utensils", "expense"],
+          ["Shopping", "#e99537", "shopping-cart", "expense"],
+          ["Home Improvement", "#6471eb", "house", "expense"],
+          ["Healthcare", "#4da568", "pill", "expense"],
+          ["Personal Care", "#4da568", "pill", "expense"],
+          ["Services", "#4da568", "briefcase", "expense"],
+          ["Gifts & Donations", "#61c9ea", "hand-helping", "expense"],
+          ["Transportation", "#df4e92", "bus", "expense"],
+          ["Travel", "#df4e92", "plane", "expense"],
+          ["Rent & Utilities", "#db5a54", "lightbulb", "expense"]
         ]
       end
   end

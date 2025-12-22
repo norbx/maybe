@@ -9,7 +9,7 @@ class NoopApiRateLimiterTest < ActiveSupport::TestCase
     @api_key = ApiKey.create!(
       user: @user,
       name: "Noop Rate Limiter Test Key",
-      scopes: [ "read" ],
+      scopes: ["read"],
       display_key: "noop_rate_limiter_test_#{SecureRandom.hex(8)}"
     )
     @rate_limiter = NoopApiRateLimiter.new(@api_key)

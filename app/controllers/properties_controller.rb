@@ -1,7 +1,7 @@
 class PropertiesController < ApplicationController
   include AccountableResource, StreamExtensions
 
-  before_action :set_property, only: [ :balances, :address, :update_balances, :update_address ]
+  before_action :set_property, only: [:balances, :address, :update_balances, :update_address]
 
   def new
     @account = Current.family.accounts.build(accountable: Property.new)
@@ -84,12 +84,12 @@ class PropertiesController < ApplicationController
 
     def address_params
       params.require(:property)
-            .permit(address_attributes: [ :line1, :line2, :locality, :region, :country, :postal_code ])
+            .permit(address_attributes: [:line1, :line2, :locality, :region, :country, :postal_code])
     end
 
     def property_params
       params.require(:account)
-            .permit(:name, :subtype, :accountable_type, accountable_attributes: [ :id, :year_built, :area_unit, :area_value ])
+            .permit(:name, :subtype, :accountable_type, accountable_attributes: [:id, :year_built, :area_unit, :area_value])
     end
 
     def set_property

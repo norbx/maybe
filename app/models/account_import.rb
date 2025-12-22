@@ -29,7 +29,7 @@ class AccountImport < Import
   end
 
   def mapping_steps
-    [ Import::AccountTypeMapping ]
+    [Import::AccountTypeMapping]
   end
 
   def required_column_keys

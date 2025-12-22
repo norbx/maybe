@@ -44,7 +44,7 @@ class MintImport < Import
   end
 
   def mapping_steps
-    [ Import::CategoryMapping, Import::TagMapping, Import::AccountMapping ]
+    [Import::CategoryMapping, Import::TagMapping, Import::AccountMapping]
   end
 
   def required_column_keys

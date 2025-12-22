@@ -1,15 +1,15 @@
 class RulesController < ApplicationController
   include StreamExtensions
 
-  before_action :set_rule, only: [  :edit, :update, :destroy, :apply, :confirm ]
+  before_action :set_rule, only: [:edit, :update, :destroy, :apply, :confirm]
 
   def index
     @sort_by = params[:sort_by] || "name"
     @direction = params[:direction] || "asc"
 
-    allowed_columns = [ "name", "updated_at" ]
+    allowed_columns = ["name", "updated_at"]
     @sort_by = "name" unless allowed_columns.include?(@sort_by)
-    @direction = "asc" unless [ "asc", "desc" ].include?(@direction)
+    @direction = "asc" unless ["asc", "desc"].include?(@direction)
 
     @rules = Current.family.rules.order(@sort_by => @direction)
     render layout: "settings"
@@ -74,7 +74,7 @@ class RulesController < ApplicationController
         :resource_type, :effective_date, :active, :name,
         conditions_attributes: [
           :id, :condition_type, :operator, :value, :_destroy,
-          sub_conditions_attributes: [ :id, :condition_type, :operator, :value, :_destroy ]
+          sub_conditions_attributes: [:id, :condition_type, :operator, :value, :_destroy]
         ],
         actions_attributes: [
           :id, :action_type, :value, :_destroy

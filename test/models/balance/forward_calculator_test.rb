@@ -100,7 +100,7 @@ class Balance::ForwardCalculatorTest < ActiveSupport::TestCase
   end
 
   test "cash-only accounts (depository, credit card) use valuations where cash balance equals total balance" do
-    [ Depository, CreditCard ].each do |account_type|
+    [Depository, CreditCard].each do |account_type|
       account = create_account_with_ledger(
         account: { type: account_type, currency: "USD" },
         entries: [
@@ -134,7 +134,7 @@ class Balance::ForwardCalculatorTest < ActiveSupport::TestCase
   end
 
   test "non-cash accounts (property, loan) use valuations where cash balance is always zero" do
-    [ Property, Loan ].each do |account_type|
+    [Property, Loan].each do |account_type|
       account = create_account_with_ledger(
         account: { type: account_type, currency: "USD" },
         entries: [
@@ -436,7 +436,7 @@ class Balance::ForwardCalculatorTest < ActiveSupport::TestCase
   end
 
   test "non cash accounts can only use valuations and transactions will be recorded but ignored for balance calculation" do
-    [ Property, Vehicle, OtherAsset, OtherLiability ].each do |account_type|
+    [Property, Vehicle, OtherAsset, OtherLiability].each do |account_type|
       account = create_account_with_ledger(
         account: { type: account_type, currency: "USD" },
         entries: [
@@ -588,7 +588,7 @@ class Balance::ForwardCalculatorTest < ActiveSupport::TestCase
 
       # Extract actual values as [date, { balance:, cash_balance: }]
       actual_balances = sorted_data.map do |b|
-        [ b.date, { balance: b.balance, cash_balance: b.cash_balance } ]
+        [b.date, { balance: b.balance, cash_balance: b.cash_balance }]
       end
 
       assert_equal expected_balances, actual_balances

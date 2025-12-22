@@ -39,7 +39,7 @@ class AssistantTest < ActiveSupport::TestCase
     response_chunk = provider_response_chunk(
       id: "1",
       model: "gpt-4.1",
-      messages: [ provider_message(id: "1", text: text_chunks.join) ],
+      messages: [provider_message(id: "1", text: text_chunks.join)],
       function_requests: []
     )
 
@@ -89,7 +89,7 @@ class AssistantTest < ActiveSupport::TestCase
     call2_response_chunk = provider_response_chunk(
       id: "2",
       model: "gpt-4.1",
-      messages: [ provider_message(id: "1", text: call2_text_chunks.join) ],
+      messages: [provider_message(id: "1", text: call2_text_chunks.join)],
       function_requests: []
     )
 

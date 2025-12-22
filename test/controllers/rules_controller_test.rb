@@ -156,7 +156,7 @@ class RulesControllerTest < ActionDispatch::IntegrationTest
   test "can destroy rule" do
     rule = rules(:one)
 
-    assert_difference [ "Rule.count", "Rule::Condition.count", "Rule::Action.count" ], -1 do
+    assert_difference ["Rule.count", "Rule::Condition.count", "Rule::Action.count"], -1 do
       delete rule_url(rule)
     end
 

@@ -55,7 +55,7 @@ class Settings::ApiKeysTest < ApplicationSystemTestCase
       user: @user,
       name: "Production API Key",
       display_key: "test_plain_key_123",
-      scopes: [ "read_write" ]
+      scopes: ["read_write"]
     )
 
     visit settings_api_key_path
@@ -74,7 +74,7 @@ class Settings::ApiKeysTest < ApplicationSystemTestCase
       user: @user,
       name: "Test API Key",
       display_key: "test_key_123",
-      scopes: [ "read" ]
+      scopes: ["read"]
     )
 
     visit settings_api_key_path
@@ -89,7 +89,7 @@ class Settings::ApiKeysTest < ApplicationSystemTestCase
       user: @user,
       name: "Old API Key",
       display_key: "old_key_123",
-      scopes: [ "read" ]
+      scopes: ["read"]
     )
 
     visit settings_api_key_path
@@ -116,7 +116,7 @@ class Settings::ApiKeysTest < ApplicationSystemTestCase
       user: @user,
       name: "Test API Key",
       display_key: "test_key_123",
-      scopes: [ "read" ]
+      scopes: ["read"]
     )
 
     visit settings_api_key_path
@@ -146,7 +146,7 @@ class Settings::ApiKeysTest < ApplicationSystemTestCase
       user: @user,
       name: "Existing API Key",
       display_key: "existing_key_123",
-      scopes: [ "read" ]
+      scopes: ["read"]
     )
 
     visit new_settings_api_key_path
@@ -180,7 +180,7 @@ class Settings::ApiKeysTest < ApplicationSystemTestCase
       user: @user,
       name: "Used API Key",
       display_key: "used_key_123",
-      scopes: [ "read" ],
+      scopes: ["read"],
       last_used_at: 2.hours.ago
     )
 
@@ -195,7 +195,7 @@ class Settings::ApiKeysTest < ApplicationSystemTestCase
       user: @user,
       name: "Expiring API Key",
       display_key: "expiring_key_123",
-      scopes: [ "read" ],
+      scopes: ["read"],
       expires_at: 30.days.from_now
     )
 

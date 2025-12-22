@@ -79,9 +79,9 @@ class BudgetCategory < ApplicationRecord
     unused_segment_id = "unused"
     overage_segment_id = "overage"
 
-    return [ { color: "var(--budget-unallocated-fill)", amount: 1, id: unused_segment_id } ] unless actual_spending > 0
+    return [{ color: "var(--budget-unallocated-fill)", amount: 1, id: unused_segment_id }] unless actual_spending > 0
 
-    segments = [ { color: category.color, amount: actual_spending, id: id } ]
+    segments = [{ color: category.color, amount: actual_spending, id: id }]
 
     if available_to_spend.negative?
       segments.push({ color: "var(--color-destructive)", amount: available_to_spend.abs, id: overage_segment_id })
@@ -102,7 +102,7 @@ class BudgetCategory < ApplicationRecord
     parent_budget = budget.budget_categories.find { |bc| bc.category.id == category.parent_id }&.budgeted_spending
     siblings_budget = siblings.sum(&:budgeted_spending)
 
-    [ parent_budget - siblings_budget, 0 ].max
+    [parent_budget - siblings_budget, 0].max
   end
 
   def subcategories

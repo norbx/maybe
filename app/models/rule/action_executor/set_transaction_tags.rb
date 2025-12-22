@@ -19,7 +19,7 @@ class Rule::ActionExecutor::SetTransactionTags < Rule::ActionExecutor
     rows = scope.each do |txn|
       txn.enrich_attribute(
         :tag_ids,
-        [ tag.id ],
+        [tag.id],
         source: "rule"
       )
     end

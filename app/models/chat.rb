@@ -14,7 +14,7 @@ class Chat < ApplicationRecord
     def start!(prompt, model:)
       create!(
         title: generate_title(prompt),
-        messages: [ UserMessage.new(content: prompt, ai_model: model) ]
+        messages: [UserMessage.new(content: prompt, ai_model: model)]
       )
     end
 
@@ -69,7 +69,7 @@ class Chat < ApplicationRecord
     if debug_mode?
       messages
     else
-      messages.where(type: [ "UserMessage", "AssistantMessage" ])
+      messages.where(type: ["UserMessage", "AssistantMessage"])
     end
   end
 end

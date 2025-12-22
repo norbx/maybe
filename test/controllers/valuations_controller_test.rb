@@ -11,7 +11,7 @@ class ValuationsControllerTest < ActionDispatch::IntegrationTest
   test "can create reconciliation" do
     account = accounts(:investment)
 
-    assert_difference [ "Entry.count", "Valuation.count" ], 1 do
+    assert_difference ["Entry.count", "Valuation.count"], 1 do
       post valuations_url, params: {
         entry: {
           amount: account.balance + 100,
@@ -32,7 +32,7 @@ class ValuationsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "updates entry with basic attributes" do
-    assert_no_difference [ "Entry.count", "Valuation.count" ] do
+    assert_no_difference ["Entry.count", "Valuation.count"] do
       patch valuation_url(@entry), params: {
         entry: {
           amount: 22000,

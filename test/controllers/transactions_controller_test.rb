@@ -9,7 +9,7 @@ class TransactionsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "creates with transaction details" do
-    assert_difference [ "Entry.count", "Transaction.count" ], 1 do
+    assert_difference ["Entry.count", "Transaction.count"], 1 do
       post transactions_url, params: {
         entry: {
           account_id: @entry.account_id,
@@ -20,7 +20,7 @@ class TransactionsControllerTest < ActionDispatch::IntegrationTest
           nature: "inflow",
           entryable_type: @entry.entryable_type,
           entryable_attributes: {
-            tag_ids: [ Tag.first.id, Tag.second.id ],
+            tag_ids: [Tag.first.id, Tag.second.id],
             category_id: Category.first.id,
             merchant_id: Merchant.first.id
           }
@@ -36,7 +36,7 @@ class TransactionsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "updates with transaction details" do
-    assert_no_difference [ "Entry.count", "Transaction.count" ] do
+    assert_no_difference ["Entry.count", "Transaction.count"] do
       patch transaction_url(@entry), params: {
         entry: {
           name: "Updated name",
@@ -49,7 +49,7 @@ class TransactionsControllerTest < ActionDispatch::IntegrationTest
           excluded: false,
           entryable_attributes: {
             id: @entry.entryable_id,
-            tag_ids: [ Tag.first.id, Tag.second.id ],
+            tag_ids: [Tag.first.id, Tag.second.id],
             category_id: Category.first.id,
             merchant_id: Merchant.first.id
           }
@@ -63,7 +63,7 @@ class TransactionsControllerTest < ActionDispatch::IntegrationTest
     assert_equal Date.current, @entry.date
     assert_equal "USD", @entry.currency
     assert_equal -100, @entry.amount
-    assert_equal [ Tag.first.id, Tag.second.id ], @entry.entryable.tag_ids.sort
+    assert_equal [Tag.first.id, Tag.second.id], @entry.entryable.tag_ids.sort
     assert_equal Category.first.id, @entry.entryable.category_id
     assert_equal Merchant.first.id, @entry.entryable.merchant_id
     assert_equal "test notes", @entry.notes
@@ -137,7 +137,7 @@ class TransactionsControllerTest < ActionDispatch::IntegrationTest
   get transactions_url(page: 9999999, per_page: 10)
 
   # Either success (if Pagy shows last page) or redirect (if Pagy redirects)
-  assert_includes [ 200, 302 ], response.status, "Pagy should handle overflow gracefully"
+  assert_includes [200, 302], response.status, "Pagy should handle overflow gracefully"
 
   if response.status == 302
     follow_redirect!
@@ -177,17 +177,17 @@ end
 
     create_transaction(account: account, amount: 100, category: category)
 
-    search = Transaction::Search.new(family, filters: { "categories" => [ "Food" ], "types" => [ "expense" ] })
+    search = Transaction::Search.new(family, filters: { "categories" => ["Food"], "types" => ["expense"] })
     totals = OpenStruct.new(
       count: 1,
       expense_money: Money.new(10000, "USD"),
       income_money: Money.new(0, "USD")
     )
 
-    Transaction::Search.expects(:new).with(family, filters: { "categories" => [ "Food" ], "types" => [ "expense" ] }).returns(search)
+    Transaction::Search.expects(:new).with(family, filters: { "categories" => ["Food"], "types" => ["expense"] }).returns(search)
     search.expects(:totals).once.returns(totals)
 
-    get transactions_url(q: { categories: [ "Food" ], types: [ "expense" ] })
+    get transactions_url(q: { categories: ["Food"], types: ["expense"] })
     assert_response :success
   end
 end

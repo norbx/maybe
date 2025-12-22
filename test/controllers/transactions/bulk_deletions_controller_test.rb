@@ -10,7 +10,7 @@ class Transactions::BulkDeletionsControllerTest < ActionDispatch::IntegrationTes
     transactions = @user.family.entries.transactions
     delete_count = transactions.size
 
-    assert_difference([ "Transaction.count", "Entry.count" ], -delete_count) do
+    assert_difference(["Transaction.count", "Entry.count"], -delete_count) do
       post transactions_bulk_deletion_url, params: {
         bulk_delete: {
           entry_ids: transactions.pluck(:id)

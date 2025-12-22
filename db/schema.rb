@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_12_20_133412) do
+ActiveRecord::Schema[8.0].define(version: 2025_12_21_165551) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -105,6 +105,17 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_20_133412) do
     t.index ["revoked_at"], name: "index_api_keys_on_revoked_at"
     t.index ["user_id", "source"], name: "index_api_keys_on_user_id_and_source"
     t.index ["user_id"], name: "index_api_keys_on_user_id"
+  end
+
+  create_table "api_rate_limit_buckets", force: :cascade do |t|
+    t.uuid "api_key_id", null: false
+    t.bigint "window_start", null: false
+    t.integer "request_count", default: 0, null: false
+    t.datetime "expires_at", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["api_key_id", "window_start"], name: "index_rate_limit_buckets_on_api_key_and_window", unique: true
+    t.index ["expires_at"], name: "index_rate_limit_buckets_on_expires_at"
   end
 
   create_table "balances", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -682,6 +693,17 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_20_133412) do
     t.index ["created_at"], name: "index_solid_cable_messages_on_created_at"
   end
 
+  create_table "solid_cache_entries", force: :cascade do |t|
+    t.binary "key", null: false
+    t.binary "value", null: false
+    t.datetime "created_at", null: false
+    t.bigint "key_hash", null: false
+    t.integer "byte_size", null: false
+    t.index ["byte_size"], name: "index_solid_cache_entries_on_byte_size"
+    t.index ["key_hash", "byte_size"], name: "index_solid_cache_entries_on_key_hash_and_byte_size"
+    t.index ["key_hash"], name: "index_solid_cache_entries_on_key_hash", unique: true
+  end
+
   create_table "solid_queue_blocked_executions", force: :cascade do |t|
     t.bigint "job_id", null: false
     t.string "queue_name", null: false
@@ -961,6 +983,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_20_133412) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "api_keys", "users"
+  add_foreign_key "api_rate_limit_buckets", "api_keys"
   add_foreign_key "balances", "accounts", on_delete: :cascade
   add_foreign_key "budget_categories", "budgets"
   add_foreign_key "budget_categories", "categories"

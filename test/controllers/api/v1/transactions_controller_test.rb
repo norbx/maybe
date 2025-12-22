@@ -16,21 +16,21 @@ class Api::V1::TransactionsControllerTest < ActionDispatch::IntegrationTest
     @api_key = ApiKey.create!(
       user: @user,
       name: "Test Read-Write Key",
-      scopes: [ "read_write" ],
+      scopes: ["read_write"],
       display_key: "test_rw_#{SecureRandom.hex(8)}"
     )
 
     @read_only_api_key = ApiKey.create!(
       user: @user,
       name: "Test Read-Only Key",
-      scopes: [ "read" ],
+      scopes: ["read"],
       display_key: "test_ro_#{SecureRandom.hex(8)}",
       source: "mobile"  # Use different source to allow multiple keys
     )
 
     # Clear any existing rate limit data
-    Redis.new.del("api_rate_limit:#{@api_key.id}")
-    Redis.new.del("api_rate_limit:#{@read_only_api_key.id}")
+    ApiRateLimitBucket.where(api_key: @api_key).delete_all
+    ApiRateLimitBucket.where(api_key: @read_only_api_key).delete_all
   end
 
   # INDEX action tests

@@ -3,7 +3,7 @@
 class Settings::ApiKeysController < ApplicationController
   layout "settings"
 
-  before_action :set_api_key, only: [ :show, :destroy ]
+  before_action :set_api_key, only: [:show, :destroy]
 
   def show
     @current_api_key = @api_key
@@ -54,7 +54,7 @@ class Settings::ApiKeysController < ApplicationController
       # Convert single scope value to array for storage
       permitted_params = params.require(:api_key).permit(:name, :scopes)
       if permitted_params[:scopes].present?
-        permitted_params[:scopes] = [ permitted_params[:scopes] ]
+        permitted_params[:scopes] = [permitted_params[:scopes]]
       end
       permitted_params
     end

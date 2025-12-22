@@ -98,6 +98,6 @@ class TransactionImportTest < ActiveSupport::TestCase
       @import.publish
     end
 
-    assert_equal [ -100, 200, -300 ], @import.entries.map(&:amount)
+    assert_equal [-100, 200, -300], @import.entries.map(&:amount)
   end
 end

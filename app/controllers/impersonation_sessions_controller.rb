@@ -1,6 +1,6 @@
 class ImpersonationSessionsController < ApplicationController
-  before_action :require_super_admin!, only: [ :create, :join, :leave ]
-  before_action :set_impersonation_session, only: [ :approve, :reject, :complete ]
+  before_action :require_super_admin!, only: [:create, :join, :leave]
+  before_action :set_impersonation_session, only: [:approve, :reject, :complete]
 
   def create
     Current.true_user.request_impersonation_for(session_params[:impersonated_id])

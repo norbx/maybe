@@ -4,7 +4,7 @@ class Import::Mapping < ApplicationRecord
   belongs_to :import
   belongs_to :mappable, polymorphic: true, optional: true
 
-  validates :key, presence: true, uniqueness: { scope: [ :import_id, :type ] }, allow_blank: true
+  validates :key, presence: true, uniqueness: { scope: [:import_id, :type] }, allow_blank: true
 
   scope :for_import, ->(import) { where(import: import) }
   scope :creational, -> { where(create_when_empty: true, mappable: nil) }

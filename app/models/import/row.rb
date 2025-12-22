@@ -12,7 +12,7 @@ class Import::Row < ApplicationRecord
 
   def tags_list
     if tags.blank?
-      [ "" ]
+      [""]
     else
       tags.split("|").map(&:strip)
     end

@@ -2,15 +2,15 @@ class Family < ApplicationRecord
   include PlaidConnectable, Syncable, AutoTransferMatchable, Subscribeable
 
   DATE_FORMATS = [
-    [ "MM-DD-YYYY", "%m-%d-%Y" ],
-    [ "DD.MM.YYYY", "%d.%m.%Y" ],
-    [ "DD-MM-YYYY", "%d-%m-%Y" ],
-    [ "YYYY-MM-DD", "%Y-%m-%d" ],
-    [ "DD/MM/YYYY", "%d/%m/%Y" ],
-    [ "YYYY/MM/DD", "%Y/%m/%d" ],
-    [ "MM/DD/YYYY", "%m/%d/%Y" ],
-    [ "D/MM/YYYY", "%e/%m/%Y" ],
-    [ "YYYY.MM.DD", "%Y.%m.%d" ]
+    ["MM-DD-YYYY", "%m-%d-%Y"],
+    ["DD.MM.YYYY", "%d.%m.%Y"],
+    ["DD-MM-YYYY", "%d-%m-%Y"],
+    ["YYYY-MM-DD", "%Y-%m-%d"],
+    ["DD/MM/YYYY", "%d/%m/%Y"],
+    ["YYYY/MM/DD", "%Y/%m/%d"],
+    ["MM/DD/YYYY", "%m/%d/%Y"],
+    ["D/MM/YYYY", "%e/%m/%Y"],
+    ["YYYY.MM.DD", "%Y.%m.%d"]
   ].freeze
 
   has_many :users, dependent: :destroy

@@ -37,7 +37,7 @@ class Money::Currency
 
     def as_options
       all_instances.sort_by do |currency|
-        [ currency.priority, currency.name ]
+        [currency.priority, currency.name]
       end
     end
 

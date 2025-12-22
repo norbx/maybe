@@ -61,6 +61,6 @@ module Money::Arithmetic
   # Override Ruby's coerce method so the order of operands doesn't matter
   # Wrap in Coerced so we can distinguish between Money and other types
   def coerce(other)
-    [ self, CoercedNumeric.new(other) ]
+    [self, CoercedNumeric.new(other)]
   end
 end

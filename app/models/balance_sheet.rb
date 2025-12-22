@@ -26,11 +26,11 @@ class BalanceSheet
   end
 
   def classification_groups
-    [ assets, liabilities ]
+    [assets, liabilities]
   end
 
   def account_groups
-    [ assets.account_groups, liabilities.account_groups ].flatten
+    [assets.account_groups, liabilities.account_groups].flatten
   end
 
   def net_worth

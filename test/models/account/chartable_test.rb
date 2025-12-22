@@ -10,7 +10,7 @@ class Account::ChartableTest < ActiveSupport::TestCase
 
     Balance::ChartSeriesBuilder.expects(:new)
       .with(
-        account_ids: [ account.id ],
+        account_ids: [account.id],
         currency: account.currency,
         period: Period.last_30_days,
         favorable_direction: account.favorable_direction,
@@ -21,7 +21,7 @@ class Account::ChartableTest < ActiveSupport::TestCase
 
     Balance::ChartSeriesBuilder.expects(:new)
       .with(
-        account_ids: [ account.id ],
+        account_ids: [account.id],
         currency: account.currency,
         period: Period.last_90_days, # Period changed, so memoization should be invalidated
         favorable_direction: account.favorable_direction,

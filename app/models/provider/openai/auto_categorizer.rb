@@ -8,7 +8,7 @@ class Provider::Openai::AutoCategorizer
   def auto_categorize
     response = client.responses.create(parameters: {
       model: "gpt-4.1-mini",
-      input: [ { role: "developer", content: developer_message } ],
+      input: [{ role: "developer", content: developer_message }],
       text: {
         format: {
           type: "json_schema",
@@ -68,15 +68,15 @@ class Provider::Openai::AutoCategorizer
                 category_name: {
                   type: "string",
                   description: "The matched category name of the transaction, or null if no match",
-                  enum: [ *user_categories.map { |c| c[:name] }, "null" ]
+                  enum: [*user_categories.map { |c| c[:name] }, "null"]
                 }
               },
-              required: [ "transaction_id", "category_name" ],
+              required: ["transaction_id", "category_name"],
               additionalProperties: false
             }
           }
         },
-        required: [ "categorizations" ],
+        required: ["categorizations"],
         additionalProperties: false
       }
     end

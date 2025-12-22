@@ -18,7 +18,7 @@ class Assistant::Function::GetBalanceSheet < Assistant::Function
   end
 
   def call(params = {})
-    observation_start_date = [ 5.years.ago.to_date, family.oldest_entry_date ].max
+    observation_start_date = [5.years.ago.to_date, family.oldest_entry_date].max
 
     period = Period.custom(start_date: observation_start_date, end_date: Date.current)
 

@@ -10,10 +10,10 @@ class Import::TagMapping < Import::Mapping
   end
 
   def selectable_values
-    family_tags = import.family.tags.alphabetically.map { |tag| [ tag.name, tag.id ] }
+    family_tags = import.family.tags.alphabetically.map { |tag| [tag.name, tag.id] }
 
     unless key.blank?
-      family_tags.unshift [ "Add as new tag", CREATE_NEW_KEY ]
+      family_tags.unshift ["Add as new tag", CREATE_NEW_KEY]
     end
 
     family_tags

@@ -9,18 +9,18 @@ class ApiRateLimiterTest < ActiveSupport::TestCase
     @api_key = ApiKey.create!(
       user: @user,
       name: "Rate Limiter Test Key",
-      scopes: [ "read" ],
+      scopes: ["read"],
       display_key: "rate_limiter_test_#{SecureRandom.hex(8)}"
     )
     @rate_limiter = ApiRateLimiter.new(@api_key)
 
-    # Clear any existing rate limit data
-    Redis.new.del("api_rate_limit:#{@api_key.id}")
+    # Clear any existing rate limit buckets
+    ApiRateLimitBucket.where(api_key: @api_key).delete_all
   end
 
   teardown do
-    # Clean up Redis data after each test
-    Redis.new.del("api_rate_limit:#{@api_key.id}")
+    # Clean up rate limit buckets after each test
+    ApiRateLimitBucket.where(api_key: @api_key).delete_all
   end
 
   test "should have default rate limit" do
@@ -104,7 +104,7 @@ class ApiRateLimiterTest < ActiveSupport::TestCase
     other_api_key = ApiKey.create!(
       user: other_user,
       name: "Other API Key",
-      scopes: [ "read_write" ],
+      scopes: ["read_write"],
       display_key: "rate_limiter_other_#{SecureRandom.hex(8)}"
     )
 
@@ -117,7 +117,7 @@ class ApiRateLimiterTest < ActiveSupport::TestCase
     assert_equal 1, @rate_limiter.current_count
     assert_equal 2, other_rate_limiter.current_count
   ensure
-    Redis.new.del("api_rate_limit:#{other_api_key.id}")
+    ApiRateLimitBucket.where(api_key: other_api_key).delete_all
     other_api_key.destroy
   end
 

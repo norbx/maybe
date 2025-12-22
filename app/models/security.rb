@@ -29,7 +29,7 @@ class Security < ApplicationRecord
 
   def as_option
     compound_name = name.present? ? "#{name} (#{ticker})" : ticker
-    [ compound_name, id ]
+    [compound_name, id]
   end
 
   private

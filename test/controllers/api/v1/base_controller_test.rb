@@ -20,16 +20,16 @@ class Api::V1::BaseControllerTest < ActionDispatch::IntegrationTest
       user: @user,
       name: "Test API Key",
       display_key: @plain_api_key,
-      scopes: [ "read_write" ]
+      scopes: ["read_write"]
     )
 
     # Clear any existing rate limit data
-    Redis.new.del("api_rate_limit:#{@api_key.id}")
+    ApiRateLimitBucket.where(api_key: @api_key).delete_all
   end
 
   teardown do
-    # Clean up Redis data after each test
-    Redis.new.del("api_rate_limit:#{@api_key.id}")
+    # Clean up rate limit data after each test
+    ApiRateLimitBucket.where(api_key: @api_key).delete_all
   end
 
   test "should require authentication" do
@@ -178,7 +178,7 @@ class Api::V1::BaseControllerTest < ActionDispatch::IntegrationTest
       user: @user,
       name: "Limited API Key",
       display_key: "limited_key_#{SecureRandom.hex(8)}",
-      scopes: [ "read" ]  # Only read scope
+      scopes: ["read"]  # Only read scope
     )
 
     get "/api/v1/test_scope_required", params: {}, headers: {
@@ -213,7 +213,7 @@ class Api::V1::BaseControllerTest < ActionDispatch::IntegrationTest
       user: @user,
       name: "Read Only API Key",
       display_key: "read_only_key_#{SecureRandom.hex(8)}",
-      scopes: [ "read" ]  # Only read scope, no write
+      scopes: ["read"]  # Only read scope, no write
     )
 
     # Try to access the write-requiring endpoint with read-only key
@@ -312,7 +312,7 @@ class Api::V1::BaseControllerTest < ActionDispatch::IntegrationTest
       user: other_user,
       name: "Other User API Key",
       display_key: "other_user_key_#{SecureRandom.hex(8)}",
-      scopes: [ "read" ]
+      scopes: ["read"]
     )
 
     # Try to access data from a different family
@@ -404,7 +404,7 @@ class Api::V1::BaseControllerTest < ActionDispatch::IntegrationTest
     other_api_key = ApiKey.create!(
       user: other_user,
       name: "Other Test API Key",
-      scopes: [ "read" ],
+      scopes: ["read"],
       display_key: "other_rate_test_#{SecureRandom.hex(8)}"
     )
 
@@ -420,7 +420,7 @@ class Api::V1::BaseControllerTest < ActionDispatch::IntegrationTest
       assert_response :success
       assert_equal "99", response.headers["X-RateLimit-Remaining"]
     ensure
-      Redis.new.del("api_rate_limit:#{other_api_key.id}")
+      ApiRateLimitBucket.where(api_key: other_api_key).delete_all
       other_api_key.destroy
     end
   end

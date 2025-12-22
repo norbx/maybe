@@ -16,7 +16,7 @@ class TransactionsTest < ApplicationSystemTestCase
     create_transaction("eight", 3.days.ago.to_date, 100)
     create_transaction("nine", 1.days.ago.to_date, 100)
     @uncategorized_transaction = create_transaction("ten", 1.days.ago.to_date, 100)
-    create_transaction("eleven", Date.current, 100, category: categories(:food_and_drink), tags: [ tags(:one) ], merchant: merchants(:amazon))
+    create_transaction("eleven", Date.current, 100, category: categories(:food_and_drink), tags: [tags(:one)], merchant: merchants(:amazon))
 
     @transactions = @user.family.entries
                          .transactions
@@ -227,7 +227,7 @@ class TransactionsTest < ApplicationSystemTestCase
     end
 
     def number_of_transactions_on_page
-      [ @user.family.entries.count, @page_size ].min
+      [@user.family.entries.count, @page_size].min
     end
 
     def all_transactions_checkbox

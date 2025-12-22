@@ -82,7 +82,7 @@ class TradeImport < Import
       # Avoids resolving the same security over and over again (resolver potentially makes network calls)
       @security_cache ||= {}
 
-      cache_key = [ ticker, exchange_operating_mic ].compact.join(":")
+      cache_key = [ticker, exchange_operating_mic].compact.join(":")
 
       security = @security_cache[cache_key]
 

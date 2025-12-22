@@ -39,7 +39,7 @@ class Family::DataExporter
 
     def generate_accounts_csv
       CSV.generate do |csv|
-        csv << [ "id", "name", "type", "subtype", "balance", "currency", "created_at" ]
+        csv << ["id", "name", "type", "subtype", "balance", "currency", "created_at"]
 
         # Only export accounts belonging to this family
         @family.accounts.includes(:accountable).find_each do |account|
@@ -58,7 +58,7 @@ class Family::DataExporter
 
     def generate_transactions_csv
       CSV.generate do |csv|
-        csv << [ "date", "account_name", "amount", "name", "category", "tags", "notes", "currency" ]
+        csv << ["date", "account_name", "amount", "name", "category", "tags", "notes", "currency"]
 
         # Only export transactions from accounts belonging to this family
         @family.transactions
@@ -80,7 +80,7 @@ class Family::DataExporter
 
     def generate_trades_csv
       CSV.generate do |csv|
-        csv << [ "date", "account_name", "ticker", "quantity", "price", "amount", "currency" ]
+        csv << ["date", "account_name", "ticker", "quantity", "price", "amount", "currency"]
 
         # Only export trades from accounts belonging to this family
         @family.trades
@@ -101,7 +101,7 @@ class Family::DataExporter
 
     def generate_categories_csv
       CSV.generate do |csv|
-        csv << [ "name", "color", "parent_category", "classification" ]
+        csv << ["name", "color", "parent_category", "classification"]
 
         # Only export categories belonging to this family
         @family.categories.includes(:parent).find_each do |category|

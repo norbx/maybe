@@ -31,10 +31,10 @@ class Holding::ForwardCalculatorTest < ActiveSupport::TestCase
       Security::Price.create!(security: voo, date: "2025-01-04", price: 500)
       create_trade(voo, qty: 10, date: "2025-01-03", price: 500, account: @account)
 
-      expected = [ [ "2025-01-02", 0 ], [ "2025-01-03", 5000 ], [ "2025-01-04", 5000 ] ]
+      expected = [["2025-01-02", 0], ["2025-01-03", 5000], ["2025-01-04", 5000]]
       calculated = Holding::ForwardCalculator.new(@account).calculate
 
-      assert_equal expected, calculated.map { |b| [ b.date.to_s, b.amount ] }
+      assert_equal expected, calculated.map { |b| [b.date.to_s, b.amount] }
     end
   end
 

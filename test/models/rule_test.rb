@@ -17,8 +17,8 @@ class RuleTest < ActiveSupport::TestCase
       family: @family,
       resource_type: "transaction",
       effective_date: 1.day.ago.to_date,
-      conditions: [ Rule::Condition.new(condition_type: "transaction_merchant", operator: "=", value: @whole_foods_merchant.id) ],
-      actions: [ Rule::Action.new(action_type: "set_transaction_category", value: @groceries_category.id) ]
+      conditions: [Rule::Condition.new(condition_type: "transaction_merchant", operator: "=", value: @whole_foods_merchant.id)],
+      actions: [Rule::Action.new(action_type: "set_transaction_category", value: @groceries_category.id)]
     )
 
     rule.apply
@@ -43,7 +43,7 @@ class RuleTest < ActiveSupport::TestCase
           Rule::Condition.new(condition_type: "transaction_amount", operator: ">", value: 60)
         ])
       ],
-      actions: [ Rule::Action.new(action_type: "set_transaction_category", value: @groceries_category.id) ]
+      actions: [Rule::Action.new(action_type: "set_transaction_category", value: @groceries_category.id)]
     )
 
     rule.apply
@@ -61,7 +61,7 @@ class RuleTest < ActiveSupport::TestCase
     rule = Rule.new(
       family: @family,
       resource_type: "transaction",
-      actions: [ Rule::Action.new(action_type: "set_transaction_category", value: @groceries_category.id) ],
+      actions: [Rule::Action.new(action_type: "set_transaction_category", value: @groceries_category.id)],
       conditions: [
         Rule::Condition.new(condition_type: "compound", operator: "and", sub_conditions: [
           Rule::Condition.new(condition_type: "compound", operator: "and", sub_conditions: [
@@ -72,6 +72,6 @@ class RuleTest < ActiveSupport::TestCase
     )
 
     assert_not rule.valid?
-    assert_equal [ "Compound conditions cannot be nested" ], rule.errors.full_messages
+    assert_equal ["Compound conditions cannot be nested"], rule.errors.full_messages
   end
 end

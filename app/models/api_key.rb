@@ -5,7 +5,7 @@ class ApiKey < ApplicationRecord
   encrypts :display_key, deterministic: true
 
   # Constants
-  SOURCES = [ "web", "mobile" ].freeze
+  SOURCES = ["web", "mobile"].freeze
 
   # Validations
   validates :display_key, presence: true, uniqueness: true

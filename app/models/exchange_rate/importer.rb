@@ -72,7 +72,7 @@ class ExchangeRate::Importer
         upserted_ids = ExchangeRate.upsert_all(
           batch,
           unique_by: %i[from_currency to_currency date],
-          returning: [ "id" ]
+          returning: ["id"]
         )
 
         total_upsert_count += upserted_ids.count
@@ -151,6 +151,6 @@ class ExchangeRate::Importer
     # it to today so that upstream provider calls remain valid and predictable.
     def normalize_end_date(requested_end_date)
       today_est = Date.current.in_time_zone("America/New_York").to_date
-      [ requested_end_date, today_est ].min
+      [requested_end_date, today_est].min
     end
 end

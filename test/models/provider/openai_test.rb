@@ -73,7 +73,7 @@ class Provider::OpenaiTest < ActiveSupport::TestCase
 
       response = @subject.auto_detect_merchants(
         transactions: input_transactions,
-        user_merchants: [ { name: "Shooters" } ]
+        user_merchants: [{ name: "Shooters" }]
       )
 
       assert response.success?
@@ -181,10 +181,10 @@ class Provider::OpenaiTest < ActiveSupport::TestCase
       second_response = @subject.chat_response(
         prompt,
         model: @subject_model,
-        function_results: [ {
+        function_results: [{
           call_id: function_request.call_id,
           output: { amount: 10000, currency: "USD" }.to_json
-        } ],
+        }],
         previous_response_id: first_response.data.id
       )
 

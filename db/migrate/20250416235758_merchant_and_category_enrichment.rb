@@ -28,7 +28,7 @@ class MerchantAndCategoryEnrichment < ActiveRecord::Migration[7.2]
               .where(family_id: family_id, name: name)
               .order(:id)
               .pluck(:id)
-              .then { |arr| [ arr.first, arr.drop(1) ] }
+              .then { |arr| [arr.first, arr.drop(1)] }
 
             next if duplicate_ids.empty?
 
@@ -48,8 +48,8 @@ class MerchantAndCategoryEnrichment < ActiveRecord::Migration[7.2]
     add_column :merchants, :source, :string
     add_column :merchants, :provider_merchant_id, :string
 
-    add_index :merchants, [ :family_id, :name ], unique: true, where: "type = 'FamilyMerchant'"
-    add_index :merchants, [ :source, :name ], unique: true, where: "type = 'ProviderMerchant'"
+    add_index :merchants, [:family_id, :name], unique: true, where: "type = 'FamilyMerchant'"
+    add_index :merchants, [:source, :name], unique: true, where: "type = 'ProviderMerchant'"
 
     add_column :transactions, :plaid_category, :string
     add_column :transactions, :plaid_category_detailed, :string

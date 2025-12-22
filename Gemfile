@@ -7,7 +7,7 @@ gem "rails", "~> 8.0.0"
 
 # Drivers
 gem "pg", "~> 1.5"
-gem "redis", "~> 5.4"
+gem "solid_cache", "~> 1.0"
 
 # Deployment
 gem "puma", ">= 5.0"
@@ -43,7 +43,7 @@ gem "rack-mini-profiler"
 gem "sentry-ruby"
 gem "sentry-rails"
 gem "logtail-rails"
-gem "skylight", groups: [ :production ]
+gem "skylight", groups: [:production]
 
 # Active Storage
 gem "aws-sdk-s3", "~> 1.177.0", require: false
@@ -93,7 +93,7 @@ group :development, :test do
 end
 
 if ENV["BENCHMARKING_ENABLED"]
-  gem "dotenv-rails", groups: [ :production ]
+  gem "dotenv-rails", groups: [:production]
 end
 
 group :development do

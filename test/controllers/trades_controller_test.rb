@@ -9,7 +9,7 @@ class TradesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "updates trade entry" do
-    assert_no_difference [ "Entry.count", "Trade.count" ] do
+    assert_no_difference ["Entry.count", "Trade.count"] do
       patch trade_url(@entry), params: {
         entry: {
           currency: "USD",
@@ -94,7 +94,7 @@ class TradesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "creates interest entry" do
-    assert_difference [ "Entry.count", "Transaction.count" ], 1 do
+    assert_difference ["Entry.count", "Transaction.count"], 1 do
       post trades_url(account_id: @entry.account_id), params: {
         model: {
           type: "interest",
@@ -112,7 +112,7 @@ class TradesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "creates trade buy entry" do
-    assert_difference [ "Entry.count", "Trade.count", "Security.count" ], 1 do
+    assert_difference ["Entry.count", "Trade.count", "Security.count"], 1 do
       post trades_url(account_id: @entry.account_id), params: {
         model: {
           type: "buy",
@@ -135,7 +135,7 @@ class TradesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "creates trade sell entry" do
-    assert_difference [ "Entry.count", "Trade.count" ], 1 do
+    assert_difference ["Entry.count", "Trade.count"], 1 do
       post trades_url(account_id: @entry.account_id), params: {
         model: {
           type: "sell",

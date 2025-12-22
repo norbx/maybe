@@ -4,7 +4,7 @@ class Balance < ApplicationRecord
   belongs_to :account
 
   validates :account, :date, :balance, presence: true
-  validates :flows_factor, inclusion: { in: [ -1, 1 ] }
+  validates :flows_factor, inclusion: { in: [-1, 1] }
 
   monetize :balance, :cash_balance,
            :start_cash_balance, :start_non_cash_balance, :start_balance,
