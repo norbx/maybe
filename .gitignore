@@ -112,3 +112,6 @@ data/*
 
 # Cache data
 /db/schema_cache.yml
+
+# Devcontainer data
+/.devcontainer/devcontainer.env
