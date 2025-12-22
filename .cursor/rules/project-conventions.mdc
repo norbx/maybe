@@ -15,7 +15,7 @@ This rule serves as high-level documentation for how you should write code for t
   - Lucide Icons for icons
   - OpenAI for AI chat
 - Database: PostgreSQL
-- Jobs: SolidQueue + Redis
+- Jobs: SolidQueue
 - External
   - Payments: Stripe
   - User bank data syncing: Plaid

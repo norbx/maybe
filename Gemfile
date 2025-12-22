@@ -8,7 +8,6 @@ gem "rails", "~> 8.0.0"
 # Drivers
 gem "pg", "~> 1.5"
 gem "solid_cache", "~> 1.0"
-gem "redis", "~> 5.4"
 
 # Deployment
 gem "puma", ">= 5.0"
