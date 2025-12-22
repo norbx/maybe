@@ -29,8 +29,8 @@ class Api::V1::TransactionsControllerTest < ActionDispatch::IntegrationTest
     )
 
     # Clear any existing rate limit data
-    Redis.new.del("api_rate_limit:#{@api_key.id}")
-    Redis.new.del("api_rate_limit:#{@read_only_api_key.id}")
+    ApiRateLimitBucket.where(api_key: @api_key).delete_all
+    ApiRateLimitBucket.where(api_key: @read_only_api_key).delete_all
   end
 
   # INDEX action tests
