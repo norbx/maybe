@@ -100,4 +100,43 @@ class TransactionImportTest < ActiveSupport::TestCase
 
     assert_equal [-100, 200, -300], @import.entries.map(&:amount)
   end
+
+  test "imports transactions with specific bank data format" do
+    import = <<~CSV
+      This is some random text that my bank
+      puts before the actual transaction data.
+
+      There are often blank lines
+      # and the ones that start with some arbitrarty characters.
+
+      Also note that the data format differs and needs to be cleaned
+      before importing.
+
+      #Data operacji;#Opis operacji;#Rachunek;#Kategoria;#Kwota;
+      2025-12-28;"Żabka  ZAKUP PRZY UŻYCIU KARTY W KRAJU transakcja nierozliczona";"mKonto Intensive 6311 ... 0016";"Żywność i chemia domowa";-7,57 PLN;;
+      2025-12-27;"Trattoria Numero Uno  ZAKUP PRZY UŻYCIU KARTY W KRAJU transakcja nierozliczona";"mKonto Intensive 6311 ... 0016";"Jedzenie poza domem";-61,00 PLN;;
+    CSV
+
+    @import.update!(
+      account: accounts(:depository),
+      raw_file_str: import,
+      col_sep: ";",
+      date_col_label: "#Data operacji",
+      date_format: "%Y-%m-%d",
+      amount_col_label: "#Kwota",
+      name_col_label: "#Opis operacji",
+      category_col_label: "#Kategoria",
+    )
+
+    @import.generate_rows_from_csv
+
+    @import.reload
+
+    assert_difference -> { Entry.count } => 2,
+                      -> { Transaction.count } => 2 do
+      @import.publish
+    end
+
+    assert_equal [-100, -200], @import.entries.map(&:amount)
+  end
 end
