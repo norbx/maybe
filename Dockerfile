@@ -18,12 +18,13 @@ ENV RAILS_ENV="production" \
     BUNDLE_PATH="/usr/local/bundle" \
     BUNDLE_WITHOUT="development" \
     BUILD_COMMIT_SHA=${BUILD_COMMIT_SHA}
-    
+
 # Throw-away build stage to reduce size of final image
 FROM base AS build
 
 # Install packages needed to build gems
-RUN apt-get install --no-install-recommends -y build-essential libpq-dev git pkg-config libyaml-dev
+RUN apt-get update -qq && \
+    apt-get install --no-install-recommends -y build-essential libpq-dev git pkg-config libyaml-dev
 
 # Install application gems
 COPY .ruby-version Gemfile Gemfile.lock ./
