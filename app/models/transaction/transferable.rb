@@ -30,7 +30,7 @@ module Transaction::Transferable
   end
 
   private
-    def family_matches_scope
-      self.entry.account.family.transfer_match_candidates
-    end
+  def family_matches_scope
+    self.entry.account.family.transfer_match_candidates
+  end
 end

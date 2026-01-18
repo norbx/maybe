@@ -127,71 +127,71 @@ class Sync < ApplicationRecord
   end
 
   private
-    def log_status_change
-      Rails.logger.info("changing from #{aasm.from_state} to #{aasm.to_state} (event: #{aasm.current_event})")
-    end
+  def log_status_change
+    Rails.logger.info("changing from #{aasm.from_state} to #{aasm.to_state} (event: #{aasm.current_event})")
+  end
 
-    def has_failed_children?
-      children.failed.any?
-    end
+  def has_failed_children?
+    children.failed.any?
+  end
 
-    def all_children_finalized?
-      children.incomplete.empty?
-    end
+  def all_children_finalized?
+    children.incomplete.empty?
+  end
 
-    def perform_post_sync
-      Rails.logger.info("Performing post-sync for #{syncable_type} (#{syncable.id})")
-      syncable.perform_post_sync
-      syncable.broadcast_sync_complete
-    rescue => e
-      Rails.logger.error("Error performing post-sync for #{syncable_type} (#{syncable.id}): #{e.message}")
-      report_error(e)
-    end
+  def perform_post_sync
+    Rails.logger.info("Performing post-sync for #{syncable_type} (#{syncable.id})")
+    syncable.perform_post_sync
+    syncable.broadcast_sync_complete
+  rescue => e
+    Rails.logger.error("Error performing post-sync for #{syncable_type} (#{syncable.id}): #{e.message}")
+    report_error(e)
+  end
 
-    def report_error(error)
-      Sentry.capture_exception(error) do |scope|
-        scope.set_tags(sync_id: id)
-      end
+  def report_error(error)
+    Sentry.capture_exception(error) do |scope|
+      scope.set_tags(sync_id: id)
     end
+  end
 
-    def report_warnings
-      todays_sync_count = syncable.syncs.where(created_at: Date.current.all_day).count
+  def report_warnings
+    todays_sync_count = syncable.syncs.where(created_at: Date.current.all_day).count
 
-      if todays_sync_count > 10
-        Sentry.capture_exception(
-          Error.new("#{syncable_type} (#{syncable.id}) has exceeded 10 syncs today (count: #{todays_sync_count})"),
-          level: :warning
-        )
-      end
+    if todays_sync_count > 10
+      Sentry.capture_exception(
+        Error.new("#{syncable_type} (#{syncable.id}) has exceeded 10 syncs today (count: #{todays_sync_count})"),
+        level: :warning
+      )
     end
+  end
 
-    def handle_start_transition
-      report_warnings
-    end
+  def handle_start_transition
+    report_warnings
+  end
 
-    def handle_transition
-      log_status_change
-    end
+  def handle_transition
+    log_status_change
+  end
 
-    def handle_completion_transition
-      family.touch(:latest_sync_completed_at)
-    end
+  def handle_completion_transition
+    family.touch(:latest_sync_completed_at)
+  end
 
-    def window_valid
-      if window_start_date && window_end_date && window_start_date > window_end_date
-        errors.add(:window_end_date, "must be greater than window_start_date")
-      end
+  def window_valid
+    if window_start_date && window_end_date && window_start_date > window_end_date
+      errors.add(:window_end_date, "must be greater than window_start_date")
     end
+  end
 
-    def update_family_sync_timestamp
-      family.touch(:latest_sync_activity_at)
-    end
+  def update_family_sync_timestamp
+    family.touch(:latest_sync_activity_at)
+  end
 
-    def family
-      if syncable.is_a?(Family)
-        syncable
-      else
-        syncable.family
-      end
+  def family
+    if syncable.is_a?(Family)
+      syncable
+    else
+      syncable.family
     end
+  end
 end

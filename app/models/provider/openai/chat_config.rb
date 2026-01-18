@@ -32,5 +32,5 @@ class Provider::Openai::ChatConfig
   end
 
   private
-    attr_reader :functions, :function_results
+  attr_reader :functions, :function_results
 end

@@ -220,61 +220,61 @@ class Import < ApplicationRecord
   end
 
   private
-    def row_count_exceeded?
-      rows.count > max_row_count
-    end
+  def row_count_exceeded?
+    rows.count > max_row_count
+  end
 
-    def import!
-      # no-op, subclasses can implement for customization of algorithm
-    end
+  def import!
+    # no-op, subclasses can implement for customization of algorithm
+  end
 
-    def default_row_name
-      "Imported item"
-    end
+  def default_row_name
+    "Imported item"
+  end
 
-    def default_currency
-      family.currency
-    end
+  def default_currency
+    family.currency
+  end
 
-    def parsed_csv
-      @parsed_csv ||= self.class.parse_csv_str(raw_file_str, col_sep: col_sep)
-    end
+  def parsed_csv
+    @parsed_csv ||= self.class.parse_csv_str(raw_file_str, col_sep: col_sep)
+  end
 
-    def sanitize_number(value)
-      return "" if value.nil?
+  def sanitize_number(value)
+    return "" if value.nil?
 
-      format = NUMBER_FORMATS[number_format]
-      return "" unless format
+    format = NUMBER_FORMATS[number_format]
+    return "" unless format
 
-      # First, normalize spaces and remove any characters that aren't numbers, delimiters, separators, or minus signs
-      sanitized = value.to_s.strip
+    # First, normalize spaces and remove any characters that aren't numbers, delimiters, separators, or minus signs
+    sanitized = value.to_s.strip
 
-      # Handle French/Scandinavian format specially
-      if format[:delimiter] == " "
-        sanitized = sanitized.gsub(/\s+/, "") # Remove all spaces first
-      else
-        sanitized = sanitized.gsub(/[^\d#{Regexp.escape(format[:delimiter])}#{Regexp.escape(format[:separator])}\-]/, "")
+    # Handle French/Scandinavian format specially
+    if format[:delimiter] == " "
+      sanitized = sanitized.gsub(/\s+/, "") # Remove all spaces first
+    else
+      sanitized = sanitized.gsub(/[^\d#{Regexp.escape(format[:delimiter])}#{Regexp.escape(format[:separator])}\-]/, "")
 
-        # Replace delimiter with empty string
-        if format[:delimiter].present?
-          sanitized = sanitized.gsub(format[:delimiter], "")
-        end
+      # Replace delimiter with empty string
+      if format[:delimiter].present?
+        sanitized = sanitized.gsub(format[:delimiter], "")
       end
-
-      # Replace separator with period for proper float parsing
-      if format[:separator].present?
-        sanitized = sanitized.gsub(format[:separator], ".")
-      end
-
-      # Return empty string if not a valid number
-      unless sanitized =~ /\A-?\d+\.?\d*\z/
-        return ""
-      end
-
-      sanitized
     end
 
-    def set_default_number_format
-      self.number_format ||= "1,234.56" # Default to US/UK format
+    # Replace separator with period for proper float parsing
+    if format[:separator].present?
+      sanitized = sanitized.gsub(format[:separator], ".")
     end
+
+    # Return empty string if not a valid number
+    unless sanitized =~ /\A-?\d+\.?\d*\z/
+      return ""
+    end
+
+    sanitized
+  end
+
+  def set_default_number_format
+    self.number_format ||= "1,234.56" # Default to US/UK format
+  end
 end

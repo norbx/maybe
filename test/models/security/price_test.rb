@@ -50,15 +50,15 @@ class Security::PriceTest < ActiveSupport::TestCase
   end
 
   private
-    def expect_provider_price(security:, price:, date:)
-      @provider.expects(:fetch_security_price)
-               .with(symbol: security.ticker, exchange_operating_mic: security.exchange_operating_mic, date: date)
-               .returns(provider_success_response(price))
-    end
+  def expect_provider_price(security:, price:, date:)
+    @provider.expects(:fetch_security_price)
+             .with(symbol: security.ticker, exchange_operating_mic: security.exchange_operating_mic, date: date)
+             .returns(provider_success_response(price))
+  end
 
-    def expect_provider_prices(security:, prices:, start_date:, end_date:)
-      @provider.expects(:fetch_security_prices)
-               .with(security, start_date: start_date, end_date: end_date)
-               .returns(provider_success_response(prices))
-    end
+  def expect_provider_prices(security:, prices:, start_date:, end_date:)
+    @provider.expects(:fetch_security_prices)
+             .with(security, start_date: start_date, end_date: end_date)
+             .returns(provider_success_response(prices))
+  end
 end

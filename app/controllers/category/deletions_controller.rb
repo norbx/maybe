@@ -12,13 +12,13 @@ class Category::DeletionsController < ApplicationController
   end
 
   private
-    def set_category
-      @category = Current.family.categories.find(params[:category_id])
-    end
+  def set_category
+    @category = Current.family.categories.find(params[:category_id])
+  end
 
-    def set_replacement_category
-      if params[:replacement_category_id].present?
-        @replacement_category = Current.family.categories.find(params[:replacement_category_id])
-      end
+  def set_replacement_category
+    if params[:replacement_category_id].present?
+      @replacement_category = Current.family.categories.find(params[:replacement_category_id])
     end
+  end
 end

@@ -77,19 +77,19 @@ class MintImport < Import
   end
 
   private
-    def set_mappings
-      self.signage_convention = "inflows_positive"
-      self.date_col_label = "Date"
-      self.date_format = "%m/%d/%Y"
-      self.name_col_label = "Description"
-      self.amount_col_label = "Amount"
-      self.currency_col_label = "Currency"
-      self.account_col_label = "Account Name"
-      self.category_col_label = "Category"
-      self.tags_col_label = "Labels"
-      self.notes_col_label = "Notes"
-      self.entity_type_col_label = "Transaction Type"
+  def set_mappings
+    self.signage_convention = "inflows_positive"
+    self.date_col_label = "Date"
+    self.date_format = "%m/%d/%Y"
+    self.name_col_label = "Description"
+    self.amount_col_label = "Amount"
+    self.currency_col_label = "Currency"
+    self.account_col_label = "Account Name"
+    self.category_col_label = "Category"
+    self.tags_col_label = "Labels"
+    self.notes_col_label = "Notes"
+    self.entity_type_col_label = "Transaction Type"
 
-      save!
-    end
+    save!
+  end
 end

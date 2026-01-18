@@ -582,15 +582,15 @@ class Balance::ForwardCalculatorTest < ActiveSupport::TestCase
   end
 
   private
-    def assert_balances(calculated_data:, expected_balances:)
-      # Sort calculated data by date to ensure consistent ordering
-      sorted_data = calculated_data.sort_by(&:date)
+  def assert_balances(calculated_data:, expected_balances:)
+    # Sort calculated data by date to ensure consistent ordering
+    sorted_data = calculated_data.sort_by(&:date)
 
-      # Extract actual values as [date, { balance:, cash_balance: }]
-      actual_balances = sorted_data.map do |b|
-        [b.date, { balance: b.balance, cash_balance: b.cash_balance }]
-      end
-
-      assert_equal expected_balances, actual_balances
+    # Extract actual values as [date, { balance:, cash_balance: }]
+    actual_balances = sorted_data.map do |b|
+      [b.date, { balance: b.balance, cash_balance: b.cash_balance }]
     end
+
+    assert_equal expected_balances, actual_balances
+  end
 end

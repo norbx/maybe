@@ -6,7 +6,7 @@ module Assistant::Provided
   end
 
   private
-    def registry
-      @registry ||= Provider::Registry.for_concept(:llm)
-    end
+  def registry
+    @registry ||= Provider::Registry.for_concept(:llm)
+  end
 end

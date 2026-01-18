@@ -24,38 +24,38 @@ module Import::CsvConverter
     )
   end
 
-    private
+  private
 
-      def find_header_index(csv_str, col_sep: ",")
-        lines = csv_str.split("\n")
+  def find_header_index(csv_str, col_sep: ",")
+    lines = csv_str.split("\n")
 
-        lines.each_with_index do |line, index|
-          CSV_HEADER_PATTERNS.each do |_, patterns|
-            begin
-              cells = CSV.parse_line(line, col_sep: col_sep)
-              next if cells.nil? || cells.empty?
+    lines.each_with_index do |line, index|
+      CSV_HEADER_PATTERNS.each do |_, patterns|
+        begin
+          cells = CSV.parse_line(line, col_sep: col_sep)
+          next if cells.nil? || cells.empty?
 
-              matches = cells.count do |cell|
-                next false if cell.nil?
-                patterns.any? { |pattern| cell.match?(pattern) }
-              end
-
-              return index if matches >= 2
-            rescue CSV::MalformedCSVError
-              next
-            end
+          matches = cells.count do |cell|
+            next false if cell.nil?
+            patterns.any? { |pattern| cell.match?(pattern) }
           end
-        end
-        0
-      end
 
-      def amount_converter
-        lambda do |str, field_metadata|
-          if field_metadata.header&.match?(/#Kwota/)
-            str&.gsub(/\s*[A-Z]{3}\s*$/, "")&.gsub(",", ".")
-          else
-            str
-          end
+          return index if matches >= 2
+        rescue CSV::MalformedCSVError
+          next
         end
       end
+    end
+    0
+  end
+
+  def amount_converter
+    lambda do |str, field_metadata|
+      if field_metadata.header&.match?(/#Kwota/)
+        str&.gsub(/\s*[A-Z]{3}\s*$/, "")&.gsub(",", ".")
+      else
+        str
+      end
+    end
+  end
 end

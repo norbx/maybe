@@ -19,23 +19,23 @@ class DS::Button < DS::Buttonish
   end
 
   private
-    def merged_opts
-      merged_opts = opts.dup || {}
-      extra_classes = merged_opts.delete(:class)
-      href = merged_opts.delete(:href)
-      data = merged_opts.delete(:data) || {}
+  def merged_opts
+    merged_opts = opts.dup || {}
+    extra_classes = merged_opts.delete(:class)
+    href = merged_opts.delete(:href)
+    data = merged_opts.delete(:data) || {}
 
-      if confirm.present?
-        data = data.merge(turbo_confirm: confirm.to_data_attribute)
-      end
-
-      if frame.present?
-        data = data.merge(turbo_frame: frame)
-      end
-
-      merged_opts.merge(
-        class: class_names(container_classes, extra_classes),
-        data: data
-      )
+    if confirm.present?
+      data = data.merge(turbo_confirm: confirm.to_data_attribute)
     end
+
+    if frame.present?
+      data = data.merge(turbo_frame: frame)
+    end
+
+    merged_opts.merge(
+      class: class_names(container_classes, extra_classes),
+      data: data
+    )
+  end
 end

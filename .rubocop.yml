@@ -10,6 +10,7 @@ Layout/IndentationStyle:
 
 Layout/IndentationConsistency:
   Enabled: true
+  EnforcedStyle: normal
 
 Layout/SpaceInsidePercentLiteralDelimiters:
   Enabled: true

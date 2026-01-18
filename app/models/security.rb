@@ -33,8 +33,8 @@ class Security < ApplicationRecord
   end
 
   private
-    def upcase_symbols
-      self.ticker = ticker.upcase
-      self.exchange_operating_mic = exchange_operating_mic.upcase if exchange_operating_mic.present?
-    end
+  def upcase_symbols
+    self.ticker = ticker.upcase
+    self.exchange_operating_mic = exchange_operating_mic.upcase if exchange_operating_mic.present?
+  end
 end

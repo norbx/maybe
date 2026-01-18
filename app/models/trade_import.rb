@@ -76,25 +76,25 @@ class TradeImport < Import
   end
 
   private
-    def find_or_create_security(ticker: nil, exchange_operating_mic: nil)
-      return nil unless ticker.present?
+  def find_or_create_security(ticker: nil, exchange_operating_mic: nil)
+    return nil unless ticker.present?
 
-      # Avoids resolving the same security over and over again (resolver potentially makes network calls)
-      @security_cache ||= {}
+    # Avoids resolving the same security over and over again (resolver potentially makes network calls)
+    @security_cache ||= {}
 
-      cache_key = [ticker, exchange_operating_mic].compact.join(":")
+    cache_key = [ticker, exchange_operating_mic].compact.join(":")
 
-      security = @security_cache[cache_key]
+    security = @security_cache[cache_key]
 
-      return security if security.present?
+    return security if security.present?
 
-      security = Security::Resolver.new(
-        ticker,
-        exchange_operating_mic: exchange_operating_mic.presence
-      ).resolve
+    security = Security::Resolver.new(
+      ticker,
+      exchange_operating_mic: exchange_operating_mic.presence
+    ).resolve
 
-      @security_cache[cache_key] = security
+    @security_cache[cache_key] = security
 
-      security
-    end
+    security
+  end
 end

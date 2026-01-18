@@ -88,14 +88,14 @@ class ApiRateLimiter
 
   private
 
-    def current_window_start
-      (Time.current.to_i / 3600) * 3600
-    end
+  def current_window_start
+    (Time.current.to_i / 3600) * 3600
+  end
 
-    def determine_tier
-      # For now, all API keys are standard tier
-      # This can be extended later to support different tiers based on user subscription
-      # or API key configuration
-      DEFAULT_TIER
-    end
+  def determine_tier
+    # For now, all API keys are standard tier
+    # This can be extended later to support different tiers based on user subscription
+    # or API key configuration
+    DEFAULT_TIER
+  end
 end

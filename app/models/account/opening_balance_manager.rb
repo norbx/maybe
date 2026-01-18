@@ -44,56 +44,56 @@ class Account::OpeningBalanceManager
   end
 
   private
-    attr_reader :account
+  attr_reader :account
 
-    def opening_anchor_valuation
-      @opening_anchor_valuation ||= account.valuations.opening_anchor.includes(:entry).first
+  def opening_anchor_valuation
+    @opening_anchor_valuation ||= account.valuations.opening_anchor.includes(:entry).first
+  end
+
+  def oldest_entry_date
+    @oldest_entry_date ||= account.entries.minimum(:date)
+  end
+
+  def default_date
+    if oldest_entry_date
+      [oldest_entry_date - 1.day, 2.years.ago.to_date].min
+    else
+      2.years.ago.to_date
     end
+  end
 
-    def oldest_entry_date
-      @oldest_entry_date ||= account.entries.minimum(:date)
-    end
-
-    def default_date
-      if oldest_entry_date
-        [oldest_entry_date - 1.day, 2.years.ago.to_date].min
-      else
-        2.years.ago.to_date
-      end
-    end
-
-    def create_opening_anchor(balance:, date:)
-      account.entries.create!(
-        date: date,
-        name: Valuation.build_opening_anchor_name(account.accountable_type),
-        amount: balance,
-        currency: account.currency,
-        entryable: Valuation.new(
-          kind: "opening_anchor"
-        )
+  def create_opening_anchor(balance:, date:)
+    account.entries.create!(
+      date: date,
+      name: Valuation.build_opening_anchor_name(account.accountable_type),
+      amount: balance,
+      currency: account.currency,
+      entryable: Valuation.new(
+        kind: "opening_anchor"
       )
-    end
+    )
+  end
 
-    def update_opening_anchor(balance:, date: nil)
-      changes_made = false
+  def update_opening_anchor(balance:, date: nil)
+    changes_made = false
 
-      ActiveRecord::Base.transaction do
-        # Update associated entry attributes
-        entry = opening_anchor_valuation.entry
+    ActiveRecord::Base.transaction do
+      # Update associated entry attributes
+      entry = opening_anchor_valuation.entry
 
-        if entry.amount != balance
-          entry.amount = balance
-          changes_made = true
-        end
-
-        if date.present? && entry.date != date
-          entry.date = date
-          changes_made = true
-        end
-
-        entry.save! if entry.changed?
+      if entry.amount != balance
+        entry.amount = balance
+        changes_made = true
       end
 
-      changes_made
+      if date.present? && entry.date != date
+        entry.date = date
+        changes_made = true
+      end
+
+      entry.save! if entry.changed?
     end
+
+    changes_made
+  end
 end

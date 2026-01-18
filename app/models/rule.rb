@@ -62,48 +62,48 @@ class Rule < ApplicationRecord
   end
 
   private
-    def matching_resources_scope
-      scope = registry.resource_scope
+  def matching_resources_scope
+    scope = registry.resource_scope
 
-      # 1. Prepare the query with joins required by conditions
-      conditions.each do |condition|
-        scope = condition.prepare(scope)
-      end
-
-      # 2. Apply the conditions to the query
-      conditions.each do |condition|
-        scope = condition.apply(scope)
-      end
-
-      scope
+    # 1. Prepare the query with joins required by conditions
+    conditions.each do |condition|
+      scope = condition.prepare(scope)
     end
 
-    def min_actions
-      if actions.reject(&:marked_for_destruction?).empty?
-        errors.add(:base, "must have at least one action")
-      end
+    # 2. Apply the conditions to the query
+    conditions.each do |condition|
+      scope = condition.apply(scope)
     end
 
-    def no_duplicate_actions
-      action_types = actions.reject(&:marked_for_destruction?).map(&:action_type)
+    scope
+  end
 
-      errors.add(:base, "Rule cannot have duplicate actions #{action_types.inspect}") if action_types.uniq.count != action_types.count
+  def min_actions
+    if actions.reject(&:marked_for_destruction?).empty?
+      errors.add(:base, "must have at least one action")
     end
+  end
 
-    # Validation: To keep rules simple and easy to understand, we don't allow nested compound conditions.
-    def no_nested_compound_conditions
-      return true if conditions.none? { |condition| condition.compound? }
+  def no_duplicate_actions
+    action_types = actions.reject(&:marked_for_destruction?).map(&:action_type)
 
-      conditions.each do |condition|
-        if condition.compound?
-          if condition.sub_conditions.any? { |sub_condition| sub_condition.compound? }
-            errors.add(:base, "Compound conditions cannot be nested")
-          end
+    errors.add(:base, "Rule cannot have duplicate actions #{action_types.inspect}") if action_types.uniq.count != action_types.count
+  end
+
+  # Validation: To keep rules simple and easy to understand, we don't allow nested compound conditions.
+  def no_nested_compound_conditions
+    return true if conditions.none? { |condition| condition.compound? }
+
+    conditions.each do |condition|
+      if condition.compound?
+        if condition.sub_conditions.any? { |sub_condition| sub_condition.compound? }
+          errors.add(:base, "Compound conditions cannot be nested")
         end
       end
     end
+  end
 
-    def normalize_name
-      self.name = nil if name.is_a?(String) && name.strip.empty?
-    end
+  def normalize_name
+    self.name = nil if name.is_a?(String) && name.strip.empty?
+  end
 end

@@ -25,61 +25,61 @@ class Account::ActivityFeedData
   end
 
   private
-    def balance_for_date(date)
-      balances_by_date[date]
+  def balance_for_date(date)
+    balances_by_date[date]
+  end
+
+  def transfers_for_date(date)
+    transfers_by_date[date] || []
+  end
+
+  def grouped_entries
+    @grouped_entries ||= entries.group_by(&:date)
+  end
+
+  def balances_by_date
+    @balances_by_date ||= begin
+      return {} if entries.empty?
+
+      dates = grouped_entries.keys
+      account.balances
+        .where(date: dates, currency: account.currency)
+        .index_by(&:date)
     end
+  end
 
-    def transfers_for_date(date)
-      transfers_by_date[date] || []
-    end
+  def transfers_by_date
+    @transfers_by_date ||= begin
+      return {} if transaction_ids.empty?
 
-    def grouped_entries
-      @grouped_entries ||= entries.group_by(&:date)
-    end
+      transfers = Transfer
+        .where(inflow_transaction_id: transaction_ids)
+        .or(Transfer.where(outflow_transaction_id: transaction_ids))
+        .to_a
 
-    def balances_by_date
-      @balances_by_date ||= begin
-        return {} if entries.empty?
+      # Group transfers by the date of their transaction entries
+      result = Hash.new { |h, k| h[k] = [] }
 
-        dates = grouped_entries.keys
-        account.balances
-          .where(date: dates, currency: account.currency)
-          .index_by(&:date)
-      end
-    end
+      entries.each do |entry|
+        next unless entry.transaction? && transaction_ids.include?(entry.entryable_id)
 
-    def transfers_by_date
-      @transfers_by_date ||= begin
-        return {} if transaction_ids.empty?
-
-        transfers = Transfer
-          .where(inflow_transaction_id: transaction_ids)
-          .or(Transfer.where(outflow_transaction_id: transaction_ids))
-          .to_a
-
-        # Group transfers by the date of their transaction entries
-        result = Hash.new { |h, k| h[k] = [] }
-
-        entries.each do |entry|
-          next unless entry.transaction? && transaction_ids.include?(entry.entryable_id)
-
-          transfers.each do |transfer|
-            if transfer.inflow_transaction_id == entry.entryable_id ||
-               transfer.outflow_transaction_id == entry.entryable_id
-              result[entry.date] << transfer
-            end
+        transfers.each do |transfer|
+          if transfer.inflow_transaction_id == entry.entryable_id ||
+             transfer.outflow_transaction_id == entry.entryable_id
+            result[entry.date] << transfer
           end
         end
-
-        # Remove duplicates
-        result.transform_values(&:uniq)
       end
-    end
 
-    def transaction_ids
-      @transaction_ids ||= entries
-        .select(&:transaction?)
-        .map(&:entryable_id)
-        .compact
+      # Remove duplicates
+      result.transform_values(&:uniq)
     end
+  end
+
+  def transaction_ids
+    @transaction_ids ||= entries
+      .select(&:transaction?)
+      .map(&:entryable_id)
+      .compact
+  end
 end

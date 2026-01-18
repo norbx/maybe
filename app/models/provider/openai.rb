@@ -82,5 +82,5 @@ class Provider::Openai < Provider
   end
 
   private
-    attr_reader :client
+  attr_reader :client
 end

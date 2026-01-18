@@ -38,25 +38,25 @@ class DS::MenuItem < DesignSystemComponent
   end
 
   private
-    def container_classes
-      [
-        "flex items-center gap-2 p-2 rounded-md w-full",
-        destructive? ? "hover:bg-red-tint-5 theme-dark:hover:bg-red-tint-10" : "hover:bg-container-hover"
-      ].join(" ")
+  def container_classes
+    [
+      "flex items-center gap-2 p-2 rounded-md w-full",
+      destructive? ? "hover:bg-red-tint-5 theme-dark:hover:bg-red-tint-10" : "hover:bg-container-hover"
+    ].join(" ")
+  end
+
+  def merged_opts
+    merged_opts = opts.dup || {}
+    data = merged_opts.delete(:data) || {}
+
+    if confirm.present?
+      data = data.merge(turbo_confirm: confirm.to_data_attribute)
     end
 
-    def merged_opts
-      merged_opts = opts.dup || {}
-      data = merged_opts.delete(:data) || {}
-
-      if confirm.present?
-        data = data.merge(turbo_confirm: confirm.to_data_attribute)
-      end
-
-      if frame.present?
-        data = data.merge(turbo_frame: frame)
-      end
-
-      merged_opts.merge(data: data)
+    if frame.present?
+      data = data.merge(turbo_frame: frame)
     end
+
+    merged_opts.merge(data: data)
+  end
 end

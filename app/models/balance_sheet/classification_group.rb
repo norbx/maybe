@@ -52,10 +52,10 @@ class BalanceSheet::ClassificationGroup
   end
 
   private
-    attr_reader :accounts
+  attr_reader :accounts
 
-    def normalize_classification!(classification)
-      raise ArgumentError, "Invalid classification: #{classification}" unless %w[asset liability].include?(classification)
-      classification
-    end
+  def normalize_classification!(classification)
+    raise ArgumentError, "Invalid classification: #{classification}" unless %w[asset liability].include?(classification)
+    classification
+  end
 end

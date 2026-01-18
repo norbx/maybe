@@ -65,23 +65,23 @@ module AccountableResource
   end
 
   private
-    def set_link_options
-      @show_us_link = Current.family.can_connect_plaid_us?
-      @show_eu_link = Current.family.can_connect_plaid_eu?
-    end
+  def set_link_options
+    @show_us_link = Current.family.can_connect_plaid_us?
+    @show_eu_link = Current.family.can_connect_plaid_eu?
+  end
 
-    def accountable_type
-      controller_name.classify.constantize
-    end
+  def accountable_type
+    controller_name.classify.constantize
+  end
 
-    def set_account
-      @account = Current.family.accounts.find(params[:id])
-    end
+  def set_account
+    @account = Current.family.accounts.find(params[:id])
+  end
 
-    def account_params
-      params.require(:account).permit(
-        :name, :balance, :subtype, :currency, :accountable_type, :return_to,
-        accountable_attributes: self.class.permitted_accountable_attributes
-      )
-    end
+  def account_params
+    params.require(:account).permit(
+      :name, :balance, :subtype, :currency, :accountable_type, :return_to,
+      accountable_attributes: self.class.permitted_accountable_attributes
+    )
+  end
 end

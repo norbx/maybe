@@ -14,7 +14,7 @@ module Account::Reconcileable
   end
 
   private
-    def reconciliation_manager
-      @reconciliation_manager ||= Account::ReconciliationManager.new(self)
-    end
+  def reconciliation_manager
+    @reconciliation_manager ||= Account::ReconciliationManager.new(self)
+  end
 end

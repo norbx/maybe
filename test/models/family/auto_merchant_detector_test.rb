@@ -38,5 +38,5 @@ class Family::AutoMerchantDetectorTest < ActiveSupport::TestCase
   end
 
   private
-    AutoDetectedMerchant = Provider::LlmConcept::AutoDetectedMerchant
+  AutoDetectedMerchant = Provider::LlmConcept::AutoDetectedMerchant
 end

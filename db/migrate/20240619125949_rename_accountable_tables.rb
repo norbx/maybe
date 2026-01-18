@@ -77,11 +77,11 @@ class RenameAccountableTables < ActiveRecord::Migration[7.2]
 
   private
 
-    def update_accountable_types(mapping)
-      Account.reset_column_information
+  def update_accountable_types(mapping)
+    Account.reset_column_information
 
-      mapping.each do |old_type, new_type|
-        Account.where(accountable_type: old_type).update_all(accountable_type: new_type)
-      end
+    mapping.each do |old_type, new_type|
+      Account.where(accountable_type: old_type).update_all(accountable_type: new_type)
     end
+  end
 end

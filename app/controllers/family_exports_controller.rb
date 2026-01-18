@@ -35,13 +35,13 @@ class FamilyExportsController < ApplicationController
 
   private
 
-    def set_export
-      @export = Current.family.family_exports.find(params[:id])
-    end
+  def set_export
+    @export = Current.family.family_exports.find(params[:id])
+  end
 
-    def require_admin
-      unless Current.user.admin?
-        redirect_to root_path, alert: "Access denied"
-      end
+  def require_admin
+    unless Current.user.admin?
+      redirect_to root_path, alert: "Access denied"
     end
+  end
 end

@@ -186,65 +186,65 @@ class Provider::Synth < Provider
   end
 
   private
-    attr_reader :api_key
+  attr_reader :api_key
 
-    def base_url
-      ENV["SYNTH_URL"] || "https://api.synthfinance.com"
+  def base_url
+    ENV["SYNTH_URL"] || "https://api.synthfinance.com"
+  end
+
+  def app_name
+    "maybe_app"
+  end
+
+  def app_type
+    Rails.application.config.app_mode
+  end
+
+  def client
+    @client ||= Faraday.new(url: base_url) do |faraday|
+      faraday.request(:retry, {
+        max: 2,
+        interval: 0.05,
+        interval_randomness: 0.5,
+        backoff_factor: 2
+      })
+
+      faraday.response :raise_error
+      faraday.headers["Authorization"] = "Bearer #{api_key}"
+      faraday.headers["X-Source"] = app_name
+      faraday.headers["X-Source-Type"] = app_type
+    end
+  end
+
+  def fetch_page(url, page, params = {})
+    client.get(url, params.merge(page: page))
+  end
+
+  def paginate(url, params = {})
+    results = []
+    page = 1
+    current_page = 0
+    total_pages = 1
+    first_page = nil
+
+    while current_page < total_pages
+      response = fetch_page(url, page, params)
+
+      body = JSON.parse(response.body)
+      first_page = body unless first_page
+      page_results = yield(body)
+      results.concat(page_results)
+
+      current_page = body.dig("paging", "current_page")
+      total_pages = body.dig("paging", "total_pages")
+
+      page += 1
     end
 
-    def app_name
-      "maybe_app"
-    end
-
-    def app_type
-      Rails.application.config.app_mode
-    end
-
-    def client
-      @client ||= Faraday.new(url: base_url) do |faraday|
-        faraday.request(:retry, {
-          max: 2,
-          interval: 0.05,
-          interval_randomness: 0.5,
-          backoff_factor: 2
-        })
-
-        faraday.response :raise_error
-        faraday.headers["Authorization"] = "Bearer #{api_key}"
-        faraday.headers["X-Source"] = app_name
-        faraday.headers["X-Source-Type"] = app_type
-      end
-    end
-
-    def fetch_page(url, page, params = {})
-      client.get(url, params.merge(page: page))
-    end
-
-    def paginate(url, params = {})
-      results = []
-      page = 1
-      current_page = 0
-      total_pages = 1
-      first_page = nil
-
-      while current_page < total_pages
-        response = fetch_page(url, page, params)
-
-        body = JSON.parse(response.body)
-        first_page = body unless first_page
-        page_results = yield(body)
-        results.concat(page_results)
-
-        current_page = body.dig("paging", "current_page")
-        total_pages = body.dig("paging", "total_pages")
-
-        page += 1
-      end
-
-      PaginatedData.new(
-        paginated: results,
-        first_page: first_page,
-        total_pages: total_pages
-      )
-    end
+    PaginatedData.new(
+      paginated: results,
+      first_page: first_page,
+      total_pages: total_pages
+    )
+  end
 end

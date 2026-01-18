@@ -46,11 +46,11 @@ module Account::Anchorable
   end
 
   private
-    def opening_balance_manager
-      @opening_balance_manager ||= Account::OpeningBalanceManager.new(self)
-    end
+  def opening_balance_manager
+    @opening_balance_manager ||= Account::OpeningBalanceManager.new(self)
+  end
 
-    def current_balance_manager
-      @current_balance_manager ||= Account::CurrentBalanceManager.new(self)
-    end
+  def current_balance_manager
+    @current_balance_manager ||= Account::CurrentBalanceManager.new(self)
+  end
 end

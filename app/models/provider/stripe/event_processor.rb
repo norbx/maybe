@@ -8,9 +8,9 @@ class Provider::Stripe::EventProcessor
   end
 
   private
-    attr_reader :event
+  attr_reader :event
 
-    def event_data
-      event.data.object
-    end
+  def event_data
+    event.data.object
+  end
 end

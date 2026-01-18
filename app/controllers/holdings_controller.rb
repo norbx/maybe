@@ -23,7 +23,7 @@ class HoldingsController < ApplicationController
   end
 
   private
-    def set_holding
-      @holding = Current.family.holdings.find(params[:id])
-    end
+  def set_holding
+    @holding = Current.family.holdings.find(params[:id])
+  end
 end

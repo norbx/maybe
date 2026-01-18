@@ -44,40 +44,40 @@ class Family::AutoCategorizer
   end
 
   private
-    attr_reader :family, :transaction_ids
+  attr_reader :family, :transaction_ids
 
-    # For now, OpenAI only, but this should work with any LLM concept provider
-    def llm_provider
-      Provider::Registry.get_provider(:openai)
-    end
+  # For now, OpenAI only, but this should work with any LLM concept provider
+  def llm_provider
+    Provider::Registry.get_provider(:openai)
+  end
 
-    def user_categories_input
-      family.categories.map do |category|
-        {
-          id: category.id,
-          name: category.name,
-          is_subcategory: category.subcategory?,
-          parent_id: category.parent_id,
-          classification: category.classification
-        }
-      end
+  def user_categories_input
+    family.categories.map do |category|
+      {
+        id: category.id,
+        name: category.name,
+        is_subcategory: category.subcategory?,
+        parent_id: category.parent_id,
+        classification: category.classification
+      }
     end
+  end
 
-    def transactions_input
-      scope.map do |transaction|
-        {
-          id: transaction.id,
-          amount: transaction.entry.amount.abs,
-          classification: transaction.entry.classification,
-          description: transaction.entry.name,
-          merchant: transaction.merchant&.name
-        }
-      end
+  def transactions_input
+    scope.map do |transaction|
+      {
+        id: transaction.id,
+        amount: transaction.entry.amount.abs,
+        classification: transaction.entry.classification,
+        description: transaction.entry.name,
+        merchant: transaction.merchant&.name
+      }
     end
+  end
 
-    def scope
-      family.transactions.where(id: transaction_ids, category_id: nil)
-                         .enrichable(:category_id)
-                         .includes(:category, :merchant, :entry)
-    end
+  def scope
+    family.transactions.where(id: transaction_ids, category_id: nil)
+                       .enrichable(:category_id)
+                       .includes(:category, :merchant, :entry)
+  end
 end

@@ -19,23 +19,23 @@ class BalanceSheet::CategorisedSeriesBuilder
   end
 
   private
-    attr_reader :family
+  attr_reader :family
 
-    def visible_account_ids
-      @visible_account_ids ||= family.accounts.visible.with_attached_logo.pluck(:id)
-    end
+  def visible_account_ids
+    @visible_account_ids ||= family.accounts.visible.with_attached_logo.pluck(:id)
+  end
 
-    def cache_key(period, category_id)
-      key = [
-        "balance_sheet_categorised_series",
-        period.start_date,
-        period.end_date,
-        category_id
-      ].compact.join("_")
+  def cache_key(period, category_id)
+    key = [
+      "balance_sheet_categorised_series",
+      period.start_date,
+      period.end_date,
+      category_id
+    ].compact.join("_")
 
-      family.build_cache_key(
-        key,
-        invalidate_on_data_updates: true
-      )
-    end
+    family.build_cache_key(
+      key,
+      invalidate_on_data_updates: true
+    )
+  end
 end

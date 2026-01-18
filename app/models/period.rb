@@ -153,18 +153,18 @@ class Period
   end
 
   private
-    def key_metadata
-      @key_metadata ||= PERIODS[key]
+  def key_metadata
+    @key_metadata ||= PERIODS[key]
+  end
+
+  def must_be_valid_date_range
+    return if start_date.nil? || end_date.nil?
+    unless start_date.is_a?(Date) && end_date.is_a?(Date)
+      errors.add(:start_date, "must be a valid date, got #{start_date.inspect}")
+      errors.add(:end_date, "must be a valid date, got #{end_date.inspect}")
+      return
     end
 
-    def must_be_valid_date_range
-      return if start_date.nil? || end_date.nil?
-      unless start_date.is_a?(Date) && end_date.is_a?(Date)
-        errors.add(:start_date, "must be a valid date, got #{start_date.inspect}")
-        errors.add(:end_date, "must be a valid date, got #{end_date.inspect}")
-        return
-      end
-
-      errors.add(:start_date, "must be before end date") if start_date > end_date
-    end
+    errors.add(:start_date, "must be before end date") if start_date > end_date
+  end
 end

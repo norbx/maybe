@@ -215,40 +215,40 @@ class TransactionsTest < ApplicationSystemTestCase
 
   private
 
-    def create_transaction(name, date, amount, category: nil, merchant: nil, tags: [], account: nil)
-      account ||= accounts(:depository)
+  def create_transaction(name, date, amount, category: nil, merchant: nil, tags: [], account: nil)
+    account ||= accounts(:depository)
 
-      account.entries.create! \
-        name: name,
-        date: date,
-        amount: amount,
-        currency: "USD",
-        entryable: Transaction.new(category: category, merchant: merchant, tags: tags)
-    end
+    account.entries.create! \
+      name: name,
+      date: date,
+      amount: amount,
+      currency: "USD",
+      entryable: Transaction.new(category: category, merchant: merchant, tags: tags)
+  end
 
-    def number_of_transactions_on_page
-      [@user.family.entries.count, @page_size].min
-    end
+  def number_of_transactions_on_page
+    [@user.family.entries.count, @page_size].min
+  end
 
-    def all_transactions_checkbox
-      find("#selection_entry")
-    end
+  def all_transactions_checkbox
+    find("#selection_entry")
+  end
 
-    def date_transactions_checkbox(date)
-      find("#selection_entry_#{date}")
-    end
+  def date_transactions_checkbox(date)
+    find("#selection_entry_#{date}")
+  end
 
-    def transaction_checkbox(transaction)
-      find("#" + dom_id(transaction, "selection"))
-    end
+  def transaction_checkbox(transaction)
+    find("#" + dom_id(transaction, "selection"))
+  end
 
-    def assert_selection_count(count)
-      if count == 0
-        assert_no_selector("#entry-selection-bar")
-      else
-        within "#entry-selection-bar" do
-          assert_text "#{count} transaction#{count == 1 ? "" : "s"} selected"
-        end
+  def assert_selection_count(count)
+    if count == 0
+      assert_no_selector("#entry-selection-bar")
+    else
+      within "#entry-selection-bar" do
+        assert_text "#{count} transaction#{count == 1 ? "" : "s"} selected"
       end
     end
+  end
 end

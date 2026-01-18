@@ -39,17 +39,17 @@ class Api::V1::MessagesController < Api::V1::BaseController
 
   private
 
-    def ensure_write_scope
-      authorize_scope!(:write)
-    end
+  def ensure_write_scope
+    authorize_scope!(:write)
+  end
 
-    def set_chat
-      @chat = Current.user.chats.find(params[:chat_id])
-    rescue ActiveRecord::RecordNotFound
-      render json: { error: "Chat not found" }, status: :not_found
-    end
+  def set_chat
+    @chat = Current.user.chats.find(params[:chat_id])
+  rescue ActiveRecord::RecordNotFound
+    render json: { error: "Chat not found" }, status: :not_found
+  end
 
-    def message_params
-      params.permit(:content, :model)
-    end
+  def message_params
+    params.permit(:content, :model)
+  end
 end

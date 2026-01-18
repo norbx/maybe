@@ -31,7 +31,7 @@ class Provider::Github
   end
 
   private
-    def repo
-      "#{owner}/#{name}"
-    end
+  def repo
+    "#{owner}/#{name}"
+  end
 end

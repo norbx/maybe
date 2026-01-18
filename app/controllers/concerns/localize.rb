@@ -7,13 +7,13 @@ module Localize
   end
 
   private
-    def switch_locale(&action)
-      locale = Current.family.try(:locale) || I18n.default_locale
-      I18n.with_locale(locale, &action)
-    end
+  def switch_locale(&action)
+    locale = Current.family.try(:locale) || I18n.default_locale
+    I18n.with_locale(locale, &action)
+  end
 
-    def switch_timezone(&action)
-      timezone = Current.family.try(:timezone) || Time.zone
-      Time.use_zone(timezone, &action)
-    end
+  def switch_timezone(&action)
+    timezone = Current.family.try(:timezone) || Time.zone
+    Time.use_zone(timezone, &action)
+  end
 end

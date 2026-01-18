@@ -56,35 +56,35 @@ class HoldingTest < ActiveSupport::TestCase
 
   private
 
-    def load_holdings
-      security1 = create_security("AMZN", prices: [
-        { date: 1.day.ago.to_date, price: 212.00 },
-        { date: Date.current, price: 216.00 }
-      ])
+  def load_holdings
+    security1 = create_security("AMZN", prices: [
+      { date: 1.day.ago.to_date, price: 212.00 },
+      { date: Date.current, price: 216.00 }
+    ])
 
-      security2 = create_security("NVDA", prices: [
-        { date: 1.day.ago.to_date, price: 128.00 },
-        { date: Date.current, price: 124.00 }
-      ])
+    security2 = create_security("NVDA", prices: [
+      { date: 1.day.ago.to_date, price: 128.00 },
+      { date: Date.current, price: 124.00 }
+    ])
 
-      create_holding(security1, 1.day.ago.to_date, 10)
-      amzn = create_holding(security1, Date.current, 15)
+    create_holding(security1, 1.day.ago.to_date, 10)
+    amzn = create_holding(security1, Date.current, 15)
 
-      create_holding(security2, 1.day.ago.to_date, 5)
-      nvda = create_holding(security2, Date.current, 30)
+    create_holding(security2, 1.day.ago.to_date, 5)
+    nvda = create_holding(security2, Date.current, 30)
 
-      [amzn, nvda]
-    end
+    [amzn, nvda]
+  end
 
-    def create_holding(security, date, qty)
-      price = Security::Price.find_by(date: date, security: security).price
+  def create_holding(security, date, qty)
+    price = Security::Price.find_by(date: date, security: security).price
 
-      @account.holdings.create! \
-        date: date,
-        security: security,
-        qty: qty,
-        price: price,
-        amount: qty * price,
-        currency: "USD"
-    end
+    @account.holdings.create! \
+      date: date,
+      security: security,
+      qty: qty,
+      price: price,
+      amount: qty * price,
+      currency: "USD"
+  end
 end

@@ -16,68 +16,68 @@ class Balance::CategorisedChartSeriesBuilder
   end
 
   private
-    attr_reader :account_ids, :category_ids, :currency, :period, :favorable_direction
+  attr_reader :account_ids, :category_ids, :currency, :period, :favorable_direction
 
-    def interval
-      @interval || period.interval
-    end
+  def interval
+    @interval || period.interval
+  end
 
-    def build_series
-      values = query_data.map do |datum|
-        Series::Value.new(
-          date: datum.date,
-          date_formatted: I18n.l(datum.date, format: :long),
-          value: Money.new(datum.current, currency),
-          trend: Trend.new(
-            current: Money.new(datum.current, currency),
-            previous: Money.new(datum.previous, currency),
-            favorable_direction: favorable_direction
-          ),
-          moving_average: Money.new(datum.moving_average, currency),
-          moving_average_trend: Trend.new(
-            current: Money.new(datum.moving_average, currency),
-            previous: Money.new(datum.previous_moving_average, currency),
-            favorable_direction: favorable_direction
-          )
+  def build_series
+    values = query_data.map do |datum|
+      Series::Value.new(
+        date: datum.date,
+        date_formatted: I18n.l(datum.date, format: :long),
+        value: Money.new(datum.current, currency),
+        trend: Trend.new(
+          current: Money.new(datum.current, currency),
+          previous: Money.new(datum.previous, currency),
+          favorable_direction: favorable_direction
+        ),
+        moving_average: Money.new(datum.moving_average, currency),
+        moving_average_trend: Trend.new(
+          current: Money.new(datum.moving_average, currency),
+          previous: Money.new(datum.previous_moving_average, currency),
+          favorable_direction: favorable_direction
         )
-      end
-
-      Series.new(
-        start_date: period.start_date,
-        end_date: period.end_date,
-        interval: interval,
-        values: values,
-        favorable_direction: favorable_direction
       )
     end
 
-    def query_data
-      @query_data ||= Balance.find_by_sql([
-        query,
-        {
-          account_ids: account_ids,
-          category_ids: category_ids,
-          start_date: period.start_date,
-          end_date: period.end_date,
-          interval: interval,
-          sign_multiplier: sign_multiplier
-        }
-      ])
-    rescue => e
-      Rails.logger.error "Query data error: #{e.message} for accounts #{account_ids}, period #{period.start_date} to #{period.end_date}"
-      raise
-    end
+    Series.new(
+      start_date: period.start_date,
+      end_date: period.end_date,
+      interval: interval,
+      values: values,
+      favorable_direction: favorable_direction
+    )
+  end
 
-    # Since the query aggregates the *net* of assets - liabilities, this means that if we're looking at
-    # a single liability account, we'll get a negative set of values.  This is not what the user expects
-    # to see.  When favorable direction is "down" (i.e. liability, decrease is "good"), we need to invert
-    # the values by multiplying by -1.
-    def sign_multiplier
-      favorable_direction == "down" ? -1 : 1
-    end
+  def query_data
+    @query_data ||= Balance.find_by_sql([
+      query,
+      {
+        account_ids: account_ids,
+        category_ids: category_ids,
+        start_date: period.start_date,
+        end_date: period.end_date,
+        interval: interval,
+        sign_multiplier: sign_multiplier
+      }
+    ])
+  rescue => e
+    Rails.logger.error "Query data error: #{e.message} for accounts #{account_ids}, period #{period.start_date} to #{period.end_date}"
+    raise
+  end
 
-    def query
-      <<~SQL
+  # Since the query aggregates the *net* of assets - liabilities, this means that if we're looking at
+  # a single liability account, we'll get a negative set of values.  This is not what the user expects
+  # to see.  When favorable direction is "down" (i.e. liability, decrease is "good"), we need to invert
+  # the values by multiplying by -1.
+  def sign_multiplier
+    favorable_direction == "down" ? -1 : 1
+  end
+
+  def query
+    <<~SQL
         WITH dates AS (
           SELECT (date_trunc('month', (gs)) + INTERVAL '1 month - 1 day') AS date
           FROM generate_series(
@@ -143,5 +143,5 @@ class Balance::CategorisedChartSeriesBuilder
         FROM latest_13
         ORDER BY date
       SQL
-    end
+  end
 end

@@ -109,80 +109,80 @@ class TransactionsController < ApplicationController
   end
 
   private
-    def per_page
-      params[:per_page].to_i.positive? ? params[:per_page].to_i : 20
+  def per_page
+    params[:per_page].to_i.positive? ? params[:per_page].to_i : 20
+  end
+
+  def needs_rule_notification?(transaction)
+    return false if Current.user.rule_prompts_disabled
+
+    if Current.user.rule_prompt_dismissed_at.present?
+      time_since_last_rule_prompt = Time.current - Current.user.rule_prompt_dismissed_at
+      return false if time_since_last_rule_prompt < 1.day
     end
 
-    def needs_rule_notification?(transaction)
-      return false if Current.user.rule_prompts_disabled
+    transaction.saved_change_to_category_id? && transaction.category_id.present? &&
+    transaction.eligible_for_category_rule?
+  end
 
-      if Current.user.rule_prompt_dismissed_at.present?
-        time_since_last_rule_prompt = Time.current - Current.user.rule_prompt_dismissed_at
-        return false if time_since_last_rule_prompt < 1.day
-      end
+  def entry_params
+    entry_params = params.require(:entry).permit(
+      :name, :date, :amount, :currency, :excluded, :notes, :nature, :entryable_type,
+      entryable_attributes: [:id, :category_id, :merchant_id, :kind, { tag_ids: [] }]
+    )
 
-      transaction.saved_change_to_category_id? && transaction.category_id.present? &&
-      transaction.eligible_for_category_rule?
+    nature = entry_params.delete(:nature)
+
+    if nature.present? && entry_params[:amount].present?
+      signed_amount = nature == "inflow" ? -entry_params[:amount].to_d : entry_params[:amount].to_d
+      entry_params = entry_params.merge(amount: signed_amount)
     end
 
-    def entry_params
-      entry_params = params.require(:entry).permit(
-        :name, :date, :amount, :currency, :excluded, :notes, :nature, :entryable_type,
-        entryable_attributes: [:id, :category_id, :merchant_id, :kind, { tag_ids: [] }]
+    entry_params
+  end
+
+  def search_params
+    cleaned_params = params.fetch(:q, {})
+            .permit(
+              :start_date, :end_date, :search, :amount,
+              :amount_operator, :active_accounts_only,
+              accounts: [], account_ids: [],
+              categories: [], merchants: [], types: [], tags: []
+            )
+            .to_h
+            .compact_blank
+
+    cleaned_params.delete(:amount_operator) unless cleaned_params[:amount].present?
+
+
+    cleaned_params
+  end
+
+  def store_params!
+    if should_restore_params?
+      params_to_restore = {}
+
+      params_to_restore[:q] = stored_params["q"].presence || {}
+      params_to_restore[:page] = stored_params["page"].presence || 1
+      params_to_restore[:per_page] = stored_params["per_page"].presence || 50
+
+      redirect_to transactions_path(params_to_restore)
+    else
+      Current.session.update!(
+        prev_transaction_page_params: {
+          q: search_params,
+          page: params[:page],
+          per_page: params[:per_page]
+        }
       )
-
-      nature = entry_params.delete(:nature)
-
-      if nature.present? && entry_params[:amount].present?
-        signed_amount = nature == "inflow" ? -entry_params[:amount].to_d : entry_params[:amount].to_d
-        entry_params = entry_params.merge(amount: signed_amount)
-      end
-
-      entry_params
     end
+  end
 
-    def search_params
-      cleaned_params = params.fetch(:q, {})
-              .permit(
-                :start_date, :end_date, :search, :amount,
-                :amount_operator, :active_accounts_only,
-                accounts: [], account_ids: [],
-                categories: [], merchants: [], types: [], tags: []
-              )
-              .to_h
-              .compact_blank
+  def should_restore_params?
+    request.query_parameters.blank? && (stored_params["q"].present? || stored_params["page"].present? || stored_params["per_page"].present?)
+  end
 
-      cleaned_params.delete(:amount_operator) unless cleaned_params[:amount].present?
-
-
-      cleaned_params
-    end
-
-    def store_params!
-      if should_restore_params?
-        params_to_restore = {}
-
-        params_to_restore[:q] = stored_params["q"].presence || {}
-        params_to_restore[:page] = stored_params["page"].presence || 1
-        params_to_restore[:per_page] = stored_params["per_page"].presence || 50
-
-        redirect_to transactions_path(params_to_restore)
-      else
-        Current.session.update!(
-          prev_transaction_page_params: {
-            q: search_params,
-            page: params[:page],
-            per_page: params[:per_page]
-          }
-        )
-      end
-    end
-
-    def should_restore_params?
-      request.query_parameters.blank? && (stored_params["q"].present? || stored_params["page"].present? || stored_params["per_page"].present?)
-    end
-
-    def stored_params
-      Current.session.prev_transaction_page_params
-    end
+  def stored_params
+    Current.session.prev_transaction_page_params
+  end
 end

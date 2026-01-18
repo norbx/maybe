@@ -71,9 +71,9 @@ class Import::RowsControllerTest < ActionDispatch::IntegrationTest
   end
 
   private
-    def assert_row_fields(row, fields)
-      fields.each do |field|
-        assert_select "turbo-frame##{dom_id(row, field)}"
-      end
+  def assert_row_fields(row, fields)
+    fields.each do |field|
+      assert_select "turbo-frame##{dom_id(row, field)}"
     end
+  end
 end

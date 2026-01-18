@@ -13,7 +13,7 @@ class InviteCodesController < ApplicationController
 
   private
 
-    def ensure_self_hosted
-      redirect_to root_path unless self_hosted?
-    end
+  def ensure_self_hosted
+    redirect_to root_path unless self_hosted?
+  end
 end

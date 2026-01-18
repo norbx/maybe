@@ -43,11 +43,11 @@ class FamilyMerchantsController < ApplicationController
   end
 
   private
-    def set_merchant
-      @family_merchant = Current.family.merchants.find(params[:id])
-    end
+  def set_merchant
+    @family_merchant = Current.family.merchants.find(params[:id])
+  end
 
-    def merchant_params
-      params.require(:family_merchant).permit(:name, :color)
-    end
+  def merchant_params
+    params.require(:family_merchant).permit(:name, :color)
+  end
 end

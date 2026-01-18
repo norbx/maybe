@@ -20,9 +20,9 @@ class Demo::DataCleaner
 
   private
 
-    def ensure_safe_environment!
-      unless SAFE_ENVIRONMENTS.include?(Rails.env)
-        raise SecurityError, "Demo::DataCleaner can only be used in #{SAFE_ENVIRONMENTS.join(', ')} environments. Current: #{Rails.env}"
-      end
+  def ensure_safe_environment!
+    unless SAFE_ENVIRONMENTS.include?(Rails.env)
+      raise SecurityError, "Demo::DataCleaner can only be used in #{SAFE_ENVIRONMENTS.join(', ')} environments. Current: #{Rails.env}"
     end
+  end
 end

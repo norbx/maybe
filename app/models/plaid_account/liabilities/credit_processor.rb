@@ -13,13 +13,13 @@ class PlaidAccount::Liabilities::CreditProcessor
   end
 
   private
-    attr_reader :plaid_account
+  attr_reader :plaid_account
 
-    def account
-      plaid_account.account
-    end
+  def account
+    plaid_account.account
+  end
 
-    def credit_data
-      plaid_account.raw_liabilities_payload["credit"]
-    end
+  def credit_data
+    plaid_account.raw_liabilities_payload["credit"]
+  end
 end

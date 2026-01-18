@@ -51,7 +51,7 @@ class Property < ApplicationRecord
   end
 
   private
-    def first_valuation_amount
-      account.entries.valuations.order(:date).first&.amount_money || account.balance_money
-    end
+  def first_valuation_amount
+    account.entries.valuations.order(:date).first&.amount_money || account.balance_money
+  end
 end

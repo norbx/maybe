@@ -21,17 +21,17 @@ class Assistant::FunctionToolCaller
   end
 
   private
-    def execute(function_request)
-      fn = find_function(function_request)
-      fn_args = JSON.parse(function_request.function_args)
-      fn.call(fn_args)
-    rescue => e
-      raise FunctionExecutionError.new(
-        "Error calling function #{fn.name} with arguments #{fn_args}: #{e.message}"
-      )
-    end
+  def execute(function_request)
+    fn = find_function(function_request)
+    fn_args = JSON.parse(function_request.function_args)
+    fn.call(fn_args)
+  rescue => e
+    raise FunctionExecutionError.new(
+      "Error calling function #{fn.name} with arguments #{fn_args}: #{e.message}"
+    )
+  end
 
-    def find_function(function_request)
-      functions.find { |f| f.name == function_request.function_name }
-    end
+  def find_function(function_request)
+    functions.find { |f| f.name == function_request.function_name }
+  end
 end

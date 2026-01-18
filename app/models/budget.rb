@@ -48,12 +48,12 @@ class Budget < ApplicationRecord
     end
 
     private
-      def oldest_valid_budget_date(family)
-        # Allow going back to either the earliest entry date OR 2 years ago, whichever is earlier
-        two_years_ago = 2.years.ago.beginning_of_month
-        oldest_entry_date = family.oldest_entry_date.beginning_of_month
-        [two_years_ago, oldest_entry_date].min
-      end
+    def oldest_valid_budget_date(family)
+      # Allow going back to either the earliest entry date OR 2 years ago, whichever is earlier
+      two_years_ago = 2.years.ago.beginning_of_month
+      oldest_entry_date = family.oldest_entry_date.beginning_of_month
+      [two_years_ago, oldest_entry_date].min
+    end
   end
 
   def period
@@ -235,15 +235,15 @@ class Budget < ApplicationRecord
   end
 
   private
-    def income_statement
-      @income_statement ||= family.income_statement
-    end
+  def income_statement
+    @income_statement ||= family.income_statement
+  end
 
-    def expense_totals
-      @expense_totals ||= income_statement.expense_totals(period: period)
-    end
+  def expense_totals
+    @expense_totals ||= income_statement.expense_totals(period: period)
+  end
 
-    def income_totals
-      @income_totals ||= family.income_statement.income_totals(period: period)
-    end
+  def income_totals
+    @income_totals ||= family.income_statement.income_totals(period: period)
+  end
 end

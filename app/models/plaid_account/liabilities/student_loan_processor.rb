@@ -15,36 +15,36 @@ class PlaidAccount::Liabilities::StudentLoanProcessor
   end
 
   private
-    attr_reader :plaid_account
+  attr_reader :plaid_account
 
-    def account
-      plaid_account.account
-    end
+  def account
+    plaid_account.account
+  end
 
-    def term_months
-      return nil unless origination_date && expected_payoff_date
+  def term_months
+    return nil unless origination_date && expected_payoff_date
 
-      ((expected_payoff_date - origination_date).to_i / 30).to_i
-    end
+    ((expected_payoff_date - origination_date).to_i / 30).to_i
+  end
 
-    def origination_date
-      parse_date(student_loan_data["origination_date"])
-    end
+  def origination_date
+    parse_date(student_loan_data["origination_date"])
+  end
 
-    def expected_payoff_date
-      parse_date(student_loan_data["expected_payoff_date"])
-    end
+  def expected_payoff_date
+    parse_date(student_loan_data["expected_payoff_date"])
+  end
 
-    def parse_date(value)
-      return value if value.is_a?(Date)
-      return nil unless value.present?
+  def parse_date(value)
+    return value if value.is_a?(Date)
+    return nil unless value.present?
 
-      Date.parse(value.to_s)
-    rescue ArgumentError
-      nil
-    end
+    Date.parse(value.to_s)
+  rescue ArgumentError
+    nil
+  end
 
-    def student_loan_data
-      plaid_account.raw_liabilities_payload["student"]
-    end
+  def student_loan_data
+    plaid_account.raw_liabilities_payload["student"]
+  end
 end

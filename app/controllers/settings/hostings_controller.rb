@@ -35,11 +35,11 @@ class Settings::HostingsController < ApplicationController
   end
 
   private
-    def hosting_params
-      params.require(:setting).permit(:require_invite_for_signup, :require_email_confirmation, :synth_api_key)
-    end
+  def hosting_params
+    params.require(:setting).permit(:require_invite_for_signup, :require_email_confirmation, :synth_api_key)
+  end
 
-    def ensure_admin
-      redirect_to settings_hosting_path, alert: t(".not_authorized") unless Current.user.admin?
-    end
+  def ensure_admin
+    redirect_to settings_hosting_path, alert: t(".not_authorized") unless Current.user.admin?
+  end
 end

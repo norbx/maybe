@@ -26,22 +26,22 @@ class BudgetsController < ApplicationController
 
   private
 
-    def budget_create_params
-      params.require(:budget).permit(:start_date)
-    end
+  def budget_create_params
+    params.require(:budget).permit(:start_date)
+  end
 
-    def budget_params
-      params.require(:budget).permit(:budgeted_spending, :expected_income)
-    end
+  def budget_params
+    params.require(:budget).permit(:budgeted_spending, :expected_income)
+  end
 
-    def set_budget
-      start_date = Budget.param_to_date(params[:month_year])
-      @budget = Budget.find_or_bootstrap(Current.family, start_date: start_date)
-      raise ActiveRecord::RecordNotFound unless @budget
-    end
+  def set_budget
+    start_date = Budget.param_to_date(params[:month_year])
+    @budget = Budget.find_or_bootstrap(Current.family, start_date: start_date)
+    raise ActiveRecord::RecordNotFound unless @budget
+  end
 
-    def redirect_to_current_month_budget
-      current_budget = Budget.find_or_bootstrap(Current.family, start_date: Date.current)
-      redirect_to budget_path(current_budget)
-    end
+  def redirect_to_current_month_budget
+    current_budget = Budget.find_or_bootstrap(Current.family, start_date: Date.current)
+    redirect_to budget_path(current_budget)
+  end
 end

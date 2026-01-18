@@ -9,7 +9,7 @@ class FamilyMerchant < Merchant
   validates :name, uniqueness: { scope: :family }
 
   private
-    def set_default_color
-      self.color = COLORS.sample
-    end
+  def set_default_color
+    self.color = COLORS.sample
+  end
 end

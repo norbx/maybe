@@ -106,7 +106,7 @@ module Security::Provided
   end
 
   private
-    def provider
-      self.class.provider
-    end
+  def provider
+    self.class.provider
+  end
 end

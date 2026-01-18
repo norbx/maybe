@@ -59,15 +59,15 @@ module Syncable
   end
 
   private
-    def latest_sync
-      syncs.ordered.first
-    end
+  def latest_sync
+    syncs.ordered.first
+  end
 
-    def syncer
-      self.class::Syncer.new(self)
-    end
+  def syncer
+    self.class::Syncer.new(self)
+  end
 
-    def sync_broadcaster
-      self.class::SyncCompleteEvent.new(self)
-    end
+  def sync_broadcaster
+    self.class::SyncCompleteEvent.new(self)
+  end
 end

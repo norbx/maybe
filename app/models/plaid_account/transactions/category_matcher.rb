@@ -73,37 +73,37 @@ class PlaidAccount::Transactions::CategoryMatcher
   end
 
   private
-    attr_reader :user_categories
+  attr_reader :user_categories
 
-    def get_plaid_category_details(plaid_category_name)
-      detailed_plaid_categories.find { |c| c[:key] == plaid_category_name.downcase.to_sym }
-    end
+  def get_plaid_category_details(plaid_category_name)
+    detailed_plaid_categories.find { |c| c[:key] == plaid_category_name.downcase.to_sym }
+  end
 
-    def detailed_plaid_categories
-      CATEGORIES_MAP.flat_map do |parent_key, parent_data|
-        parent_data[:detailed_categories].map do |child_key, child_data|
-          {
-            key: child_key,
-            classification: child_data[:classification],
-            aliases: child_data[:aliases],
-            parent_key: parent_key,
-            parent_aliases: parent_data[:aliases]
-          }
-        end
-      end
-    end
-
-    def normalized_user_categories
-      user_categories.map do |user_category|
+  def detailed_plaid_categories
+    CATEGORIES_MAP.flat_map do |parent_key, parent_data|
+      parent_data[:detailed_categories].map do |child_key, child_data|
         {
-          id: user_category.id,
-          classification: user_category.classification,
-          name: normalize_user_category_name(user_category.name)
+          key: child_key,
+          classification: child_data[:classification],
+          aliases: child_data[:aliases],
+          parent_key: parent_key,
+          parent_aliases: parent_data[:aliases]
         }
       end
     end
+  end
 
-    def normalize_user_category_name(name)
-      name.to_s.downcase.gsub(/[^a-z0-9]/, " ").strip
+  def normalized_user_categories
+    user_categories.map do |user_category|
+      {
+        id: user_category.id,
+        classification: user_category.classification,
+        name: normalize_user_category_name(user_category.name)
+      }
     end
+  end
+
+  def normalize_user_category_name(name)
+    name.to_s.downcase.gsub(/[^a-z0-9]/, " ").strip
+  end
 end

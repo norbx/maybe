@@ -58,41 +58,41 @@ class Family::AutoMerchantDetector
   end
 
   private
-    attr_reader :family, :transaction_ids
+  attr_reader :family, :transaction_ids
 
-    # For now, OpenAI only, but this should work with any LLM concept provider
-    def llm_provider
-      Provider::Registry.get_provider(:openai)
-    end
+  # For now, OpenAI only, but this should work with any LLM concept provider
+  def llm_provider
+    Provider::Registry.get_provider(:openai)
+  end
 
-    def default_logo_provider_url
-      "https://logo.synthfinance.com"
-    end
+  def default_logo_provider_url
+    "https://logo.synthfinance.com"
+  end
 
-    def user_merchants_input
-      family.merchants.map do |merchant|
-        {
-          id: merchant.id,
-          name: merchant.name
-        }
-      end
+  def user_merchants_input
+    family.merchants.map do |merchant|
+      {
+        id: merchant.id,
+        name: merchant.name
+      }
     end
+  end
 
-    def transactions_input
-      scope.map do |transaction|
-        {
-          id: transaction.id,
-          amount: transaction.entry.amount.abs,
-          classification: transaction.entry.classification,
-          description: transaction.entry.name,
-          merchant: transaction.merchant&.name
-        }
-      end
+  def transactions_input
+    scope.map do |transaction|
+      {
+        id: transaction.id,
+        amount: transaction.entry.amount.abs,
+        classification: transaction.entry.classification,
+        description: transaction.entry.name,
+        merchant: transaction.merchant&.name
+      }
     end
+  end
 
-    def scope
-      family.transactions.where(id: transaction_ids, merchant_id: nil)
-                         .enrichable(:merchant_id)
-                         .includes(:merchant, :entry)
-    end
+  def scope
+    family.transactions.where(id: transaction_ids, merchant_id: nil)
+                       .enrichable(:merchant_id)
+                       .includes(:merchant, :entry)
+  end
 end

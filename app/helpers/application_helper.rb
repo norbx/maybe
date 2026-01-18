@@ -109,15 +109,15 @@ module ApplicationHelper
   end
 
   private
-    def calculate_total(item, money_method, negate)
-      # Filter out transfer-type transactions from entries
-      # Only Entry objects have entryable transactions, Account objects don't
-      items = item.reject do |i|
-        i.is_a?(Entry) &&
-        i.entryable.is_a?(Transaction) &&
-        i.entryable.transfer?
-      end
-      total = items.sum(&money_method)
-      negate ? -total : total
+  def calculate_total(item, money_method, negate)
+    # Filter out transfer-type transactions from entries
+    # Only Entry objects have entryable transactions, Account objects don't
+    items = item.reject do |i|
+      i.is_a?(Entry) &&
+      i.entryable.is_a?(Transaction) &&
+      i.entryable.transfer?
     end
+    total = items.sum(&money_method)
+    negate ? -total : total
+  end
 end

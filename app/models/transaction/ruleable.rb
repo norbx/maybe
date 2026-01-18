@@ -11,7 +11,7 @@ module Transaction::Ruleable
   end
 
   private
-    def rules
-      entry.account.family.rules
-    end
+  def rules
+    entry.account.family.rules
+  end
 end

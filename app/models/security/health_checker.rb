@@ -28,18 +28,18 @@ class Security::HealthChecker
     end
 
     private
-      # If a security has never had a health check, we prioritize it, regardless of batch size
-      def never_checked_scope
-        Security.where(last_health_check_at: nil)
-      end
+    # If a security has never had a health check, we prioritize it, regardless of batch size
+    def never_checked_scope
+      Security.where(last_health_check_at: nil)
+    end
 
-      # Any securities not checked for 30 days are due
-      # We only process the batch size, which means some "due" securities will not be checked today
-      # This is by design, to prevent all securities from coming due at the same time
-      def due_for_check_scope
-        Security.where(last_health_check_at: ..HEALTH_CHECK_INTERVAL.ago)
-                .order(last_health_check_at: :asc)
-      end
+    # Any securities not checked for 30 days are due
+    # We only process the batch size, which means some "due" securities will not be checked today
+    # This is by design, to prevent all securities from coming due at the same time
+    def due_for_check_scope
+      Security.where(last_health_check_at: ..HEALTH_CHECK_INTERVAL.ago)
+              .order(last_health_check_at: :asc)
+    end
   end
 
   def initialize(security)
@@ -63,58 +63,58 @@ class Security::HealthChecker
   end
 
   private
-    attr_reader :security
+  attr_reader :security
 
-    def provider
-      Security.provider
-    end
+  def provider
+    Security.provider
+  end
 
-    def latest_provider_price
-      return nil unless provider.present?
+  def latest_provider_price
+    return nil unless provider.present?
 
-      response = provider.fetch_security_price(
-        symbol: security.ticker,
-        exchange_operating_mic: security.exchange_operating_mic,
-        date: Date.current
-      )
+    response = provider.fetch_security_price(
+      symbol: security.ticker,
+      exchange_operating_mic: security.exchange_operating_mic,
+      date: Date.current
+    )
 
-      return nil unless response.success?
+    return nil unless response.success?
 
-      response.data.price
-    end
+    response.data.price
+  end
 
-    # On success, reset any failure counters and ensure it is "online"
-    def handle_success
+  # On success, reset any failure counters and ensure it is "online"
+  def handle_success
+    security.update!(
+      offline: false,
+      failed_fetch_count: 0,
+      failed_fetch_at: nil
+    )
+  end
+
+  def handle_failure
+    new_failure_count = security.failed_fetch_count.to_i + 1
+    new_failure_at = Time.current
+
+    if new_failure_count > MAX_CONSECUTIVE_FAILURES
+      convert_to_offline_security!
+    else
       security.update!(
-        offline: false,
-        failed_fetch_count: 0,
-        failed_fetch_at: nil
+        failed_fetch_count: new_failure_count,
+        failed_fetch_at: new_failure_at
       )
     end
+  end
 
-    def handle_failure
-      new_failure_count = security.failed_fetch_count.to_i + 1
-      new_failure_at = Time.current
-
-      if new_failure_count > MAX_CONSECUTIVE_FAILURES
-        convert_to_offline_security!
-      else
-        security.update!(
-          failed_fetch_count: new_failure_count,
-          failed_fetch_at: new_failure_at
-        )
-      end
+  # The "offline" state tells our MarketDataImporter (daily cron) to skip this security when fetching prices
+  def convert_to_offline_security!
+    Security.transaction do
+      security.update!(
+        offline: true,
+        failed_fetch_count: MAX_CONSECUTIVE_FAILURES + 1,
+        failed_fetch_at: Time.current
+      )
+      security.prices.delete_all
     end
-
-    # The "offline" state tells our MarketDataImporter (daily cron) to skip this security when fetching prices
-    def convert_to_offline_security!
-      Security.transaction do
-        security.update!(
-          offline: true,
-          failed_fetch_count: MAX_CONSECUTIVE_FAILURES + 1,
-          failed_fetch_at: Time.current
-        )
-        security.prices.delete_all
-      end
-    end
+  end
 end

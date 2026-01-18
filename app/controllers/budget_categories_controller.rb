@@ -35,14 +35,14 @@ class BudgetCategoriesController < ApplicationController
   end
 
   private
-    def budget_category_params
-      params.require(:budget_category).permit(:budgeted_spending).tap do |params|
-        params[:budgeted_spending] = params[:budgeted_spending].presence || 0
-      end
+  def budget_category_params
+    params.require(:budget_category).permit(:budgeted_spending).tap do |params|
+      params[:budgeted_spending] = params[:budgeted_spending].presence || 0
     end
+  end
 
-    def set_budget
-      start_date = Budget.param_to_date(params[:budget_month_year])
-      @budget = Current.family.budgets.find_by(start_date: start_date)
-    end
+  def set_budget
+    start_date = Budget.param_to_date(params[:budget_month_year])
+    @budget = Current.family.budgets.find_by(start_date: start_date)
+  end
 end

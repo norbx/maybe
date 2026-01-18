@@ -15,21 +15,21 @@ class IncomeStatement::FamilyStats
   end
 
   private
-    StatRow = Data.define(:classification, :median, :avg)
+  StatRow = Data.define(:classification, :median, :avg)
 
-    def sanitized_query_sql
-      ActiveRecord::Base.sanitize_sql_array([
-        query_sql,
-        {
-          target_currency: @family.currency,
-          interval: @interval,
-          family_id: @family.id
-        }
-      ])
-    end
+  def sanitized_query_sql
+    ActiveRecord::Base.sanitize_sql_array([
+      query_sql,
+      {
+        target_currency: @family.currency,
+        interval: @interval,
+        family_id: @family.id
+      }
+    ])
+  end
 
-    def query_sql
-      <<~SQL
+  def query_sql
+    <<~SQL
         WITH period_totals AS (
           SELECT
             date_trunc(:interval, ae.date) as period,
@@ -55,5 +55,5 @@ class IncomeStatement::FamilyStats
         FROM period_totals
         GROUP BY classification;
       SQL
-    end
+  end
 end

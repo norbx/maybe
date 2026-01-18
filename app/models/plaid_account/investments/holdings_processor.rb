@@ -38,13 +38,13 @@ class PlaidAccount::Investments::HoldingsProcessor
   end
 
   private
-    attr_reader :plaid_account, :security_resolver
+  attr_reader :plaid_account, :security_resolver
 
-    def account
-      plaid_account.account
-    end
+  def account
+    plaid_account.account
+  end
 
-    def holdings
-      plaid_account.raw_investments_payload["holdings"] || []
-    end
+  def holdings
+    plaid_account.raw_investments_payload["holdings"] || []
+  end
 end

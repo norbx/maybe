@@ -70,25 +70,25 @@ class ApiKey < ApplicationRecord
 
   private
 
-    def set_display_key
-      if key.present?
-        self.display_key = key
-      end
+  def set_display_key
+    if key.present?
+      self.display_key = key
     end
+  end
 
-    def scopes_not_empty
-      if scopes.blank? || (scopes.is_a?(Array) && (scopes.empty? || scopes.all?(&:blank?)))
-        errors.add(:scopes, "must include at least one permission")
-      elsif scopes.is_a?(Array) && scopes.length > 1
-        errors.add(:scopes, "can only have one permission level")
-      elsif scopes.is_a?(Array) && !%w[read read_write].include?(scopes.first)
-        errors.add(:scopes, "must be either 'read' or 'read_write'")
-      end
+  def scopes_not_empty
+    if scopes.blank? || (scopes.is_a?(Array) && (scopes.empty? || scopes.all?(&:blank?)))
+      errors.add(:scopes, "must include at least one permission")
+    elsif scopes.is_a?(Array) && scopes.length > 1
+      errors.add(:scopes, "can only have one permission level")
+    elsif scopes.is_a?(Array) && !%w[read read_write].include?(scopes.first)
+      errors.add(:scopes, "must be either 'read' or 'read_write'")
     end
+  end
 
-    def one_active_key_per_user_per_source
-      if user&.api_keys&.active&.where(source: source)&.where&.not(id: id)&.exists?
-        errors.add(:user, "can only have one active API key per source (#{source})")
-      end
+  def one_active_key_per_user_per_source
+    if user&.api_keys&.active&.where(source: source)&.where&.not(id: id)&.exists?
+      errors.add(:user, "can only have one active API key per source (#{source})")
     end
+  end
 end

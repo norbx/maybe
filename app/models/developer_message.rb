@@ -4,7 +4,7 @@ class DeveloperMessage < Message
   end
 
   private
-    def broadcast?
-      chat.debug_mode?
-    end
+  def broadcast?
+    chat.debug_mode?
+  end
 end

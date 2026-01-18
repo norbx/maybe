@@ -12,7 +12,7 @@ class Import::ConfirmsController < ApplicationController
   end
 
   private
-    def set_import
-      @import = Current.family.imports.find(params[:import_id])
-    end
+  def set_import
+    @import = Current.family.imports.find(params[:import_id])
+  end
 end

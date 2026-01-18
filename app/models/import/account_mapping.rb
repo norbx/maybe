@@ -47,7 +47,7 @@ class Import::AccountMapping < Import::Mapping
   end
 
   private
-    def requires_mapping?
-      (key.blank? || !create_when_empty) && import.account.nil?
-    end
+  def requires_mapping?
+    (key.blank? || !create_when_empty) && import.account.nil?
+  end
 end

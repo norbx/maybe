@@ -78,22 +78,22 @@ class PropertiesController < ApplicationController
   end
 
   private
-    def balance_params
-      params.require(:account).permit(:balance, :currency)
-    end
+  def balance_params
+    params.require(:account).permit(:balance, :currency)
+  end
 
-    def address_params
-      params.require(:property)
-            .permit(address_attributes: [:line1, :line2, :locality, :region, :country, :postal_code])
-    end
+  def address_params
+    params.require(:property)
+          .permit(address_attributes: [:line1, :line2, :locality, :region, :country, :postal_code])
+  end
 
-    def property_params
-      params.require(:account)
-            .permit(:name, :subtype, :accountable_type, accountable_attributes: [:id, :year_built, :area_unit, :area_value])
-    end
+  def property_params
+    params.require(:account)
+          .permit(:name, :subtype, :accountable_type, accountable_attributes: [:id, :year_built, :area_unit, :area_value])
+  end
 
-    def set_property
-      @account = Current.family.accounts.find(params[:id])
-      @property = @account.property
-    end
+  def set_property
+    @account = Current.family.accounts.find(params[:id])
+    @property = @account.property
+  end
 end

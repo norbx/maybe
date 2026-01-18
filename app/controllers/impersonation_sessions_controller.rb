@@ -38,21 +38,21 @@ class ImpersonationSessionsController < ApplicationController
   end
 
   private
-    def session_params
-      params.require(:impersonation_session).permit(:impersonated_id)
-    end
+  def session_params
+    params.require(:impersonation_session).permit(:impersonated_id)
+  end
 
-    def set_impersonation_session
-      @impersonation_session =
-        Current.true_user.impersonated_support_sessions.find_by(id: params[:id]) ||
-        Current.true_user.impersonator_support_sessions.find_by(id: params[:id])
-    end
+  def set_impersonation_session
+    @impersonation_session =
+      Current.true_user.impersonated_support_sessions.find_by(id: params[:id]) ||
+      Current.true_user.impersonator_support_sessions.find_by(id: params[:id])
+  end
 
-    def require_super_admin!
-      raise_unauthorized! unless Current.true_user&.super_admin?
-    end
+  def require_super_admin!
+    raise_unauthorized! unless Current.true_user&.super_admin?
+  end
 
-    def raise_unauthorized!
-      raise ActionController::RoutingError.new("Not Found")
-    end
+  def raise_unauthorized!
+    raise ActionController::RoutingError.new("Not Found")
+  end
 end

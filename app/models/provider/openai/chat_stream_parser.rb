@@ -18,11 +18,11 @@ class Provider::Openai::ChatStreamParser
   end
 
   private
-    attr_reader :object
+  attr_reader :object
 
-    Chunk = Provider::LlmConcept::ChatStreamChunk
+  Chunk = Provider::LlmConcept::ChatStreamChunk
 
-    def parse_response(response)
-      Provider::Openai::ChatParser.new(response).parsed
-    end
+  def parse_response(response)
+    Provider::Openai::ChatParser.new(response).parsed
+  end
 end

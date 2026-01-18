@@ -41,11 +41,11 @@ class TagsController < ApplicationController
 
   private
 
-    def set_tag
-      @tag = Current.family.tags.find(params[:id])
-    end
+  def set_tag
+    @tag = Current.family.tags.find(params[:id])
+  end
 
-    def tag_params
-      params.require(:tag).permit(:name, :color)
-    end
+  def tag_params
+    params.require(:tag).permit(:name, :color)
+  end
 end

@@ -164,48 +164,48 @@ class User < ApplicationRecord
   end
 
   private
-    def ensure_valid_profile_image
-      return unless profile_image.attached?
+  def ensure_valid_profile_image
+    return unless profile_image.attached?
 
-      unless profile_image.content_type.in?(%w[image/jpeg image/png])
-        errors.add(:profile_image, "must be a JPEG or PNG")
-        profile_image.purge
-      end
+    unless profile_image.content_type.in?(%w[image/jpeg image/png])
+      errors.add(:profile_image, "must be a JPEG or PNG")
+      profile_image.purge
     end
+  end
 
-    def last_user_in_family?
-      family.users.count == 1
+  def last_user_in_family?
+    family.users.count == 1
+  end
+
+  def deactivated_email
+    email.gsub(/@/, "-deactivated-#{SecureRandom.uuid}@")
+  end
+
+  def profile_image_size
+    if profile_image.attached? && profile_image.byte_size > 10.megabytes
+      errors.add(:profile_image, :invalid_file_size, max_megabytes: 10)
     end
+  end
 
-    def deactivated_email
-      email.gsub(/@/, "-deactivated-#{SecureRandom.uuid}@")
+  def totp
+    ROTP::TOTP.new(otp_secret, issuer: "Maybe Finance")
+  end
+
+  def verify_backup_code?(code)
+    return false if otp_backup_codes.blank?
+
+    # Find and remove the used backup code
+    if (index = otp_backup_codes.index(code))
+      remaining_codes = otp_backup_codes.dup
+      remaining_codes.delete_at(index)
+      update_column(:otp_backup_codes, remaining_codes)
+      true
+    else
+      false
     end
+  end
 
-    def profile_image_size
-      if profile_image.attached? && profile_image.byte_size > 10.megabytes
-        errors.add(:profile_image, :invalid_file_size, max_megabytes: 10)
-      end
-    end
-
-    def totp
-      ROTP::TOTP.new(otp_secret, issuer: "Maybe Finance")
-    end
-
-    def verify_backup_code?(code)
-      return false if otp_backup_codes.blank?
-
-      # Find and remove the used backup code
-      if (index = otp_backup_codes.index(code))
-        remaining_codes = otp_backup_codes.dup
-        remaining_codes.delete_at(index)
-        update_column(:otp_backup_codes, remaining_codes)
-        true
-      else
-        false
-      end
-    end
-
-    def generate_backup_codes
-      8.times.map { SecureRandom.hex(4) }
-    end
+  def generate_backup_codes
+    8.times.map { SecureRandom.hex(4) }
+  end
 end

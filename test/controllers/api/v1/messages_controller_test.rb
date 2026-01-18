@@ -105,7 +105,7 @@ class Api::V1::MessagesControllerTest < ActionDispatch::IntegrationTest
 
   private
 
-    def bearer_auth_header(token)
-      { "Authorization" => "Bearer #{token.token}" }
-    end
+  def bearer_auth_header(token)
+    { "Authorization" => "Bearer #{token.token}" }
+  end
 end

@@ -180,7 +180,7 @@ class Assistant::Function::GetTransactions < Assistant::Function
   end
 
   private
-    def default_page_size
-      self.class.default_page_size
-    end
+  def default_page_size
+    self.class.default_page_size
+  end
 end

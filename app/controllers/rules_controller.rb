@@ -65,20 +65,20 @@ class RulesController < ApplicationController
   end
 
   private
-    def set_rule
-      @rule = Current.family.rules.find(params[:id])
-    end
+  def set_rule
+    @rule = Current.family.rules.find(params[:id])
+  end
 
-    def rule_params
-      params.require(:rule).permit(
-        :resource_type, :effective_date, :active, :name,
-        conditions_attributes: [
-          :id, :condition_type, :operator, :value, :_destroy,
-          sub_conditions_attributes: [:id, :condition_type, :operator, :value, :_destroy]
-        ],
-        actions_attributes: [
-          :id, :action_type, :value, :_destroy
-        ]
-      )
-    end
+  def rule_params
+    params.require(:rule).permit(
+      :resource_type, :effective_date, :active, :name,
+      conditions_attributes: [
+        :id, :condition_type, :operator, :value, :_destroy,
+        sub_conditions_attributes: [:id, :condition_type, :operator, :value, :_destroy]
+      ],
+      actions_attributes: [
+        :id, :action_type, :value, :_destroy
+      ]
+    )
+  end
 end

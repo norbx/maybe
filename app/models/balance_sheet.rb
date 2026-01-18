@@ -54,19 +54,19 @@ class BalanceSheet
   end
 
   private
-    def sync_status_monitor
-      @sync_status_monitor ||= SyncStatusMonitor.new(family)
-    end
+  def sync_status_monitor
+    @sync_status_monitor ||= SyncStatusMonitor.new(family)
+  end
 
-    def account_totals
-      @account_totals ||= AccountTotals.new(family, sync_status_monitor: sync_status_monitor)
-    end
+  def account_totals
+    @account_totals ||= AccountTotals.new(family, sync_status_monitor: sync_status_monitor)
+  end
 
-    def net_worth_series_builder
-      @net_worth_series_builder ||= NetWorthSeriesBuilder.new(family)
-    end
+  def net_worth_series_builder
+    @net_worth_series_builder ||= NetWorthSeriesBuilder.new(family)
+  end
 
-    def categorised_series_builder
-      @categorised_series_builder ||= CategorisedSeriesBuilder.new(family)
-    end
+  def categorised_series_builder
+    @categorised_series_builder ||= CategorisedSeriesBuilder.new(family)
+  end
 end

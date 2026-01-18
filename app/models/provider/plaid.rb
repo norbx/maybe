@@ -144,69 +144,69 @@ class Provider::Plaid
   end
 
   private
-    TransactionSyncResponse = Struct.new :added, :modified, :removed, :cursor, keyword_init: true
-    InvestmentsResponse = Struct.new :holdings, :transactions, :securities, keyword_init: true
+  TransactionSyncResponse = Struct.new :added, :modified, :removed, :cursor, keyword_init: true
+  InvestmentsResponse = Struct.new :holdings, :transactions, :securities, keyword_init: true
 
-    def get_item_holdings(access_token:)
-      request = Plaid::InvestmentsHoldingsGetRequest.new({ access_token: access_token })
-      response = client.investments_holdings_get(request)
+  def get_item_holdings(access_token:)
+    request = Plaid::InvestmentsHoldingsGetRequest.new({ access_token: access_token })
+    response = client.investments_holdings_get(request)
 
-      [response.holdings, response.securities]
+    [response.holdings, response.securities]
+  end
+
+  def get_item_investment_transactions(access_token:, start_date:, end_date:)
+    transactions = []
+    securities = []
+    offset = 0
+
+    loop do
+      request = Plaid::InvestmentsTransactionsGetRequest.new(
+        access_token: access_token,
+        start_date: start_date.to_s,
+        end_date: end_date.to_s,
+        options: { offset: offset }
+      )
+
+      response = client.investments_transactions_get(request)
+
+      transactions += response.investment_transactions
+      securities += response.securities
+
+      break if transactions.length >= response.total_investment_transactions
+      offset = transactions.length
     end
 
-    def get_item_investment_transactions(access_token:, start_date:, end_date:)
-      transactions = []
-      securities = []
-      offset = 0
+    [transactions, securities]
+  end
 
-      loop do
-        request = Plaid::InvestmentsTransactionsGetRequest.new(
-          access_token: access_token,
-          start_date: start_date.to_s,
-          end_date: end_date.to_s,
-          options: { offset: offset }
-        )
+  def get_primary_product(accountable_type)
+    return "transactions" if eu?
 
-        response = client.investments_transactions_get(request)
-
-        transactions += response.investment_transactions
-        securities += response.securities
-
-        break if transactions.length >= response.total_investment_transactions
-        offset = transactions.length
-      end
-
-      [transactions, securities]
+    case accountable_type
+    when "Investment"
+      "investments"
+    when "CreditCard", "Loan"
+      "liabilities"
+    else
+      "transactions"
     end
+  end
 
-    def get_primary_product(accountable_type)
-      return "transactions" if eu?
+  def get_additional_consented_products(accountable_type)
+    return [] if eu?
 
-      case accountable_type
-      when "Investment"
-        "investments"
-      when "CreditCard", "Loan"
-        "liabilities"
-      else
-        "transactions"
-      end
+    MAYBE_SUPPORTED_PLAID_PRODUCTS - [get_primary_product(accountable_type)]
+  end
+
+  def eu?
+    region.to_sym == :eu
+  end
+
+  def country_codes
+    if eu?
+      ["ES", "NL", "FR", "IE", "DE", "IT", "PL", "DK", "NO", "SE", "EE", "LT", "LV", "PT", "BE"]  # EU supported countries
+    else
+      ["US", "CA"] # US + CA only
     end
-
-    def get_additional_consented_products(accountable_type)
-      return [] if eu?
-
-      MAYBE_SUPPORTED_PLAID_PRODUCTS - [get_primary_product(accountable_type)]
-    end
-
-    def eu?
-      region.to_sym == :eu
-    end
-
-    def country_codes
-      if eu?
-        ["ES", "NL", "FR", "IE", "DE", "IT", "PL", "DK", "NO", "SE", "EE", "LT", "LV", "PT", "BE"]  # EU supported countries
-      else
-        ["US", "CA"] # US + CA only
-      end
-    end
+  end
 end

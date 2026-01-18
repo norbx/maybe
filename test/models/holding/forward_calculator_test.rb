@@ -131,36 +131,36 @@ class Holding::ForwardCalculatorTest < ActiveSupport::TestCase
   end
 
   private
-    def assert_holdings(expected, calculated)
-      expected.each do |expected_entry|
-        calculated_entry = calculated.find { |c| c.security == expected_entry.security && c.date == expected_entry.date }
+  def assert_holdings(expected, calculated)
+    expected.each do |expected_entry|
+      calculated_entry = calculated.find { |c| c.security == expected_entry.security && c.date == expected_entry.date }
 
-        assert_equal expected_entry.qty, calculated_entry.qty, "Qty mismatch for #{expected_entry.security.ticker} on #{expected_entry.date}"
-        assert_equal expected_entry.price, calculated_entry.price, "Price mismatch for #{expected_entry.security.ticker} on #{expected_entry.date}"
-        assert_equal expected_entry.amount, calculated_entry.amount, "Amount mismatch for #{expected_entry.security.ticker} on #{expected_entry.date}"
-      end
+      assert_equal expected_entry.qty, calculated_entry.qty, "Qty mismatch for #{expected_entry.security.ticker} on #{expected_entry.date}"
+      assert_equal expected_entry.price, calculated_entry.price, "Price mismatch for #{expected_entry.security.ticker} on #{expected_entry.date}"
+      assert_equal expected_entry.amount, calculated_entry.amount, "Amount mismatch for #{expected_entry.security.ticker} on #{expected_entry.date}"
     end
+  end
 
-    def load_prices
-      @voo = Security.create!(ticker: "VOO", name: "Vanguard S&P 500 ETF")
-      Security::Price.create!(security: @voo, date: 4.days.ago.to_date, price: 460)
-      Security::Price.create!(security: @voo, date: 3.days.ago.to_date, price: 470)
-      Security::Price.create!(security: @voo, date: 2.days.ago.to_date, price: 480)
-      Security::Price.create!(security: @voo, date: 1.day.ago.to_date, price: 490)
-      Security::Price.create!(security: @voo, date: Date.current, price: 500)
+  def load_prices
+    @voo = Security.create!(ticker: "VOO", name: "Vanguard S&P 500 ETF")
+    Security::Price.create!(security: @voo, date: 4.days.ago.to_date, price: 460)
+    Security::Price.create!(security: @voo, date: 3.days.ago.to_date, price: 470)
+    Security::Price.create!(security: @voo, date: 2.days.ago.to_date, price: 480)
+    Security::Price.create!(security: @voo, date: 1.day.ago.to_date, price: 490)
+    Security::Price.create!(security: @voo, date: Date.current, price: 500)
 
-      @wmt = Security.create!(ticker: "WMT", name: "Walmart Inc.")
-      Security::Price.create!(security: @wmt, date: 4.days.ago.to_date, price: 100)
-      Security::Price.create!(security: @wmt, date: 3.days.ago.to_date, price: 100)
-      Security::Price.create!(security: @wmt, date: 2.days.ago.to_date, price: 100)
-      Security::Price.create!(security: @wmt, date: 1.day.ago.to_date, price: 100)
-      Security::Price.create!(security: @wmt, date: Date.current, price: 100)
+    @wmt = Security.create!(ticker: "WMT", name: "Walmart Inc.")
+    Security::Price.create!(security: @wmt, date: 4.days.ago.to_date, price: 100)
+    Security::Price.create!(security: @wmt, date: 3.days.ago.to_date, price: 100)
+    Security::Price.create!(security: @wmt, date: 2.days.ago.to_date, price: 100)
+    Security::Price.create!(security: @wmt, date: 1.day.ago.to_date, price: 100)
+    Security::Price.create!(security: @wmt, date: Date.current, price: 100)
 
-      @amzn = Security.create!(ticker: "AMZN", name: "Amazon.com Inc.")
-      Security::Price.create!(security: @amzn, date: 4.days.ago.to_date, price: 200)
-      Security::Price.create!(security: @amzn, date: 3.days.ago.to_date, price: 200)
-      Security::Price.create!(security: @amzn, date: 2.days.ago.to_date, price: 200)
-      Security::Price.create!(security: @amzn, date: 1.day.ago.to_date, price: 200)
-      Security::Price.create!(security: @amzn, date: Date.current, price: 200)
-    end
+    @amzn = Security.create!(ticker: "AMZN", name: "Amazon.com Inc.")
+    Security::Price.create!(security: @amzn, date: 4.days.ago.to_date, price: 200)
+    Security::Price.create!(security: @amzn, date: 3.days.ago.to_date, price: 200)
+    Security::Price.create!(security: @amzn, date: 2.days.ago.to_date, price: 200)
+    Security::Price.create!(security: @amzn, date: 1.day.ago.to_date, price: 200)
+    Security::Price.create!(security: @amzn, date: Date.current, price: 200)
+  end
 end

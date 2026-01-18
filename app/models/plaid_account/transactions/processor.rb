@@ -22,39 +22,39 @@ class PlaidAccount::Transactions::Processor
   end
 
   private
-    attr_reader :plaid_account
+  attr_reader :plaid_account
 
-    def category_matcher
-      @category_matcher ||= PlaidAccount::Transactions::CategoryMatcher.new(family_categories)
-    end
+  def category_matcher
+    @category_matcher ||= PlaidAccount::Transactions::CategoryMatcher.new(family_categories)
+  end
 
-    def family_categories
-      @family_categories ||= begin
-        if account.family.categories.none?
-          account.family.categories.bootstrap!
-        end
-
-        account.family.categories
+  def family_categories
+    @family_categories ||= begin
+      if account.family.categories.none?
+        account.family.categories.bootstrap!
       end
-    end
 
-    def account
-      plaid_account.account
+      account.family.categories
     end
+  end
 
-    def remove_plaid_transaction(raw_transaction)
-      account.entries.find_by(plaid_id: raw_transaction["transaction_id"])&.destroy
-    end
+  def account
+    plaid_account.account
+  end
 
-    # Since we find_or_create_by transactions, we don't need a distinction between added/modified
-    def modified_transactions
-      modified = plaid_account.raw_transactions_payload["modified"] || []
-      added = plaid_account.raw_transactions_payload["added"] || []
+  def remove_plaid_transaction(raw_transaction)
+    account.entries.find_by(plaid_id: raw_transaction["transaction_id"])&.destroy
+  end
 
-      modified + added
-    end
+  # Since we find_or_create_by transactions, we don't need a distinction between added/modified
+  def modified_transactions
+    modified = plaid_account.raw_transactions_payload["modified"] || []
+    added = plaid_account.raw_transactions_payload["added"] || []
 
-    def removed_transactions
-      plaid_account.raw_transactions_payload["removed"] || []
-    end
+    modified + added
+  end
+
+  def removed_transactions
+    plaid_account.raw_transactions_payload["removed"] || []
+  end
 end

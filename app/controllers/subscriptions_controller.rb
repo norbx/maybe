@@ -58,7 +58,7 @@ class SubscriptionsController < ApplicationController
   end
 
   private
-    def stripe
-      @stripe ||= Provider::Registry.get_provider(:stripe)
-    end
+  def stripe
+    @stripe ||= Provider::Registry.get_provider(:stripe)
+  end
 end

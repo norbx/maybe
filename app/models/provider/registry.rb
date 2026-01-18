@@ -23,50 +23,50 @@ class Provider::Registry
     end
 
     private
-      def stripe
-        secret_key = ENV["STRIPE_SECRET_KEY"]
-        webhook_secret = ENV["STRIPE_WEBHOOK_SECRET"]
+    def stripe
+      secret_key = ENV["STRIPE_SECRET_KEY"]
+      webhook_secret = ENV["STRIPE_WEBHOOK_SECRET"]
 
-        return nil unless secret_key.present? && webhook_secret.present?
+      return nil unless secret_key.present? && webhook_secret.present?
 
-        Provider::Stripe.new(secret_key:, webhook_secret:)
-      end
+      Provider::Stripe.new(secret_key:, webhook_secret:)
+    end
 
-      def synth
-        api_key = ENV.fetch("SYNTH_API_KEY", Setting.synth_api_key)
+    def synth
+      api_key = ENV.fetch("SYNTH_API_KEY", Setting.synth_api_key)
 
-        return nil unless api_key.present?
+      return nil unless api_key.present?
 
-        Provider::Synth.new(api_key)
-      end
+      Provider::Synth.new(api_key)
+    end
 
-      def plaid_us
-        config = Rails.application.config.plaid
+    def plaid_us
+      config = Rails.application.config.plaid
 
-        return nil unless config.present?
+      return nil unless config.present?
 
-        Provider::Plaid.new(config, region: :us)
-      end
+      Provider::Plaid.new(config, region: :us)
+    end
 
-      def plaid_eu
-        config = Rails.application.config.plaid_eu
+    def plaid_eu
+      config = Rails.application.config.plaid_eu
 
-        return nil unless config.present?
+      return nil unless config.present?
 
-        Provider::Plaid.new(config, region: :eu)
-      end
+      Provider::Plaid.new(config, region: :eu)
+    end
 
-      def github
-        Provider::Github.new
-      end
+    def github
+      Provider::Github.new
+    end
 
-      def openai
-        access_token = ENV.fetch("OPENAI_ACCESS_TOKEN", Setting.openai_access_token)
+    def openai
+      access_token = ENV.fetch("OPENAI_ACCESS_TOKEN", Setting.openai_access_token)
 
-        return nil unless access_token.present?
+      return nil unless access_token.present?
 
-        Provider::Openai.new(access_token)
-      end
+      Provider::Openai.new(access_token)
+    end
   end
 
   def initialize(concept)
@@ -87,18 +87,18 @@ class Provider::Registry
   end
 
   private
-    attr_reader :concept
+  attr_reader :concept
 
-    def available_providers
-      case concept
-      when :exchange_rates
-        %i[synth]
-      when :securities
-        %i[synth]
-      when :llm
-        %i[openai]
-      else
-        %i[synth plaid_us plaid_eu github openai]
-      end
+  def available_providers
+    case concept
+    when :exchange_rates
+      %i[synth]
+    when :securities
+      %i[synth]
+    when :llm
+      %i[openai]
+    else
+      %i[synth plaid_us plaid_eu github openai]
     end
+  end
 end

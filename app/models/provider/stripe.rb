@@ -68,21 +68,21 @@ class Provider::Stripe
   end
 
   private
-    attr_reader :client, :webhook_secret
+  attr_reader :client, :webhook_secret
 
-    NewCheckoutSession = Data.define(:url, :customer_id)
-    CheckoutSessionResult = Data.define(:success?, :subscription_id)
+  NewCheckoutSession = Data.define(:url, :customer_id)
+  CheckoutSessionResult = Data.define(:success?, :subscription_id)
 
-    def price_id_for(plan)
-      prices = {
-        monthly: ENV["STRIPE_MONTHLY_PRICE_ID"],
-        annual: ENV["STRIPE_ANNUAL_PRICE_ID"]
-      }
+  def price_id_for(plan)
+    prices = {
+      monthly: ENV["STRIPE_MONTHLY_PRICE_ID"],
+      annual: ENV["STRIPE_ANNUAL_PRICE_ID"]
+    }
 
-      prices[plan.to_sym || :monthly]
-    end
+    prices[plan.to_sym || :monthly]
+  end
 
-    def retrieve_event(event_id)
-      client.v1.events.retrieve(event_id)
-    end
+  def retrieve_event(event_id)
+    client.v1.events.retrieve(event_id)
+  end
 end

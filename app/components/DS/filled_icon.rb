@@ -66,34 +66,34 @@ class DS::FilledIcon < DesignSystemComponent
   end
 
   private
-    def solid_bg_class
-      case variant
-      when :surface
-        "bg-surface-inset"
-      when :container
-        "bg-container-inset"
-      when :inverse
-        "bg-container"
-      end
+  def solid_bg_class
+    case variant
+    when :surface
+      "bg-surface-inset"
+    when :container
+      "bg-container-inset"
+    when :inverse
+      "bg-container"
     end
+  end
 
-    def size_classes
-      SIZES[size][:container_size]
-    end
+  def size_classes
+    SIZES[size][:container_size]
+  end
 
-    def radius_classes
-      rounded ? "rounded-full" : SIZES[size][:container_radius]
-    end
+  def radius_classes
+    rounded ? "rounded-full" : SIZES[size][:container_radius]
+  end
 
-    def custom_fg_color
-      hex_color || "var(--color-gray-500)"
-    end
+  def custom_fg_color
+    hex_color || "var(--color-gray-500)"
+  end
 
-    def transparent_bg_color
-      "color-mix(in oklab, #{custom_fg_color} 10%, transparent)"
-    end
+  def transparent_bg_color
+    "color-mix(in oklab, #{custom_fg_color} 10%, transparent)"
+  end
 
-    def transparent_border_color
-      "color-mix(in oklab, #{custom_fg_color} 10%, transparent)"
-    end
+  def transparent_border_color
+    "color-mix(in oklab, #{custom_fg_color} 10%, transparent)"
+  end
 end

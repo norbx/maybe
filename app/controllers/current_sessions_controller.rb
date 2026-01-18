@@ -8,7 +8,7 @@ class CurrentSessionsController < ApplicationController
   end
 
   private
-    def session_params
-      params.require(:current_session).permit(:tab_key, :tab_value)
-    end
+  def session_params
+    params.require(:current_session).permit(:tab_key, :tab_value)
+  end
 end

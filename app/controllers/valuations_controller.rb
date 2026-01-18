@@ -83,7 +83,7 @@ class ValuationsController < ApplicationController
   end
 
   private
-    def entry_params
-      params.require(:entry).permit(:date, :amount, :notes)
-    end
+  def entry_params
+    params.require(:entry).permit(:date, :amount, :notes)
+  end
 end

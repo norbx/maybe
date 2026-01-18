@@ -61,19 +61,19 @@ class TradesTest < ApplicationSystemTestCase
   end
 
   private
-    def open_new_trade_modal
-      click_on "New transaction"
-    end
+  def open_new_trade_modal
+    click_on "New transaction"
+  end
 
-    def within_trades(&block)
-      within "#" + dom_id(@account, "entries"), &block
-    end
+  def within_trades(&block)
+    within "#" + dom_id(@account, "entries"), &block
+  end
 
-    def visit_trades
-      visit account_path(@account, tab: "activity")
-    end
+  def visit_trades
+    visit account_path(@account, tab: "activity")
+  end
 
-    def visit_account_portfolio
-      visit account_path(@account, tab: "holdings")
-    end
+  def visit_account_portfolio
+    visit account_path(@account, tab: "holdings")
+  end
 end
