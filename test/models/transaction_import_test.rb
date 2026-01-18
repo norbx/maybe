@@ -113,8 +113,8 @@ class TransactionImportTest < ActiveSupport::TestCase
       before importing.
 
       #Data operacji;#Opis operacji;#Rachunek;#Kategoria;#Kwota;
-      2025-12-28;"Żabka  ZAKUP PRZY UŻYCIU KARTY W KRAJU transakcja nierozliczona";"mKonto Intensive 6311 ... 0016";"Żywność i chemia domowa";-7,57 PLN;;
-      2025-12-27;"Trattoria Numero Uno  ZAKUP PRZY UŻYCIU KARTY W KRAJU transakcja nierozliczona";"mKonto Intensive 6311 ... 0016";"Jedzenie poza domem";-61,00 PLN;;
+      2025-12-28;"Żabka  ZAKUP PRZY UŻYCIU KARTY W KRAJU transakcja nierozliczona";"mKonto Intensive 6311 ... 0016";"Żywność i chemia domowa";-7,57 PLN;
+      2025-12-27;"Trattoria Numero Uno  ZAKUP PRZY UŻYCIU KARTY W KRAJU transakcja nierozliczona";"mKonto Intensive 6311 ... 0016";"Jedzenie poza domem";-61,00 PLN;
     CSV
 
     @import.update!(
@@ -137,6 +137,6 @@ class TransactionImportTest < ActiveSupport::TestCase
       @import.publish
     end
 
-    assert_equal [-100, -200], @import.entries.map(&:amount)
+    assert_equal [7.57, 61.00], @import.entries.map(&:amount)
   end
 end
