@@ -63,13 +63,13 @@ class Assistant
   end
 
   private
-    attr_reader :functions
+  attr_reader :functions
 
-    def function_tool_caller
-      function_instances = functions.map do |fn|
-        fn.new(chat.user)
-      end
-
-      @function_tool_caller ||= FunctionToolCaller.new(function_instances)
+  def function_tool_caller
+    function_instances = functions.map do |fn|
+      fn.new(chat.user)
     end
+
+    @function_tool_caller ||= FunctionToolCaller.new(function_instances)
+  end
 end

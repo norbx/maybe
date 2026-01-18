@@ -37,16 +37,16 @@ class Provider::PlaidSandbox < Provider::Plaid
   end
 
   private
-    def create_client
-      raise "Plaid sandbox is not supported in production" if Rails.env.production?
+  def create_client
+    raise "Plaid sandbox is not supported in production" if Rails.env.production?
 
-      api_client = Plaid::ApiClient.new(
-        Rails.application.config.plaid_eu
-      )
+    api_client = Plaid::ApiClient.new(
+      Rails.application.config.plaid_eu
+    )
 
-      # Force sandbox environment for PlaidSandbox regardless of Rails config
-      api_client.config.server_index = Plaid::Configuration::Environment["sandbox"]
+    # Force sandbox environment for PlaidSandbox regardless of Rails config
+    api_client.config.server_index = Plaid::Configuration::Environment["sandbox"]
 
-      Plaid::PlaidApi.new(api_client)
-    end
+    Plaid::PlaidApi.new(api_client)
+  end
 end

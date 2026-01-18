@@ -16,7 +16,7 @@ module Monetizable
   end
 
   private
-    def monetizable_currency
-      currency
-    end
+  def monetizable_currency
+    currency
+  end
 end

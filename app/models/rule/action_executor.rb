@@ -35,9 +35,9 @@ class Rule::ActionExecutor
   end
 
   private
-    attr_reader :rule
+  attr_reader :rule
 
-    def family
-      rule.family
-    end
+  def family
+    rule.family
+  end
 end

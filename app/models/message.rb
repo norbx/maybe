@@ -16,7 +16,7 @@ class Message < ApplicationRecord
   scope :ordered, -> { order(created_at: :asc) }
 
   private
-    def broadcast?
-      true
-    end
+  def broadcast?
+    true
+  end
 end

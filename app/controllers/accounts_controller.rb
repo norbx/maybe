@@ -63,11 +63,11 @@ class AccountsController < ApplicationController
   end
 
   private
-    def family
-      Current.family
-    end
+  def family
+    Current.family
+  end
 
-    def set_account
-      @account = family.accounts.find(params[:id])
-    end
+  def set_account
+    @account = family.accounts.find(params[:id])
+  end
 end

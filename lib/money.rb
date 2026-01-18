@@ -75,9 +75,9 @@ class Money
   end
 
   private
-    def source_must_be_of_known_type
-      unless @source.is_a?(Money) || @source.is_a?(Numeric) || @source.is_a?(BigDecimal)
-        errors.add :source, "must be a Money, Numeric, or BigDecimal"
-      end
+  def source_must_be_of_known_type
+    unless @source.is_a?(Money) || @source.is_a?(Numeric) || @source.is_a?(BigDecimal)
+      errors.add :source, "must be a Money, Numeric, or BigDecimal"
     end
+  end
 end

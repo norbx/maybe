@@ -15,15 +15,15 @@ class Provider::Stripe::SubscriptionEventProcessor < Provider::Stripe::EventProc
   end
 
   private
-    def family
-      Family.find_by(stripe_customer_id: subscription.customer)
-    end
+  def family
+    Family.find_by(stripe_customer_id: subscription.customer)
+  end
 
-    def subscription_details
-      event_data.items.data.first
-    end
+  def subscription_details
+    event_data.items.data.first
+  end
 
-    def subscription
-      event_data
-    end
+  def subscription
+    event_data
+  end
 end

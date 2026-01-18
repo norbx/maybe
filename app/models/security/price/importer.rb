@@ -66,90 +66,90 @@ class Security::Price::Importer
   end
 
   private
-    attr_reader :security, :security_provider, :start_date, :end_date, :clear_cache
+  attr_reader :security, :security_provider, :start_date, :end_date, :clear_cache
 
-    def provider_prices
-      @provider_prices ||= begin
-        provider_fetch_start_date = effective_start_date - 5.days
+  def provider_prices
+    @provider_prices ||= begin
+      provider_fetch_start_date = effective_start_date - 5.days
 
-        response = security_provider.fetch_security_prices(
-          symbol: security.ticker,
-          exchange_operating_mic: security.exchange_operating_mic,
-          start_date: provider_fetch_start_date,
-          end_date:   end_date
-        )
+      response = security_provider.fetch_security_prices(
+        symbol: security.ticker,
+        exchange_operating_mic: security.exchange_operating_mic,
+        start_date: provider_fetch_start_date,
+        end_date:   end_date
+      )
 
-        if response.success?
-          response.data.index_by(&:date)
-        else
-          Rails.logger.warn("#{security_provider.class.name} could not fetch prices for #{security.ticker} between #{provider_fetch_start_date} and #{end_date}. Provider error: #{response.error.message}")
-          Sentry.capture_exception(MissingSecurityPriceError.new("Could not fetch prices for ticker"), level: :warning) do |scope|
-            scope.set_tags(security_id: security.id)
-            scope.set_context("security", { id: security.id, start_date: start_date, end_date: end_date })
-          end
-
-          {}
+      if response.success?
+        response.data.index_by(&:date)
+      else
+        Rails.logger.warn("#{security_provider.class.name} could not fetch prices for #{security.ticker} between #{provider_fetch_start_date} and #{end_date}. Provider error: #{response.error.message}")
+        Sentry.capture_exception(MissingSecurityPriceError.new("Could not fetch prices for ticker"), level: :warning) do |scope|
+          scope.set_tags(security_id: security.id)
+          scope.set_context("security", { id: security.id, start_date: start_date, end_date: end_date })
         end
+
+        {}
       end
     end
+  end
 
-    def db_prices
-      @db_prices ||= Security::Price.where(security_id: security.id, date: start_date..end_date)
-                                    .order(:date)
-                                    .to_a
-                                    .index_by(&:date)
+  def db_prices
+    @db_prices ||= Security::Price.where(security_id: security.id, date: start_date..end_date)
+                                  .order(:date)
+                                  .to_a
+                                  .index_by(&:date)
+  end
+
+  def all_prices_exist?
+    db_prices.count == expected_count
+  end
+
+  def expected_count
+    (start_date..end_date).count
+  end
+
+  # Skip over ranges that already exist unless clearing cache
+  def effective_start_date
+    return start_date if clear_cache
+
+    (start_date..end_date).detect { |d| !db_prices.key?(d) } || end_date
+  end
+
+  def start_price_value
+    provider_price_value = provider_prices.select { |date, _| date <= start_date }
+                                          .max_by { |date, _| date }
+                                          &.last&.price
+    db_price_value       = db_prices[start_date]&.price
+    provider_price_value || db_price_value
+  end
+
+  def upsert_rows(rows)
+    batch_size         = 200
+    total_upsert_count = 0
+
+    rows.each_slice(batch_size) do |batch|
+      ids = Security::Price.upsert_all(
+        batch,
+        unique_by: %i[security_id date currency],
+        returning: ["id"]
+      )
+      total_upsert_count += ids.count
     end
 
-    def all_prices_exist?
-      db_prices.count == expected_count
-    end
+    total_upsert_count
+  end
 
-    def expected_count
-      (start_date..end_date).count
-    end
+  def db_price_currency
+    db_prices.values.first&.currency
+  end
 
-    # Skip over ranges that already exist unless clearing cache
-    def effective_start_date
-      return start_date if clear_cache
+  def prev_price_currency
+    @prev_price_currency ||= provider_prices.values.first&.currency
+  end
 
-      (start_date..end_date).detect { |d| !db_prices.key?(d) } || end_date
-    end
-
-    def start_price_value
-      provider_price_value = provider_prices.select { |date, _| date <= start_date }
-                                            .max_by { |date, _| date }
-                                            &.last&.price
-      db_price_value       = db_prices[start_date]&.price
-      provider_price_value || db_price_value
-    end
-
-    def upsert_rows(rows)
-      batch_size         = 200
-      total_upsert_count = 0
-
-      rows.each_slice(batch_size) do |batch|
-        ids = Security::Price.upsert_all(
-          batch,
-          unique_by: %i[security_id date currency],
-          returning: ["id"]
-        )
-        total_upsert_count += ids.count
-      end
-
-      total_upsert_count
-    end
-
-    def db_price_currency
-      db_prices.values.first&.currency
-    end
-
-    def prev_price_currency
-      @prev_price_currency ||= provider_prices.values.first&.currency
-    end
-
-    # Clamp to today (EST) so we never call our price API for a future date (our API is in EST/EDT timezone)
-    def normalize_end_date(requested_end_date)
-      today_est = Date.current.in_time_zone("America/New_York").to_date
-      [requested_end_date, today_est].min
-    end
+  # Clamp to today (EST) so we never call our price API for a future date (our API is in EST/EDT timezone)
+  def normalize_end_date(requested_end_date)
+    today_est = Date.current.in_time_zone("America/New_York").to_date
+    [requested_end_date, today_est].min
+  end
 end

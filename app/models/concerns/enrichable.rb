@@ -73,19 +73,19 @@ module Enrichable
   end
 
   private
-    def log_enrichment(attribute_name:, attribute_value:, source:, metadata: {})
-      de = DataEnrichment.find_or_create_by(
-        enrichable: self,
-        attribute_name: attribute_name,
-        source: source,
-      )
+  def log_enrichment(attribute_name:, attribute_value:, source:, metadata: {})
+    de = DataEnrichment.find_or_create_by(
+      enrichable: self,
+      attribute_name: attribute_name,
+      source: source,
+    )
 
-      de.value = attribute_value
-      de.metadata = metadata
-      de.save
-    end
+    de.value = attribute_value
+    de.metadata = metadata
+    de.save
+  end
 
-    def ignored_enrichable_attributes
-      %w[id updated_at created_at]
-    end
+  def ignored_enrichable_attributes
+    %w[id updated_at created_at]
+  end
 end

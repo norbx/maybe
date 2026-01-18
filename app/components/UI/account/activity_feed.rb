@@ -29,7 +29,7 @@ class UI::Account::ActivityFeed < ApplicationComponent
   end
 
   private
-    def account
-      feed_data.account
-    end
+  def account
+    feed_data.account
+  end
 end

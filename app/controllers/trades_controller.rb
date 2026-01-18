@@ -51,34 +51,34 @@ class TradesController < ApplicationController
   end
 
   private
-    def entry_params
-      params.require(:entry).permit(
-        :name, :date, :amount, :currency, :excluded, :notes, :nature,
-        entryable_attributes: [:id, :qty, :price]
-      )
+  def entry_params
+    params.require(:entry).permit(
+      :name, :date, :amount, :currency, :excluded, :notes, :nature,
+      entryable_attributes: [:id, :qty, :price]
+    )
+  end
+
+  def create_params
+    params.require(:model).permit(
+      :date, :amount, :currency, :qty, :price, :ticker, :manual_ticker, :type, :transfer_account_id
+    )
+  end
+
+  def update_entry_params
+    return entry_params unless entry_params[:entryable_attributes].present?
+
+    update_params = entry_params
+    update_params = update_params.merge(entryable_type: "Trade")
+
+    qty = update_params[:entryable_attributes][:qty]
+    price = update_params[:entryable_attributes][:price]
+
+    if qty.present? && price.present?
+      qty = update_params[:nature] == "inflow" ? -qty.to_d : qty.to_d
+      update_params[:entryable_attributes][:qty] = qty
+      update_params[:amount] = qty * price.to_d
     end
 
-    def create_params
-      params.require(:model).permit(
-        :date, :amount, :currency, :qty, :price, :ticker, :manual_ticker, :type, :transfer_account_id
-      )
-    end
-
-    def update_entry_params
-      return entry_params unless entry_params[:entryable_attributes].present?
-
-      update_params = entry_params
-      update_params = update_params.merge(entryable_type: "Trade")
-
-      qty = update_params[:entryable_attributes][:qty]
-      price = update_params[:entryable_attributes][:price]
-
-      if qty.present? && price.present?
-        qty = update_params[:nature] == "inflow" ? -qty.to_d : qty.to_d
-        update_params[:entryable_attributes][:qty] = qty
-        update_params[:amount] = qty * price.to_d
-      end
-
-      update_params.except(:nature)
-    end
+    update_params.except(:nature)
+  end
 end

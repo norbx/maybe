@@ -52,34 +52,34 @@ class Balance::ForwardCalculator < Balance::BaseCalculator
   end
 
   private
-    def calc_start_date
-      account.opening_anchor_date
-    end
+  def calc_start_date
+    account.opening_anchor_date
+  end
 
-    def calc_end_date
-      [account.entries.order(:date).last&.date, account.holdings.order(:date).last&.date].compact.max || Date.current
-    end
+  def calc_end_date
+    [account.entries.order(:date).last&.date, account.holdings.order(:date).last&.date].compact.max || Date.current
+  end
 
-    # Negative entries amount on an "asset" account means, "account value has increased"
-    # Negative entries amount on a "liability" account means, "account debt has decreased"
-    # Positive entries amount on an "asset" account means, "account value has decreased"
-    # Positive entries amount on a "liability" account means, "account debt has increased"
-    def signed_entry_flows(entries)
-      entry_flows = entries.sum(&:amount)
-      account.asset? ? -entry_flows : entry_flows
-    end
+  # Negative entries amount on an "asset" account means, "account value has increased"
+  # Negative entries amount on a "liability" account means, "account debt has decreased"
+  # Positive entries amount on an "asset" account means, "account value has decreased"
+  # Positive entries amount on a "liability" account means, "account debt has increased"
+  def signed_entry_flows(entries)
+    entry_flows = entries.sum(&:amount)
+    account.asset? ? -entry_flows : entry_flows
+  end
 
-    # Derives cash balance, starting from the start-of-day, applying entries in forward to get the end-of-day balance
-    def derive_end_cash_balance(start_cash_balance:, date:)
-      derive_cash_balance(start_cash_balance, date)
-    end
+  # Derives cash balance, starting from the start-of-day, applying entries in forward to get the end-of-day balance
+  def derive_end_cash_balance(start_cash_balance:, date:)
+    derive_cash_balance(start_cash_balance, date)
+  end
 
-    # Derives non-cash balance, starting from the start-of-day, applying entries in forward to get the end-of-day balance
-    def derive_end_non_cash_balance(start_non_cash_balance:, date:)
-      derive_non_cash_balance(start_non_cash_balance, date, direction: :forward)
-    end
+  # Derives non-cash balance, starting from the start-of-day, applying entries in forward to get the end-of-day balance
+  def derive_end_non_cash_balance(start_non_cash_balance:, date:)
+    derive_non_cash_balance(start_non_cash_balance, date, direction: :forward)
+  end
 
-    def flows_factor
-      account.asset? ? 1 : -1
-    end
+  def flows_factor
+    account.asset? ? 1 : -1
+  end
 end

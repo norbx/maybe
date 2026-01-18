@@ -37,11 +37,11 @@ module EntryableResource
   end
 
   private
-    def entryable
-      controller_name.classify.constantize.new
-    end
+  def entryable
+    controller_name.classify.constantize.new
+  end
 
-    def set_entry
-      @entry = Current.family.entries.find(params[:id])
-    end
+  def set_entry
+    @entry = Current.family.entries.find(params[:id])
+  end
 end

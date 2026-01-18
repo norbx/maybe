@@ -6,7 +6,7 @@ class Transactions::BulkDeletionsController < ApplicationController
   end
 
   private
-    def bulk_delete_params
-      params.require(:bulk_delete).permit(entry_ids: [])
-    end
+  def bulk_delete_params
+    params.require(:bulk_delete).permit(entry_ids: [])
+  end
 end

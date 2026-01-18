@@ -161,9 +161,9 @@ end
 
     private
 
-      def sign_out
-        @user.sessions.each do |session|
-          delete session_path(session)
-        end
-      end
+  def sign_out
+    @user.sessions.each do |session|
+      delete session_path(session)
+    end
+  end
 end

@@ -23,19 +23,19 @@ class AccountableSparklinesController < ApplicationController
   end
 
   private
-    def family
-      Current.family
-    end
+  def family
+    Current.family
+  end
 
-    def accountable
-      Accountable.from_type(params[:accountable_type]&.classify)
-    end
+  def accountable
+    Accountable.from_type(params[:accountable_type]&.classify)
+  end
 
-    def account_ids
-      family.accounts.visible.where(accountable_type: accountable.name).pluck(:id)
-    end
+  def account_ids
+    family.accounts.visible.where(accountable_type: accountable.name).pluck(:id)
+  end
 
-    def cache_key
-      family.build_cache_key("#{@accountable.name}_sparkline", invalidate_on_data_updates: true)
-    end
+  def cache_key
+    family.build_cache_key("#{@accountable.name}_sparkline", invalidate_on_data_updates: true)
+  end
 end

@@ -6,11 +6,11 @@ module SelfHostable
   end
 
   private
-    def self_hosted?
-      Rails.configuration.app_mode.self_hosted?
-    end
+  def self_hosted?
+    Rails.configuration.app_mode.self_hosted?
+  end
 
-    def self_hosted_first_login?
-      self_hosted? && User.count.zero?
-    end
+  def self_hosted_first_login?
+    self_hosted? && User.count.zero?
+  end
 end

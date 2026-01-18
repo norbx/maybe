@@ -187,43 +187,24 @@ class Account::ActivityFeedDataTest < ActiveSupport::TestCase
   end
 
   private
-    def find_activity_for_date(activities, date)
-      activities.find { |a| a.date == date }
-    end
+  def find_activity_for_date(activities, date)
+    activities.find { |a| a.date == date }
+  end
 
-    def setup_test_data
-      # Create daily balances for checking account with new schema
-      5.times do |i|
-        date = @test_period_start + i.days
-        prev_balance = i > 0 ? 1000 + ((i - 1) * 100) : 0
+  def setup_test_data
+    # Create daily balances for checking account with new schema
+    5.times do |i|
+      date = @test_period_start + i.days
+      prev_balance = i > 0 ? 1000 + ((i - 1) * 100) : 0
 
-        @checking.balances.create!(
-          date: date,
-          balance: 1000 + (i * 100),  # Keep old field for now
-          cash_balance: 1000 + (i * 100),  # Keep old field for now
-          start_balance: prev_balance,
-          start_cash_balance: prev_balance,
-          start_non_cash_balance: 0,
-          cash_inflows: i == 0 ? 1000 : 100,
-          cash_outflows: 0,
-          non_cash_inflows: 0,
-          non_cash_outflows: 0,
-          net_market_flows: 0,
-          cash_adjustments: 0,
-          non_cash_adjustments: 0,
-          currency: "USD"
-        )
-      end
-
-      # Create daily balances for investment account with cash_balance
-      @investment.balances.create!(
-        date: @test_period_start,
-        balance: 500,  # Keep old field for now
-        cash_balance: 500,  # Keep old field for now
-        start_balance: 0,
-        start_cash_balance: 0,
+      @checking.balances.create!(
+        date: date,
+        balance: 1000 + (i * 100),  # Keep old field for now
+        cash_balance: 1000 + (i * 100),  # Keep old field for now
+        start_balance: prev_balance,
+        start_cash_balance: prev_balance,
         start_non_cash_balance: 0,
-        cash_inflows: 500,
+        cash_inflows: i == 0 ? 1000 : 100,
         cash_outflows: 0,
         non_cash_inflows: 0,
         non_cash_outflows: 0,
@@ -232,86 +213,105 @@ class Account::ActivityFeedDataTest < ActiveSupport::TestCase
         non_cash_adjustments: 0,
         currency: "USD"
       )
-      @investment.balances.create!(
-        date: @test_period_start + 1.day,
-        balance: 500,  # Keep old field for now
-        cash_balance: 500,  # Keep old field for now
-        start_balance: 500,
-        start_cash_balance: 500,
-        start_non_cash_balance: 0,
-        cash_inflows: 0,
-        cash_outflows: 0,
-        non_cash_inflows: 0,
-        non_cash_outflows: 0,
-        net_market_flows: 0,
-        cash_adjustments: 0,
-        non_cash_adjustments: 0,
-        currency: "USD"
-      )
-      @investment.balances.create!(
-        date: @test_period_start + 2.days,
-        balance: 1900,  # Keep old field for now
-        cash_balance: 400,  # Keep old field for now
-        start_balance: 500,
-        start_cash_balance: 500,
-        start_non_cash_balance: 0,
-        cash_inflows: 0,
-        cash_outflows: 100,
-        non_cash_inflows: 1500,
-        non_cash_outflows: 0,
-        net_market_flows: 0,
-        cash_adjustments: 0,
-        non_cash_adjustments: 0,
-        currency: "USD"
-      )
-
-      # Day 1: Regular transaction
-      create_transaction(
-        account: @checking,
-        date: @test_period_start,
-        amount: -50,
-        name: "Grocery Store"
-      )
-
-      # Day 2: Transfer between accounts
-      @transfer = create_transfer(
-        from_account: @checking,
-        to_account: @savings,
-        amount: 200,
-        date: @test_period_start + 1.day
-      )
-
-      # Day 3: Trade in investment account
-      create_trade(
-        securities(:aapl),
-        account: @investment,
-        qty: 10,
-        date: @test_period_start + 2.days,
-        price: 150
-      )
-
-      # Day 3: Foreign currency transaction
-      create_transaction(
-        account: @investment,
-        date: @test_period_start + 2.days,
-        amount: -100,
-        currency: "EUR",
-        name: "International Wire"
-      )
-
-      # Create exchange rate for foreign currency
-      ExchangeRate.create!(
-        date: @test_period_start + 2.days,
-        from_currency: "EUR",
-        to_currency: "USD",
-        rate: 1.1
-      )
-
-      # Day 4: Valuation
-      create_valuation(
-        account: @investment,
-        date: @test_period_start + 3.days,
-        amount: 25
-      )
     end
+
+    # Create daily balances for investment account with cash_balance
+    @investment.balances.create!(
+      date: @test_period_start,
+      balance: 500,  # Keep old field for now
+      cash_balance: 500,  # Keep old field for now
+      start_balance: 0,
+      start_cash_balance: 0,
+      start_non_cash_balance: 0,
+      cash_inflows: 500,
+      cash_outflows: 0,
+      non_cash_inflows: 0,
+      non_cash_outflows: 0,
+      net_market_flows: 0,
+      cash_adjustments: 0,
+      non_cash_adjustments: 0,
+      currency: "USD"
+    )
+    @investment.balances.create!(
+      date: @test_period_start + 1.day,
+      balance: 500,  # Keep old field for now
+      cash_balance: 500,  # Keep old field for now
+      start_balance: 500,
+      start_cash_balance: 500,
+      start_non_cash_balance: 0,
+      cash_inflows: 0,
+      cash_outflows: 0,
+      non_cash_inflows: 0,
+      non_cash_outflows: 0,
+      net_market_flows: 0,
+      cash_adjustments: 0,
+      non_cash_adjustments: 0,
+      currency: "USD"
+    )
+    @investment.balances.create!(
+      date: @test_period_start + 2.days,
+      balance: 1900,  # Keep old field for now
+      cash_balance: 400,  # Keep old field for now
+      start_balance: 500,
+      start_cash_balance: 500,
+      start_non_cash_balance: 0,
+      cash_inflows: 0,
+      cash_outflows: 100,
+      non_cash_inflows: 1500,
+      non_cash_outflows: 0,
+      net_market_flows: 0,
+      cash_adjustments: 0,
+      non_cash_adjustments: 0,
+      currency: "USD"
+    )
+
+    # Day 1: Regular transaction
+    create_transaction(
+      account: @checking,
+      date: @test_period_start,
+      amount: -50,
+      name: "Grocery Store"
+    )
+
+    # Day 2: Transfer between accounts
+    @transfer = create_transfer(
+      from_account: @checking,
+      to_account: @savings,
+      amount: 200,
+      date: @test_period_start + 1.day
+    )
+
+    # Day 3: Trade in investment account
+    create_trade(
+      securities(:aapl),
+      account: @investment,
+      qty: 10,
+      date: @test_period_start + 2.days,
+      price: 150
+    )
+
+    # Day 3: Foreign currency transaction
+    create_transaction(
+      account: @investment,
+      date: @test_period_start + 2.days,
+      amount: -100,
+      currency: "EUR",
+      name: "International Wire"
+    )
+
+    # Create exchange rate for foreign currency
+    ExchangeRate.create!(
+      date: @test_period_start + 2.days,
+      from_currency: "EUR",
+      to_currency: "USD",
+      rate: 1.1
+    )
+
+    # Day 4: Valuation
+    create_valuation(
+      account: @investment,
+      date: @test_period_start + 3.days,
+      amount: 25
+    )
+  end
 end

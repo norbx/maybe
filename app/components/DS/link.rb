@@ -25,7 +25,7 @@ class DS::Link < DS::Buttonish
   end
 
   private
-    def container_size_classes
-      super unless variant == :default
-    end
+  def container_size_classes
+    super unless variant == :default
+  end
 end

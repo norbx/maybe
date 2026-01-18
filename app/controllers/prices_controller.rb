@@ -24,7 +24,7 @@ class PricesController < ApplicationController
 
   private
 
-    def create_params
-      params.require(:model).permit(:security_id, :date, :price, :currency)
-    end
+  def create_params
+    params.require(:model).permit(:security_id, :date, :price, :currency)
+  end
 end

@@ -41,31 +41,31 @@ class PlaidAccount::Investments::BalanceCalculator
   end
 
   private
-    attr_reader :plaid_account, :security_resolver
+  attr_reader :plaid_account, :security_resolver
 
-    def holdings
-      plaid_account.raw_investments_payload["holdings"] || []
+  def holdings
+    plaid_account.raw_investments_payload["holdings"] || []
+  end
+
+  def calculate_investment_brokerage_cash
+    total_investment_account_value - true_holdings_value
+  end
+
+  # This is our source of truth.  We assume Plaid's `current_balance` reporting is 100% accurate
+  # Plaid guarantees `current_balance` AND/OR `available_balance` is always present, and based on the docs,
+  # `current_balance` should represent "total account value".
+  def total_investment_account_value
+    plaid_account.current_balance || plaid_account.available_balance
+  end
+
+  # Plaid holdings summed up, LESS "brokerage cash" holdings (that we've manually identified)
+  def true_holdings_value
+    # True holdings are holdings *less* Plaid's "pseudo-securities" (e.g. `CUR:USD` brokerage cash "holding")
+    true_holdings = holdings.reject do |h|
+      security = security_resolver.resolve(plaid_security_id: h["security_id"])
+      security.brokerage_cash?
     end
 
-    def calculate_investment_brokerage_cash
-      total_investment_account_value - true_holdings_value
-    end
-
-    # This is our source of truth.  We assume Plaid's `current_balance` reporting is 100% accurate
-    # Plaid guarantees `current_balance` AND/OR `available_balance` is always present, and based on the docs,
-    # `current_balance` should represent "total account value".
-    def total_investment_account_value
-      plaid_account.current_balance || plaid_account.available_balance
-    end
-
-    # Plaid holdings summed up, LESS "brokerage cash" holdings (that we've manually identified)
-    def true_holdings_value
-      # True holdings are holdings *less* Plaid's "pseudo-securities" (e.g. `CUR:USD` brokerage cash "holding")
-      true_holdings = holdings.reject do |h|
-        security = security_resolver.resolve(plaid_security_id: h["security_id"])
-        security.brokerage_cash?
-      end
-
-      true_holdings.sum { |h| h["quantity"] * h["institution_price"] }
-    end
+    true_holdings.sum { |h| h["quantity"] * h["institution_price"] }
+  end
 end

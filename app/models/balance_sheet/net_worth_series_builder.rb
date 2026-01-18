@@ -17,22 +17,22 @@ class BalanceSheet::NetWorthSeriesBuilder
   end
 
   private
-    attr_reader :family
+  attr_reader :family
 
-    def visible_account_ids
-      @visible_account_ids ||= family.accounts.visible.with_attached_logo.pluck(:id)
-    end
+  def visible_account_ids
+    @visible_account_ids ||= family.accounts.visible.with_attached_logo.pluck(:id)
+  end
 
-    def cache_key(period)
-      key = [
-        "balance_sheet_net_worth_series",
-        period.start_date,
-        period.end_date
-      ].compact.join("_")
+  def cache_key(period)
+    key = [
+      "balance_sheet_net_worth_series",
+      period.start_date,
+      period.end_date
+    ].compact.join("_")
 
-      family.build_cache_key(
-        key,
-        invalidate_on_data_updates: true
-      )
-    end
+    family.build_cache_key(
+      key,
+      invalidate_on_data_updates: true
+    )
+  end
 end

@@ -49,7 +49,7 @@ class MobileDevice < ApplicationRecord
 
   private
 
-    def set_last_seen_at
-      self.last_seen_at ||= Time.current
-    end
+  def set_last_seen_at
+    self.last_seen_at ||= Time.current
+  end
 end

@@ -76,8 +76,8 @@ class BalanceSheetTest < ActiveSupport::TestCase
   end
 
   private
-    def create_account(attributes = {})
-      account = @family.accounts.create! name: "Test", currency: "USD", **attributes
-      account
-    end
+  def create_account(attributes = {})
+    account = @family.accounts.create! name: "Test", currency: "USD", **attributes
+    account
+  end
 end

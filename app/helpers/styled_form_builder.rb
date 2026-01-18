@@ -76,63 +76,63 @@ class StyledFormBuilder < ActionView::Helpers::FormBuilder
   end
 
   private
-    def build_field(method, options = {}, html_options = {}, &block)
-      if options[:inline] || options[:label] == false
-        return yield({ class: "form-field__input" }.merge(html_options))
-      end
+  def build_field(method, options = {}, html_options = {}, &block)
+    if options[:inline] || options[:label] == false
+      return yield({ class: "form-field__input" }.merge(html_options))
+    end
 
-      label_element = build_label(method, options)
-      field_element = yield({ class: "form-field__input" }.merge(html_options))
+    label_element = build_label(method, options)
+    field_element = yield({ class: "form-field__input" }.merge(html_options))
 
-      container_classes = ["form-field", options[:container_class]].compact
+    container_classes = ["form-field", options[:container_class]].compact
 
-      @template.tag.div class: container_classes do
-        if options[:label_tooltip]
-          @template.tag.div(class: "form-field__header") do
-            label_element +
-            @template.tag.div(class: "form-field__actions") do
-              build_tooltip(options[:label_tooltip])
-            end
-          end +
-          @template.tag.div(class: "form-field__body") do
-            field_element
+    @template.tag.div class: container_classes do
+      if options[:label_tooltip]
+        @template.tag.div(class: "form-field__header") do
+          label_element +
+          @template.tag.div(class: "form-field__actions") do
+            build_tooltip(options[:label_tooltip])
           end
-        else
-          @template.tag.div(class: "form-field__body") do
-            label_element + field_element
-          end
+        end +
+        @template.tag.div(class: "form-field__body") do
+          field_element
+        end
+      else
+        @template.tag.div(class: "form-field__body") do
+          label_element + field_element
         end
       end
     end
+  end
 
-    def normalize_options(options, html_options)
-      options.merge(required: options[:required] || html_options[:required])
+  def normalize_options(options, html_options)
+    options.merge(required: options[:required] || html_options[:required])
+  end
+
+  def build_label(method, options)
+    return "".html_safe unless options[:label]
+
+    label_text = options[:label]
+
+    if options[:required]
+      label_text = @template.safe_join([
+        label_text == true ? method.to_s.humanize : label_text,
+        @template.tag.span("*", class: "text-red-500 ml-0.5")
+      ])
     end
 
-    def build_label(method, options)
-      return "".html_safe unless options[:label]
+    return label(method, class: "form-field__label") if label_text == true
+    label(method, label_text, class: "form-field__label")
+  end
 
-      label_text = options[:label]
+  def build_tooltip(tooltip_text)
+    return nil unless tooltip_text
 
-      if options[:required]
-        label_text = @template.safe_join([
-          label_text == true ? method.to_s.humanize : label_text,
-          @template.tag.span("*", class: "text-red-500 ml-0.5")
-        ])
-      end
-
-      return label(method, class: "form-field__label") if label_text == true
-      label(method, label_text, class: "form-field__label")
+    @template.tag.div(data: { controller: "tooltip" }) do
+      @template.safe_join([
+        @template.icon("help-circle", size: "sm", color: "default", class: "cursor-help"),
+        @template.tag.div(tooltip_text, role: "tooltip", data: { tooltip_target: "tooltip" }, class: "tooltip bg-gray-700 text-sm p-2 rounded w-64 text-white")
+      ])
     end
-
-    def build_tooltip(tooltip_text)
-      return nil unless tooltip_text
-
-      @template.tag.div(data: { controller: "tooltip" }) do
-        @template.safe_join([
-          @template.icon("help-circle", size: "sm", color: "default", class: "cursor-help"),
-          @template.tag.div(tooltip_text, role: "tooltip", data: { tooltip_target: "tooltip" }, class: "tooltip bg-gray-700 text-sm p-2 rounded w-64 text-white")
-        ])
-      end
-    end
+  end
 end

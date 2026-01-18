@@ -108,53 +108,53 @@ class BalanceComponentMigratorTest < ActiveSupport::TestCase
   end
 
   private
-    def create_balance_history(account, balances)
-      balances.each do |balance|
-        account.balances.create!(
-          date: balance[:date].to_date,
-          balance: balance[:balance],
-          cash_balance: balance[:cash_balance],
-          currency: account.currency
-        )
-      end
+  def create_balance_history(account, balances)
+    balances.each do |balance|
+      account.balances.create!(
+        date: balance[:date].to_date,
+        balance: balance[:balance],
+        cash_balance: balance[:cash_balance],
+        currency: account.currency
+      )
     end
+  end
 
-    def assert_migrated_balances(account, expected)
-      balances = account.balances.order(:date)
+  def assert_migrated_balances(account, expected)
+    balances = account.balances.order(:date)
 
-      expected.each_with_index do |expected_values, index|
-        balance = balances.find { |b| b.date == expected_values[:date].to_date }
-        assert balance, "Expected balance for #{expected_values[:date].to_date} but none found"
+    expected.each_with_index do |expected_values, index|
+      balance = balances.find { |b| b.date == expected_values[:date].to_date }
+      assert balance, "Expected balance for #{expected_values[:date].to_date} but none found"
 
-        # Assert expected values
-        assert_equal expected_values[:start_cash], balance.start_cash_balance,
-          "start_cash_balance mismatch for #{balance.date}"
-        assert_equal expected_values[:start_non_cash], balance.start_non_cash_balance,
-          "start_non_cash_balance mismatch for #{balance.date}"
-        assert_equal expected_values[:start], balance.start_balance,
-          "start_balance mismatch for #{balance.date}"
-        assert_equal expected_values[:cash_inflows], balance.cash_inflows,
-          "cash_inflows mismatch for #{balance.date}"
-        assert_equal expected_values[:non_cash_inflows], balance.non_cash_inflows,
-          "non_cash_inflows mismatch for #{balance.date}"
-        assert_equal expected_values[:end_cash], balance.end_cash_balance,
-          "end_cash_balance mismatch for #{balance.date}"
-        assert_equal expected_values[:end_non_cash], balance.end_non_cash_balance,
-          "end_non_cash_balance mismatch for #{balance.date}"
-        assert_equal expected_values[:end], balance.end_balance,
-          "end_balance mismatch for #{balance.date}"
+      # Assert expected values
+      assert_equal expected_values[:start_cash], balance.start_cash_balance,
+        "start_cash_balance mismatch for #{balance.date}"
+      assert_equal expected_values[:start_non_cash], balance.start_non_cash_balance,
+        "start_non_cash_balance mismatch for #{balance.date}"
+      assert_equal expected_values[:start], balance.start_balance,
+        "start_balance mismatch for #{balance.date}"
+      assert_equal expected_values[:cash_inflows], balance.cash_inflows,
+        "cash_inflows mismatch for #{balance.date}"
+      assert_equal expected_values[:non_cash_inflows], balance.non_cash_inflows,
+        "non_cash_inflows mismatch for #{balance.date}"
+      assert_equal expected_values[:end_cash], balance.end_cash_balance,
+        "end_cash_balance mismatch for #{balance.date}"
+      assert_equal expected_values[:end_non_cash], balance.end_non_cash_balance,
+        "end_non_cash_balance mismatch for #{balance.date}"
+      assert_equal expected_values[:end], balance.end_balance,
+        "end_balance mismatch for #{balance.date}"
 
-        # Assert zeros for other fields
-        assert_equal 0, balance.cash_outflows,
-          "cash_outflows should be zero for #{balance.date}"
-        assert_equal 0, balance.non_cash_outflows,
-          "non_cash_outflows should be zero for #{balance.date}"
-        assert_equal 0, balance.cash_adjustments,
-          "cash_adjustments should be zero for #{balance.date}"
-        assert_equal 0, balance.non_cash_adjustments,
-          "non_cash_adjustments should be zero for #{balance.date}"
-        assert_equal 0, balance.net_market_flows,
-          "net_market_flows should be zero for #{balance.date}"
-      end
+      # Assert zeros for other fields
+      assert_equal 0, balance.cash_outflows,
+        "cash_outflows should be zero for #{balance.date}"
+      assert_equal 0, balance.non_cash_outflows,
+        "non_cash_outflows should be zero for #{balance.date}"
+      assert_equal 0, balance.cash_adjustments,
+        "cash_adjustments should be zero for #{balance.date}"
+      assert_equal 0, balance.non_cash_adjustments,
+        "non_cash_adjustments should be zero for #{balance.date}"
+      assert_equal 0, balance.net_market_flows,
+        "net_market_flows should be zero for #{balance.date}"
     end
+  end
 end

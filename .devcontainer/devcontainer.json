@@ -15,7 +15,10 @@
     "vscode": {
       "extensions": [
         "biomejs.biome",
-        "EditorConfig.EditorConfig"
+        "EditorConfig.EditorConfig",
+        "shopify.ruby-lsp",
+        "shopify.ruby-extensions-pack",
+        "anthropic.claude-code"
       ]
     }
   }

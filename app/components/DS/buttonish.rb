@@ -112,45 +112,45 @@ class DS::Buttonish < DesignSystemComponent
   end
 
   private
-    def variant_data
-      self.class::VARIANTS.dig(variant)
+  def variant_data
+    self.class::VARIANTS.dig(variant)
+  end
+
+  def size_data
+    self.class::SIZES.dig(size)
+  end
+
+  # Make sure that user can override common classes like `hidden`
+  def merged_base_classes
+    base_display_classes = "inline-flex items-center gap-1"
+    base_radius_classes = size_data.dig(:radius_classes)
+
+    extra_classes_list = (extra_classes || "").split
+
+    has_display_override = extra_classes_list.any? { |c| permitted_display_override_classes.include?(c) }
+    has_radius_override = extra_classes_list.any? { |c| permitted_radius_override_classes.include?(c) }
+
+    base_classes = []
+
+    unless has_display_override
+      base_classes << base_display_classes
     end
 
-    def size_data
-      self.class::SIZES.dig(size)
+    unless has_radius_override
+      base_classes << base_radius_classes
     end
 
-    # Make sure that user can override common classes like `hidden`
-    def merged_base_classes
-      base_display_classes = "inline-flex items-center gap-1"
-      base_radius_classes = size_data.dig(:radius_classes)
+    class_names(
+      base_classes,
+      extra_classes
+    )
+  end
 
-      extra_classes_list = (extra_classes || "").split
+  def permitted_radius_override_classes
+    ["rounded-full"]
+  end
 
-      has_display_override = extra_classes_list.any? { |c| permitted_display_override_classes.include?(c) }
-      has_radius_override = extra_classes_list.any? { |c| permitted_radius_override_classes.include?(c) }
-
-      base_classes = []
-
-      unless has_display_override
-        base_classes << base_display_classes
-      end
-
-      unless has_radius_override
-        base_classes << base_radius_classes
-      end
-
-      class_names(
-        base_classes,
-        extra_classes
-      )
-    end
-
-    def permitted_radius_override_classes
-      ["rounded-full"]
-    end
-
-    def permitted_display_override_classes
-      ["hidden", "flex"]
-    end
+  def permitted_display_override_classes
+    ["hidden", "flex"]
+  end
 end

@@ -46,11 +46,11 @@ class MfaController < ApplicationController
 
   private
 
-    def determine_layout
-      if action_name.in?(%w[verify verify_code])
-        "auth"
-      else
-        "settings"
-      end
+  def determine_layout
+    if action_name.in?(%w[verify verify_code])
+      "auth"
+    else
+      "settings"
     end
+  end
 end

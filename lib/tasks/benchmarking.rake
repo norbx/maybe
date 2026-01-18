@@ -121,72 +121,72 @@ namespace :benchmarking do
   end
 
   private
-    def setup_benchmark_env(path)
-      ENV["USE_AUTH"]      = "true"
-      ENV["USE_SERVER"]    = "puma"
-      ENV["PATH_TO_HIT"]   = path
-      ENV["HTTP_METHOD"]   = "GET"
-      ENV["RAILS_LOG_LEVEL"] ||= "error" # keep output clean
-    end
+  def setup_benchmark_env(path)
+    ENV["USE_AUTH"]      = "true"
+    ENV["USE_SERVER"]    = "puma"
+    ENV["PATH_TO_HIT"]   = path
+    ENV["HTTP_METHOD"]   = "GET"
+    ENV["RAILS_LOG_LEVEL"] ||= "error" # keep output clean
+  end
 
-    def benchmark_file(path)
-      filename = case path
-      when "/" then "dashboard"
+  def benchmark_file(path)
+    filename = case path
+    when "/" then "dashboard"
+    else
+      path.gsub("/", "_").gsub(/^_+/, "")
+    end
+    "tmp/benchmarks/#{filename}.txt"
+  end
+
+  def extract_clean_results(output)
+    lines = output.split("\n")
+
+    # Example benchmark-ips output line:
+    # "         SomeLabel    14.416k (± 3.8%) i/s -     72.000k in   5.004618s"
+    result_line = lines.find { |line| line.match(/\d[\d\.kM]*\s+\(±\s*[0-9\.]+%\)\s+i\/s/) }
+
+    if result_line
+      if (match = result_line.match(/(\d[\d\.kM]*)\s+\(±\s*([0-9\.]+)%\)\s+i\/s\s+(?:\(([^)]+)\)\s+)?-\s+(\d[\d\.kM]*)\s+in\s+(\d+\.\d+)s/))
+        ips_value          = match[1]
+        deviation_percent  = match[2].to_f
+        time_per_iteration = match[3] || "-"
+        iterations         = match[4]
+        total_time         = "#{match[5]}s"
+
+        {
+          ips:                ips_value,
+          deviation:          "± %.2f%%" % deviation_percent,
+          time_per_iteration: time_per_iteration,
+          iterations:         iterations,
+          total_time:         total_time
+        }
       else
-        path.gsub("/", "_").gsub(/^_+/, "")
+        no_data_hash
       end
-      "tmp/benchmarks/#{filename}.txt"
+    else
+      no_data_hash("No results")
     end
+  end
 
-    def extract_clean_results(output)
-      lines = output.split("\n")
+  def format_table_row(type, data)
+    # Wider deviation column accommodates strings like "± 0.12%"
+    "| %-4s | %-5s | %-11s | %-14s | %-10s | %-10s |\n" % [
+      type,
+      data[:ips],
+      data[:deviation],
+      data[:time_per_iteration],
+      data[:iterations],
+      data[:total_time]
+    ]
+  end
 
-      # Example benchmark-ips output line:
-      # "         SomeLabel    14.416k (± 3.8%) i/s -     72.000k in   5.004618s"
-      result_line = lines.find { |line| line.match(/\d[\d\.kM]*\s+\(±\s*[0-9\.]+%\)\s+i\/s/) }
-
-      if result_line
-        if (match = result_line.match(/(\d[\d\.kM]*)\s+\(±\s*([0-9\.]+)%\)\s+i\/s\s+(?:\(([^)]+)\)\s+)?-\s+(\d[\d\.kM]*)\s+in\s+(\d+\.\d+)s/))
-          ips_value          = match[1]
-          deviation_percent  = match[2].to_f
-          time_per_iteration = match[3] || "-"
-          iterations         = match[4]
-          total_time         = "#{match[5]}s"
-
-          {
-            ips:                ips_value,
-            deviation:          "± %.2f%%" % deviation_percent,
-            time_per_iteration: time_per_iteration,
-            iterations:         iterations,
-            total_time:         total_time
-          }
-        else
-          no_data_hash
-        end
-      else
-        no_data_hash("No results")
-      end
-    end
-
-    def format_table_row(type, data)
-      # Wider deviation column accommodates strings like "± 0.12%"
-      "| %-4s | %-5s | %-11s | %-14s | %-10s | %-10s |\n" % [
-        type,
-        data[:ips],
-        data[:deviation],
-        data[:time_per_iteration],
-        data[:iterations],
-        data[:total_time]
-      ]
-    end
-
-    def no_data_hash(ips_msg = "No data")
-      {
-        ips:                ips_msg,
-        deviation:          "-",
-        time_per_iteration: "-",
-        iterations:         "-",
-        total_time:         "-"
-      }
-    end
+  def no_data_hash(ips_msg = "No data")
+    {
+      ips:                ips_msg,
+      deviation:          "-",
+      time_per_iteration: "-",
+      iterations:         "-",
+      total_time:         "-"
+    }
+  end
 end

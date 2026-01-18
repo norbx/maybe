@@ -13,8 +13,8 @@ module Maybe
     end
 
     private
-      def semver
-        "0.6.0"
-      end
+    def semver
+      "0.6.0"
+    end
   end
 end

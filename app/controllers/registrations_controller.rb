@@ -34,49 +34,49 @@ class RegistrationsController < ApplicationController
 
   private
 
-    def set_invitation
-      token = params[:invitation]
-      token ||= params[:user][:invitation] if params[:user].present?
-      @invitation = Invitation.pending.find_by(token: token)
+  def set_invitation
+    token = params[:invitation]
+    token ||= params[:user][:invitation] if params[:user].present?
+    @invitation = Invitation.pending.find_by(token: token)
+  end
+
+  def set_user
+    @user = User.new user_params.except(:invite_code, :invitation)
+  end
+
+  def user_params(specific_param = nil)
+    params = self.params.require(:user).permit(:name, :email, :password, :password_confirmation, :invite_code, :invitation)
+    specific_param ? params[specific_param] : params
+  end
+
+  def claim_invite_code
+    unless InviteCode.claim! params[:user][:invite_code]
+      redirect_to new_registration_path, alert: t("registrations.create.invalid_invite_code")
+    end
+  end
+
+  def validate_password_requirements
+    password = user_params[:password]
+    return if password.blank? # Let Rails built-in validations handle blank passwords
+
+    if password.length < 8
+      @user.errors.add(:password, "must be at least 8 characters")
     end
 
-    def set_user
-      @user = User.new user_params.except(:invite_code, :invitation)
+    unless password.match?(/[A-Z]/) && password.match?(/[a-z]/)
+      @user.errors.add(:password, "must include both uppercase and lowercase letters")
     end
 
-    def user_params(specific_param = nil)
-      params = self.params.require(:user).permit(:name, :email, :password, :password_confirmation, :invite_code, :invitation)
-      specific_param ? params[specific_param] : params
+    unless password.match?(/\d/)
+      @user.errors.add(:password, "must include at least one number")
     end
 
-    def claim_invite_code
-      unless InviteCode.claim! params[:user][:invite_code]
-        redirect_to new_registration_path, alert: t("registrations.create.invalid_invite_code")
-      end
+    unless password.match?(/[!@#$%^&*(),.?":{}|<>]/)
+      @user.errors.add(:password, "must include at least one special character")
     end
 
-    def validate_password_requirements
-      password = user_params[:password]
-      return if password.blank? # Let Rails built-in validations handle blank passwords
-
-      if password.length < 8
-        @user.errors.add(:password, "must be at least 8 characters")
-      end
-
-      unless password.match?(/[A-Z]/) && password.match?(/[a-z]/)
-        @user.errors.add(:password, "must include both uppercase and lowercase letters")
-      end
-
-      unless password.match?(/\d/)
-        @user.errors.add(:password, "must include at least one number")
-      end
-
-      unless password.match?(/[!@#$%^&*(),.?":{}|<>]/)
-        @user.errors.add(:password, "must include at least one special character")
-      end
-
-      if @user.errors.present?
-        render :new, status: :unprocessable_entity
-      end
+    if @user.errors.present?
+      render :new, status: :unprocessable_entity
     end
+  end
 end

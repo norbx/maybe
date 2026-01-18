@@ -49,27 +49,27 @@ class PlaidItemsController < ApplicationController
   end
 
   private
-    def set_plaid_item
-      @plaid_item = Current.family.plaid_items.find(params[:id])
-    end
+  def set_plaid_item
+    @plaid_item = Current.family.plaid_items.find(params[:id])
+  end
 
-    def plaid_item_params
-      params.require(:plaid_item).permit(:public_token, :region, metadata: {})
-    end
+  def plaid_item_params
+    params.require(:plaid_item).permit(:public_token, :region, metadata: {})
+  end
 
-    def item_name
-      plaid_item_params.dig(:metadata, :institution, :name)
-    end
+  def item_name
+    plaid_item_params.dig(:metadata, :institution, :name)
+  end
 
-    def plaid_us_webhooks_url
-      return webhooks_plaid_url if Rails.env.production?
+  def plaid_us_webhooks_url
+    return webhooks_plaid_url if Rails.env.production?
 
-      ENV.fetch("DEV_WEBHOOKS_URL", root_url.chomp("/")) + "/webhooks/plaid"
-    end
+    ENV.fetch("DEV_WEBHOOKS_URL", root_url.chomp("/")) + "/webhooks/plaid"
+  end
 
-    def plaid_eu_webhooks_url
-      return webhooks_plaid_eu_url if Rails.env.production?
+  def plaid_eu_webhooks_url
+    return webhooks_plaid_eu_url if Rails.env.production?
 
-      ENV.fetch("DEV_WEBHOOKS_URL", root_url.chomp("/")) + "/webhooks/plaid_eu"
-    end
+    ENV.fetch("DEV_WEBHOOKS_URL", root_url.chomp("/")) + "/webhooks/plaid_eu"
+  end
 end

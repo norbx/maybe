@@ -26,63 +26,63 @@ class Provider::Openai::AutoCategorizer
   end
 
   private
-    attr_reader :client, :transactions, :user_categories
+  attr_reader :client, :transactions, :user_categories
 
-    AutoCategorization = Provider::LlmConcept::AutoCategorization
+  AutoCategorization = Provider::LlmConcept::AutoCategorization
 
-    def build_response(categorizations)
-      categorizations.map do |categorization|
-        AutoCategorization.new(
-          transaction_id: categorization.dig("transaction_id"),
-          category_name: normalize_category_name(categorization.dig("category_name")),
-        )
-      end
+  def build_response(categorizations)
+    categorizations.map do |categorization|
+      AutoCategorization.new(
+        transaction_id: categorization.dig("transaction_id"),
+        category_name: normalize_category_name(categorization.dig("category_name")),
+      )
     end
+  end
 
-    def normalize_category_name(category_name)
-      return nil if category_name == "null"
+  def normalize_category_name(category_name)
+    return nil if category_name == "null"
 
-      category_name
-    end
+    category_name
+  end
 
-    def extract_categorizations(response)
-      response_json = JSON.parse(response.dig("output")[0].dig("content")[0].dig("text"))
-      response_json.dig("categorizations")
-    end
+  def extract_categorizations(response)
+    response_json = JSON.parse(response.dig("output")[0].dig("content")[0].dig("text"))
+    response_json.dig("categorizations")
+  end
 
-    def json_schema
-      {
-        type: "object",
-        properties: {
-          categorizations: {
-            type: "array",
-            description: "An array of auto-categorizations for each transaction",
-            items: {
-              type: "object",
-              properties: {
-                transaction_id: {
-                  type: "string",
-                  description: "The internal ID of the original transaction",
-                  enum: transactions.map { |t| t[:id] }
-                },
-                category_name: {
-                  type: "string",
-                  description: "The matched category name of the transaction, or null if no match",
-                  enum: [*user_categories.map { |c| c[:name] }, "null"]
-                }
+  def json_schema
+    {
+      type: "object",
+      properties: {
+        categorizations: {
+          type: "array",
+          description: "An array of auto-categorizations for each transaction",
+          items: {
+            type: "object",
+            properties: {
+              transaction_id: {
+                type: "string",
+                description: "The internal ID of the original transaction",
+                enum: transactions.map { |t| t[:id] }
               },
-              required: ["transaction_id", "category_name"],
-              additionalProperties: false
-            }
+              category_name: {
+                type: "string",
+                description: "The matched category name of the transaction, or null if no match",
+                enum: [*user_categories.map { |c| c[:name] }, "null"]
+              }
+            },
+            required: ["transaction_id", "category_name"],
+            additionalProperties: false
           }
-        },
-        required: ["categorizations"],
-        additionalProperties: false
-      }
-    end
+        }
+      },
+      required: ["categorizations"],
+      additionalProperties: false
+    }
+  end
 
-    def developer_message
-      <<~MESSAGE.strip_heredoc
+  def developer_message
+    <<~MESSAGE.strip_heredoc
         Here are the user's available categories in JSON format:
 
         ```json
@@ -95,10 +95,10 @@ class Provider::Openai::AutoCategorizer
         #{transactions.to_json}
         ```
       MESSAGE
-    end
+  end
 
-    def instructions
-      <<~INSTRUCTIONS.strip_heredoc
+  def instructions
+    <<~INSTRUCTIONS.strip_heredoc
         You are an assistant to a consumer personal finance app.  You will be provided a list
         of the user's transactions and a list of the user's categories.  Your job is to auto-categorize
         each transaction.
@@ -116,5 +116,5 @@ class Provider::Openai::AutoCategorizer
           - Note: "hint" comes from 3rd party aggregators and typically represents a category name that
             may or may not match any of the user-supplied categories
       INSTRUCTIONS
-    end
+  end
 end

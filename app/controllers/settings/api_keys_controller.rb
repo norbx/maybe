@@ -46,16 +46,16 @@ class Settings::ApiKeysController < ApplicationController
 
   private
 
-    def set_api_key
-      @api_key = Current.user.api_keys.active.first
-    end
+  def set_api_key
+    @api_key = Current.user.api_keys.active.first
+  end
 
-    def api_key_params
-      # Convert single scope value to array for storage
-      permitted_params = params.require(:api_key).permit(:name, :scopes)
-      if permitted_params[:scopes].present?
-        permitted_params[:scopes] = [permitted_params[:scopes]]
-      end
-      permitted_params
+  def api_key_params
+    # Convert single scope value to array for storage
+    permitted_params = params.require(:api_key).permit(:name, :scopes)
+    if permitted_params[:scopes].present?
+      permitted_params[:scopes] = [permitted_params[:scopes]]
     end
+    permitted_params
+  end
 end

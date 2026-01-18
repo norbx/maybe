@@ -16,31 +16,31 @@ class Balance::SyncCache
   end
 
   private
-    attr_reader :account
+  attr_reader :account
 
-    def converted_entries
-      @converted_entries ||= account.entries.order(:date).to_a.map do |e|
-        converted_entry = e.dup
-        converted_entry.amount = converted_entry.amount_money.exchange_to(
-          account.currency,
-          date: e.date,
-          fallback_rate: 1
-        ).amount
-        converted_entry.currency = account.currency
-        converted_entry
-      end
+  def converted_entries
+    @converted_entries ||= account.entries.order(:date).to_a.map do |e|
+      converted_entry = e.dup
+      converted_entry.amount = converted_entry.amount_money.exchange_to(
+        account.currency,
+        date: e.date,
+        fallback_rate: 1
+      ).amount
+      converted_entry.currency = account.currency
+      converted_entry
     end
+  end
 
-    def converted_holdings
-      @converted_holdings ||= account.holdings.map do |h|
-        converted_holding = h.dup
-        converted_holding.amount = converted_holding.amount_money.exchange_to(
-          account.currency,
-          date: h.date,
-          fallback_rate: 1
-        ).amount
-        converted_holding.currency = account.currency
-        converted_holding
-      end
+  def converted_holdings
+    @converted_holdings ||= account.holdings.map do |h|
+      converted_holding = h.dup
+      converted_holding.amount = converted_holding.amount_money.exchange_to(
+        account.currency,
+        date: h.date,
+        fallback_rate: 1
+      ).amount
+      converted_holding.currency = account.currency
+      converted_holding
     end
+  end
 end

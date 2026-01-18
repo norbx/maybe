@@ -17,7 +17,7 @@ module FeatureGuardable
   end
 
   private
-    def guard_feature
-      render plain: "Feature disabled: #{controller_name}##{action_name}", status: :forbidden
-    end
+  def guard_feature
+    render plain: "Feature disabled: #{controller_name}##{action_name}", status: :forbidden
+  end
 end

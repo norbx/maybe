@@ -35,22 +35,22 @@ class PlaidItem::WebhookProcessor
   end
 
   private
-    attr_reader :webhook_type, :webhook_code, :item_id, :error
+  attr_reader :webhook_type, :webhook_code, :item_id, :error
 
-    def plaid_item
-      @plaid_item ||= PlaidItem.find_by(plaid_id: item_id)
+  def plaid_item
+    @plaid_item ||= PlaidItem.find_by(plaid_id: item_id)
+  end
+
+  def handle_missing_item
+    return if plaid_item.present?
+
+    # If we cannot find an item in our DB, that means we've reached an invalid data state where
+    # the Plaid Item (upstream) still exists (and is being billed), but doesn't exist internally.
+    #
+    # Since we don't have the item which has the access token, there is nothing we can do programmatically
+    # here, so we just need to report it to Sentry and manually handle it.
+    Sentry.capture_exception(MissingItemError.new("Received Plaid webhook for item no longer in our DB.  Manual action required to resolve.")) do |scope|
+      scope.set_tags(plaid_item_id: item_id)
     end
-
-    def handle_missing_item
-      return if plaid_item.present?
-
-      # If we cannot find an item in our DB, that means we've reached an invalid data state where
-      # the Plaid Item (upstream) still exists (and is being billed), but doesn't exist internally.
-      #
-      # Since we don't have the item which has the access token, there is nothing we can do programmatically
-      # here, so we just need to report it to Sentry and manually handle it.
-      Sentry.capture_exception(MissingItemError.new("Received Plaid webhook for item no longer in our DB.  Manual action required to resolve.")) do |scope|
-        scope.set_tags(plaid_item_id: item_id)
-      end
-    end
+  end
 end

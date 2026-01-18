@@ -59,11 +59,11 @@ class ImportsController < ApplicationController
   end
 
   private
-    def set_import
-      @import = Current.family.imports.find(params[:id])
-    end
+  def set_import
+    @import = Current.family.imports.find(params[:id])
+  end
 
-    def import_params
-      params.require(:import).permit(:type)
-    end
+  def import_params
+    params.require(:import).permit(:type)
+  end
 end

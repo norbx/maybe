@@ -60,23 +60,23 @@ class Account::MarketDataImporter
   end
 
   private
-    # Calculates the first date we require a price for the given security scoped to this account
-    def first_required_price_date(security)
-      account.trades.with_entry
-                    .where(security: security)
-                    .where(entries: { account_id: account.id })
-                    .minimum("entries.date")
-    end
+  # Calculates the first date we require a price for the given security scoped to this account
+  def first_required_price_date(security)
+    account.trades.with_entry
+                  .where(security: security)
+                  .where(entries: { account_id: account.id })
+                  .minimum("entries.date")
+  end
 
-    def needs_exchange_rates?
-      has_multi_currency_entries? || foreign_account?
-    end
+  def needs_exchange_rates?
+    has_multi_currency_entries? || foreign_account?
+  end
 
-    def has_multi_currency_entries?
-      account.entries.where.not(currency: account.currency).exists?
-    end
+  def has_multi_currency_entries?
+    account.entries.where.not(currency: account.currency).exists?
+  end
 
-    def foreign_account?
-      account.currency != account.family.currency
-    end
+  def foreign_account?
+    account.currency != account.family.currency
+  end
 end

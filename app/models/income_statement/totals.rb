@@ -17,19 +17,19 @@ class IncomeStatement::Totals
   end
 
   private
-    TotalsRow = Data.define(:parent_category_id, :category_id, :classification, :total, :transactions_count)
+  TotalsRow = Data.define(:parent_category_id, :category_id, :classification, :total, :transactions_count)
 
-    def query_sql
-      ActiveRecord::Base.sanitize_sql_array([
-        optimized_query_sql,
-        sql_params
-      ])
-    end
+  def query_sql
+    ActiveRecord::Base.sanitize_sql_array([
+      optimized_query_sql,
+      sql_params
+    ])
+  end
 
-    # OPTIMIZED: Direct SUM aggregation without unnecessary time bucketing
-    # Eliminates CTE and intermediate date grouping for maximum performance
-    def optimized_query_sql
-      <<~SQL
+  # OPTIMIZED: Direct SUM aggregation without unnecessary time bucketing
+  # Eliminates CTE and intermediate date grouping for maximum performance
+  def optimized_query_sql
+    <<~SQL
         SELECT
           c.id as category_id,
           c.parent_id as parent_category_id,
@@ -48,11 +48,11 @@ class IncomeStatement::Totals
           AND ae.excluded = false
         GROUP BY c.id, c.parent_id, CASE WHEN ae.amount < 0 THEN 'income' ELSE 'expense' END;
       SQL
-    end
+  end
 
-    def sql_params
-      {
-        target_currency: @family.currency
-      }
-    end
+  def sql_params
+    {
+      target_currency: @family.currency
+    }
+  end
 end

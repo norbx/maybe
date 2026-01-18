@@ -28,7 +28,7 @@ class Rule::Registry::TransactionResource < Rule::Registry
   end
 
   private
-    def ai_enabled?
-      Provider::Registry.get_provider(:openai).present?
-    end
+  def ai_enabled?
+    Provider::Registry.get_provider(:openai).present?
+  end
 end

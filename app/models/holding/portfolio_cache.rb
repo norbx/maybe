@@ -50,86 +50,86 @@ class Holding::PortfolioCache
   end
 
   private
-    PriceWithPriority = Data.define(:price, :priority, :source)
+  PriceWithPriority = Data.define(:price, :priority, :source)
 
-    def trades
-      @trades ||= account.entries.includes(entryable: :security).trades.chronological.to_a
-    end
+  def trades
+    @trades ||= account.entries.includes(entryable: :security).trades.chronological.to_a
+  end
 
-    def holdings
-      @holdings ||= account.holdings.chronological.to_a
-    end
+  def holdings
+    @holdings ||= account.holdings.chronological.to_a
+  end
 
-    def collect_unique_securities
-      unique_securities_from_trades = trades.map(&:entryable).map(&:security).uniq
+  def collect_unique_securities
+    unique_securities_from_trades = trades.map(&:entryable).map(&:security).uniq
 
-      return unique_securities_from_trades unless use_holdings
+    return unique_securities_from_trades unless use_holdings
 
-      unique_securities_from_holdings = holdings.map(&:security).uniq
+    unique_securities_from_holdings = holdings.map(&:security).uniq
 
-      (unique_securities_from_trades + unique_securities_from_holdings).uniq
-    end
+    (unique_securities_from_trades + unique_securities_from_holdings).uniq
+  end
 
-    # Loads all known prices for all securities in the account with priority based on source:
-    # 1 - DB or provider prices
-    # 2 - Trade prices
-    # 3 - Holding prices
-    def load_prices
-      @security_cache = {}
-      securities = collect_unique_securities
+  # Loads all known prices for all securities in the account with priority based on source:
+  # 1 - DB or provider prices
+  # 2 - Trade prices
+  # 3 - Holding prices
+  def load_prices
+    @security_cache = {}
+    securities = collect_unique_securities
 
-      Rails.logger.info "Preloading #{securities.size} securities for account #{account.id}"
+    Rails.logger.info "Preloading #{securities.size} securities for account #{account.id}"
 
-      securities.each do |security|
-        Rails.logger.info "Loading security: ID=#{security.id} Ticker=#{security.ticker}"
+    securities.each do |security|
+      Rails.logger.info "Loading security: ID=#{security.id} Ticker=#{security.ticker}"
 
-        # High priority prices from DB (synced from provider)
-        db_prices = security.prices.where(date: account.start_date..Date.current).map do |price|
+      # High priority prices from DB (synced from provider)
+      db_prices = security.prices.where(date: account.start_date..Date.current).map do |price|
+        PriceWithPriority.new(
+          price: price,
+          priority: 1,
+          source: "db"
+        )
+      end
+
+      # Medium priority prices from trades
+      trade_prices = trades
+        .select { |t| t.entryable.security_id == security.id }
+        .map do |trade|
           PriceWithPriority.new(
-            price: price,
-            priority: 1,
-            source: "db"
+            price: Security::Price.new(
+              security: security,
+              price: trade.entryable.price,
+              currency: trade.entryable.currency,
+              date: trade.date
+            ),
+            priority: 2,
+            source: "trade"
           )
         end
 
-        # Medium priority prices from trades
-        trade_prices = trades
-          .select { |t| t.entryable.security_id == security.id }
-          .map do |trade|
-            PriceWithPriority.new(
-              price: Security::Price.new(
-                security: security,
-                price: trade.entryable.price,
-                currency: trade.entryable.currency,
-                date: trade.date
-              ),
-              priority: 2,
-              source: "trade"
-            )
-          end
-
-        # Low priority prices from holdings (if applicable)
-        holding_prices = if use_holdings
-          holdings.select { |h| h.security_id == security.id }.map do |holding|
-            PriceWithPriority.new(
-              price: Security::Price.new(
-                security: security,
-                price: holding.price,
-                currency: holding.currency,
-                date: holding.date
-              ),
-              priority: 3,
-              source: "holding"
-            )
-          end
-        else
-          []
+      # Low priority prices from holdings (if applicable)
+      holding_prices = if use_holdings
+        holdings.select { |h| h.security_id == security.id }.map do |holding|
+          PriceWithPriority.new(
+            price: Security::Price.new(
+              security: security,
+              price: holding.price,
+              currency: holding.currency,
+              date: holding.date
+            ),
+            priority: 3,
+            source: "holding"
+          )
         end
-
-        @security_cache[security.id] = {
-          security: security,
-          prices: db_prices + trade_prices + holding_prices
-        }
+      else
+        []
       end
+
+      @security_cache[security.id] = {
+        security: security,
+        prices: db_prices + trade_prices + holding_prices
+      }
     end
+  end
 end

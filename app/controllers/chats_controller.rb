@@ -47,19 +47,19 @@ class ChatsController < ApplicationController
   end
 
   private
-    def set_chat
-      @chat = Current.user.chats.find(params[:id])
-    end
+  def set_chat
+    @chat = Current.user.chats.find(params[:id])
+  end
 
-    def set_last_viewed_chat(chat)
-      Current.user.update!(last_viewed_chat: chat)
-    end
+  def set_last_viewed_chat(chat)
+    Current.user.update!(last_viewed_chat: chat)
+  end
 
-    def clear_last_viewed_chat
-      Current.user.update!(last_viewed_chat: nil)
-    end
+  def clear_last_viewed_chat
+    Current.user.update!(last_viewed_chat: nil)
+  end
 
-    def chat_params
-      params.require(:chat).permit(:title, :content, :ai_model)
-    end
+  def chat_params
+    params.require(:chat).permit(:title, :content, :ai_model)
+  end
 end

@@ -38,5 +38,5 @@ class Family::AutoCategorizerTest < ActiveSupport::TestCase
   end
 
   private
-    AutoCategorization = Provider::LlmConcept::AutoCategorization
+  AutoCategorization = Provider::LlmConcept::AutoCategorization
 end

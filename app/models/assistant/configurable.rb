@@ -13,17 +13,17 @@ module Assistant::Configurable
     end
 
     private
-      def default_functions
-        [
-          Assistant::Function::GetTransactions,
-          Assistant::Function::GetAccounts,
-          Assistant::Function::GetBalanceSheet,
-          Assistant::Function::GetIncomeStatement
-        ]
-      end
+    def default_functions
+      [
+        Assistant::Function::GetTransactions,
+        Assistant::Function::GetAccounts,
+        Assistant::Function::GetBalanceSheet,
+        Assistant::Function::GetIncomeStatement
+      ]
+    end
 
-      def default_instructions(preferred_currency, preferred_date_format)
-        <<~PROMPT
+    def default_instructions(preferred_currency, preferred_date_format)
+      <<~PROMPT
           ## Your identity
 
           You are a friendly financial assistant for an open source personal finance application called "Maybe", which is short for "Maybe Finance".
@@ -77,6 +77,6 @@ module Assistant::Configurable
           - If you suspect that you do not have enough data to 100% accurately answer, be transparent about it and state exactly what
             the data you're presenting represents and what context it is in (i.e. date range, account, etc.)
         PROMPT
-      end
+    end
   end
 end

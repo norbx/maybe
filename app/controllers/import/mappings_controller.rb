@@ -13,31 +13,31 @@ class Import::MappingsController < ApplicationController
   end
 
   private
-    def mapping_params
-      params.require(:import_mapping).permit(:type, :key, :mappable_id, :mappable_type, :value)
-    end
+  def mapping_params
+    params.require(:import_mapping).permit(:type, :key, :mappable_id, :mappable_type, :value)
+  end
 
-    def set_import
-      @import = Current.family.imports.find(params[:import_id])
-    end
+  def set_import
+    @import = Current.family.imports.find(params[:import_id])
+  end
 
-    def mappable
-      return nil unless mappable_class.present?
+  def mappable
+    return nil unless mappable_class.present?
 
-      @mappable ||= mappable_class.find_by(id: mapping_params[:mappable_id], family: Current.family)
-    end
+    @mappable ||= mappable_class.find_by(id: mapping_params[:mappable_id], family: Current.family)
+  end
 
-    def create_when_empty
-      return false unless mapping_class.present?
+  def create_when_empty
+    return false unless mapping_class.present?
 
-      mapping_params[:mappable_id] == mapping_class::CREATE_NEW_KEY
-    end
+    mapping_params[:mappable_id] == mapping_class::CREATE_NEW_KEY
+  end
 
-    def mappable_class
-      mapping_params[:mappable_type]&.constantize
-    end
+  def mappable_class
+    mapping_params[:mappable_type]&.constantize
+  end
 
-    def mapping_class
-      mapping_params[:type]&.constantize
-    end
+  def mapping_class
+    mapping_params[:type]&.constantize
+  end
 end

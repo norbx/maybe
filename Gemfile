@@ -65,7 +65,7 @@ gem "inline_svg"
 gem "octokit"
 gem "pagy"
 gem "rails-settings-cached"
-gem "tzinfo-data", platforms: %i[windows jruby]
+gem "tzinfo-data", platforms: %i[mswin mswin64 mingw x64_mingw jruby]
 gem "csv"
 gem "redcarpet"
 gem "stripe"
@@ -84,7 +84,7 @@ gem "after_commit_everywhere", "~> 1.0"
 gem "ruby-openai"
 
 group :development, :test do
-  gem "debug", platforms: %i[mri windows]
+  gem "debug", platforms: %i[mri mswin mswin64 mingw x64_mingw]
   gem "brakeman", require: false
   gem "rubocop-rails-omakase", require: false
   gem "i18n-tasks"

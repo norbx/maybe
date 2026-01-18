@@ -57,5 +57,5 @@ class BalanceSheet::AccountGroup
   end
 
   private
-    attr_reader :classification_group
+  attr_reader :classification_group
 end

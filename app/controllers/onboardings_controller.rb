@@ -14,11 +14,11 @@ class OnboardingsController < ApplicationController
   end
 
   private
-    def set_user
-      @user = Current.user
-    end
+  def set_user
+    @user = Current.user
+  end
 
-    def load_invitation
-      @invitation = Current.family.invitations.accepted.find_by(email: Current.user.email)
-    end
+  def load_invitation
+    @invitation = Current.family.invitations.accepted.find_by(email: Current.user.email)
+  end
 end

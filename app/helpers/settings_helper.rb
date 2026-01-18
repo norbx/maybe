@@ -59,7 +59,7 @@ module SettingsHelper
   end
 
   private
-    def not_self_hosted?
-      !self_hosted?
-    end
+  def not_self_hosted?
+    !self_hosted?
+  end
 end

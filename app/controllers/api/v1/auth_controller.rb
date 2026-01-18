@@ -144,67 +144,67 @@ module Api
 
       private
 
-        def user_signup_params
-          params.require(:user).permit(:email, :password, :first_name, :last_name)
+      def user_signup_params
+        params.require(:user).permit(:email, :password, :first_name, :last_name)
+      end
+
+      def validate_password(password)
+        errors = []
+
+        if password.blank?
+          errors << "Password can't be blank"
+          return errors
         end
 
-        def validate_password(password)
-          errors = []
+        errors << "Password must be at least 8 characters" if password.length < 8
+        errors << "Password must include both uppercase and lowercase letters" unless password.match?(/[A-Z]/) && password.match?(/[a-z]/)
+        errors << "Password must include at least one number" unless password.match?(/\d/)
+        errors << "Password must include at least one special character" unless password.match?(/[!@#$%^&*(),.?":{}|<>]/)
 
-          if password.blank?
-            errors << "Password can't be blank"
-            return errors
-          end
+        errors
+      end
 
-          errors << "Password must be at least 8 characters" if password.length < 8
-          errors << "Password must include both uppercase and lowercase letters" unless password.match?(/[A-Z]/) && password.match?(/[a-z]/)
-          errors << "Password must include at least one number" unless password.match?(/\d/)
-          errors << "Password must include at least one special character" unless password.match?(/[!@#$%^&*(),.?":{}|<>]/)
+      def valid_device_info?
+        device = params[:device]
+        return false if device.nil?
 
-          errors
-        end
+        required_fields = %w[device_id device_name device_type os_version app_version]
+        required_fields.all? { |field| device[field].present? }
+      end
 
-        def valid_device_info?
-          device = params[:device]
-          return false if device.nil?
+      def create_or_update_device(user)
+        # Handle both string and symbol keys
+        device_data = params[:device].permit(:device_id, :device_name, :device_type, :os_version, :app_version)
 
-          required_fields = %w[device_id device_name device_type os_version app_version]
-          required_fields.all? { |field| device[field].present? }
-        end
+        device = user.mobile_devices.find_or_initialize_by(device_id: device_data[:device_id])
+        device.update!(device_data.merge(last_seen_at: Time.current))
+        device
+      end
 
-        def create_or_update_device(user)
-          # Handle both string and symbol keys
-          device_data = params[:device].permit(:device_id, :device_name, :device_type, :os_version, :app_version)
+      def create_oauth_token_for_device(user, device)
+        # Create OAuth application for this device if needed
+        oauth_app = device.create_oauth_application!
 
-          device = user.mobile_devices.find_or_initialize_by(device_id: device_data[:device_id])
-          device.update!(device_data.merge(last_seen_at: Time.current))
-          device
-        end
+        # Revoke any existing tokens for this device
+        device.revoke_all_tokens!
 
-        def create_oauth_token_for_device(user, device)
-          # Create OAuth application for this device if needed
-          oauth_app = device.create_oauth_application!
+        # Create new access token with 30-day expiration
+        access_token = Doorkeeper::AccessToken.create!(
+          application: oauth_app,
+          resource_owner_id: user.id,
+          expires_in: 30.days.to_i,
+          scopes: "read_write",
+          use_refresh_token: true
+        )
 
-          # Revoke any existing tokens for this device
-          device.revoke_all_tokens!
-
-          # Create new access token with 30-day expiration
-          access_token = Doorkeeper::AccessToken.create!(
-            application: oauth_app,
-            resource_owner_id: user.id,
-            expires_in: 30.days.to_i,
-            scopes: "read_write",
-            use_refresh_token: true
-          )
-
-          {
-            access_token: access_token.plaintext_token,
-            refresh_token: access_token.plaintext_refresh_token,
-            token_type: "Bearer",
-            expires_in: access_token.expires_in,
-            created_at: access_token.created_at.to_i
-          }
-        end
+        {
+          access_token: access_token.plaintext_token,
+          refresh_token: access_token.plaintext_refresh_token,
+          token_type: "Bearer",
+          expires_in: access_token.expires_in,
+          created_at: access_token.created_at.to_i
+        }
+      end
     end
   end
 end

@@ -28,7 +28,7 @@ class SessionsController < ApplicationController
   end
 
   private
-    def set_session
-      @session = Current.user.sessions.find(params[:id])
-    end
+  def set_session
+    @session = Current.user.sessions.find(params[:id])
+  end
 end

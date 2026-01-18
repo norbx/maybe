@@ -37,27 +37,27 @@ class Account::SyncCompleteEvent
   end
 
   private
-    # Returns an array of [tab, mobile?] tuples that should receive an update.
-    # We broadcast to both the classification-specific tab and the "all" tab,
-    # for desktop (mobile: false) and mobile (mobile: true) variants.
-    def sidebar_targets
-      return [] unless account_group.present?
+  # Returns an array of [tab, mobile?] tuples that should receive an update.
+  # We broadcast to both the classification-specific tab and the "all" tab,
+  # for desktop (mobile: false) and mobile (mobile: true) variants.
+  def sidebar_targets
+    return [] unless account_group.present?
 
-      [
-        [account_group.classification.to_sym, false],
-        [:all, false],
-        [account_group.classification.to_sym, true],
-        [:all, true]
-      ]
-    end
+    [
+      [account_group.classification.to_sym, false],
+      [:all, false],
+      [account_group.classification.to_sym, true],
+      [:all, true]
+    ]
+  end
 
-    def account_group
-      family_balance_sheet.account_groups.find do |group|
-        group.accounts.any? { |a| a.id == account.id }
-      end
+  def account_group
+    family_balance_sheet.account_groups.find do |group|
+      group.accounts.any? { |a| a.id == account.id }
     end
+  end
 
-    def family_balance_sheet
-      account.family.balance_sheet
-    end
+  def family_balance_sheet
+    account.family.balance_sheet
+  end
 end

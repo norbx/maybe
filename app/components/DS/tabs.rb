@@ -48,19 +48,19 @@ class DS::Tabs < DesignSystemComponent
   end
 
   private
-    def unstyled?
-      variant == :unstyled
-    end
+  def unstyled?
+    variant == :unstyled
+  end
 
-    def base_btn_classes
-      unless unstyled?
-        VARIANTS.dig(variant, :base_btn_classes)
-      end
+  def base_btn_classes
+    unless unstyled?
+      VARIANTS.dig(variant, :base_btn_classes)
     end
+  end
 
-    def nav_container_classes
-      unless unstyled?
-        VARIANTS.dig(variant, :nav_container_classes)
-      end
+  def nav_container_classes
+    unless unstyled?
+      VARIANTS.dig(variant, :nav_container_classes)
     end
+  end
 end

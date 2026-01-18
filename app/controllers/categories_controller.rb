@@ -68,25 +68,25 @@ class CategoriesController < ApplicationController
   end
 
   private
-    def set_category
-      @category = Current.family.categories.find(params[:id])
-    end
+  def set_category
+    @category = Current.family.categories.find(params[:id])
+  end
 
-    def set_categories
-      @categories = unless @category.parent?
-        Current.family.categories.alphabetically.roots.where.not(id: @category.id)
-      else
-        []
-      end
+  def set_categories
+    @categories = unless @category.parent?
+      Current.family.categories.alphabetically.roots.where.not(id: @category.id)
+    else
+      []
     end
+  end
 
-    def set_transaction
-      if params[:transaction_id].present?
-        @transaction = Current.family.transactions.find(params[:transaction_id])
-      end
+  def set_transaction
+    if params[:transaction_id].present?
+      @transaction = Current.family.transactions.find(params[:transaction_id])
     end
+  end
 
-    def category_params
-      params.require(:category).permit(:name, :color, :parent_id, :classification, :lucide_icon)
-    end
+  def category_params
+    params.require(:category).permit(:name, :color, :parent_id, :classification, :lucide_icon)
+  end
 end

@@ -49,32 +49,32 @@ class TransfersController < ApplicationController
   end
 
   private
-    def set_transfer
-      # Finds the transfer and ensures the family owns it
-      @transfer = Transfer
-                    .where(id: params[:id])
-                    .where(inflow_transaction_id: Current.family.transactions.select(:id))
-                    .first
-    end
+  def set_transfer
+    # Finds the transfer and ensures the family owns it
+    @transfer = Transfer
+                  .where(id: params[:id])
+                  .where(inflow_transaction_id: Current.family.transactions.select(:id))
+                  .first
+  end
 
-    def transfer_params
-      params.require(:transfer).permit(:from_account_id, :to_account_id, :amount, :date, :name, :excluded)
-    end
+  def transfer_params
+    params.require(:transfer).permit(:from_account_id, :to_account_id, :amount, :date, :name, :excluded)
+  end
 
-    def transfer_update_params
-      params.require(:transfer).permit(:notes, :status, :category_id)
-    end
+  def transfer_update_params
+    params.require(:transfer).permit(:notes, :status, :category_id)
+  end
 
-    def update_transfer_status
-      if transfer_update_params[:status] == "rejected"
-        @transfer.reject!
-      elsif transfer_update_params[:status] == "confirmed"
-        @transfer.confirm!
-      end
+  def update_transfer_status
+    if transfer_update_params[:status] == "rejected"
+      @transfer.reject!
+    elsif transfer_update_params[:status] == "confirmed"
+      @transfer.confirm!
     end
+  end
 
-    def update_transfer_details
-      @transfer.outflow_transaction.update!(category_id: transfer_update_params[:category_id])
-      @transfer.update!(notes: transfer_update_params[:notes])
-    end
+  def update_transfer_details
+    @transfer.outflow_transaction.update!(category_id: transfer_update_params[:category_id])
+    @transfer.update!(notes: transfer_update_params[:notes])
+  end
 end

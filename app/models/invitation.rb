@@ -20,18 +20,18 @@ class Invitation < ApplicationRecord
 
   private
 
-    def generate_token
-      loop do
-        self.token = SecureRandom.hex(32)
-        break unless self.class.exists?(token: token)
-      end
+  def generate_token
+    loop do
+      self.token = SecureRandom.hex(32)
+      break unless self.class.exists?(token: token)
     end
+  end
 
-    def set_expiration
-      self.expires_at = 3.days.from_now
-    end
+  def set_expiration
+    self.expires_at = 3.days.from_now
+  end
 
-    def inviter_is_admin
-      inviter.admin?
-    end
+  def inviter_is_admin
+    inviter.admin?
+  end
 end

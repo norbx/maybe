@@ -136,24 +136,24 @@ class Balance::MaterializerTest < ActiveSupport::TestCase
 
   private
 
-    def assert_balance_fields_persisted(expected_balances)
-      expected_balances.each do |expected|
-        persisted = @account.balances.find_by(date: expected.date)
-        assert_not_nil persisted, "Balance for #{expected.date} should be persisted"
+  def assert_balance_fields_persisted(expected_balances)
+    expected_balances.each do |expected|
+      persisted = @account.balances.find_by(date: expected.date)
+      assert_not_nil persisted, "Balance for #{expected.date} should be persisted"
 
-        # Check all balance component fields
-        assert_equal expected.balance, persisted.balance
-        assert_equal expected.cash_balance, persisted.cash_balance
-        assert_equal expected.start_cash_balance, persisted.start_cash_balance
-        assert_equal expected.start_non_cash_balance, persisted.start_non_cash_balance
-        assert_equal expected.cash_inflows, persisted.cash_inflows
-        assert_equal expected.cash_outflows, persisted.cash_outflows
-        assert_equal expected.non_cash_inflows, persisted.non_cash_inflows
-        assert_equal expected.non_cash_outflows, persisted.non_cash_outflows
-        assert_equal expected.net_market_flows, persisted.net_market_flows
-        assert_equal expected.cash_adjustments, persisted.cash_adjustments
-        assert_equal expected.non_cash_adjustments, persisted.non_cash_adjustments
-        assert_equal expected.flows_factor, persisted.flows_factor
-      end
+      # Check all balance component fields
+      assert_equal expected.balance, persisted.balance
+      assert_equal expected.cash_balance, persisted.cash_balance
+      assert_equal expected.start_cash_balance, persisted.start_cash_balance
+      assert_equal expected.start_non_cash_balance, persisted.start_non_cash_balance
+      assert_equal expected.cash_inflows, persisted.cash_inflows
+      assert_equal expected.cash_outflows, persisted.cash_outflows
+      assert_equal expected.non_cash_inflows, persisted.non_cash_inflows
+      assert_equal expected.non_cash_outflows, persisted.non_cash_outflows
+      assert_equal expected.net_market_flows, persisted.net_market_flows
+      assert_equal expected.cash_adjustments, persisted.cash_adjustments
+      assert_equal expected.non_cash_adjustments, persisted.non_cash_adjustments
+      assert_equal expected.flows_factor, persisted.flows_factor
     end
+  end
 end

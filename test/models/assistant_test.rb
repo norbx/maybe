@@ -119,32 +119,32 @@ class AssistantTest < ActiveSupport::TestCase
   end
 
   private
-    def provider_function_request(id:, call_id:, function_name:, function_args:)
-      Provider::LlmConcept::ChatFunctionRequest.new(
+  def provider_function_request(id:, call_id:, function_name:, function_args:)
+    Provider::LlmConcept::ChatFunctionRequest.new(
+      id: id,
+      call_id: call_id,
+      function_name: function_name,
+      function_args: function_args
+    )
+  end
+
+  def provider_message(id:, text:)
+    Provider::LlmConcept::ChatMessage.new(id: id, output_text: text)
+  end
+
+  def provider_text_chunk(text)
+    Provider::LlmConcept::ChatStreamChunk.new(type: "output_text", data: text)
+  end
+
+  def provider_response_chunk(id:, model:, messages:, function_requests:)
+    Provider::LlmConcept::ChatStreamChunk.new(
+      type: "response",
+      data: Provider::LlmConcept::ChatResponse.new(
         id: id,
-        call_id: call_id,
-        function_name: function_name,
-        function_args: function_args
+        model: model,
+        messages: messages,
+        function_requests: function_requests
       )
-    end
-
-    def provider_message(id:, text:)
-      Provider::LlmConcept::ChatMessage.new(id: id, output_text: text)
-    end
-
-    def provider_text_chunk(text)
-      Provider::LlmConcept::ChatStreamChunk.new(type: "output_text", data: text)
-    end
-
-    def provider_response_chunk(id:, model:, messages:, function_requests:)
-      Provider::LlmConcept::ChatStreamChunk.new(
-        type: "response",
-        data: Provider::LlmConcept::ChatResponse.new(
-          id: id,
-          model: model,
-          messages: messages,
-          function_requests: function_requests
-        )
-      )
-    end
+    )
+  end
 end

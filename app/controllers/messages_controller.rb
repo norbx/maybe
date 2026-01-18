@@ -14,11 +14,11 @@ class MessagesController < ApplicationController
   end
 
   private
-    def set_chat
-      @chat = Current.user.chats.find(params[:chat_id])
-    end
+  def set_chat
+    @chat = Current.user.chats.find(params[:chat_id])
+  end
 
-    def message_params
-      params.require(:message).permit(:content, :ai_model)
-    end
+  def message_params
+    params.require(:message).permit(:content, :ai_model)
+  end
 end

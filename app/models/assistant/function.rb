@@ -44,49 +44,49 @@ class Assistant::Function
   end
 
   private
-    attr_reader :user
+  attr_reader :user
 
-    def build_schema(properties: {}, required: [])
-      {
-        type: "object",
-        properties: properties,
-        required: required,
-        additionalProperties: false
-      }
-    end
+  def build_schema(properties: {}, required: [])
+    {
+      type: "object",
+      properties: properties,
+      required: required,
+      additionalProperties: false
+    }
+  end
 
-    def family_account_names
-      @family_account_names ||= family.accounts.visible.pluck(:name)
-    end
+  def family_account_names
+    @family_account_names ||= family.accounts.visible.pluck(:name)
+  end
 
-    def family_category_names
-      @family_category_names ||= begin
-        names = family.categories.pluck(:name)
-        names << "Uncategorized"
-        names
-      end
+  def family_category_names
+    @family_category_names ||= begin
+      names = family.categories.pluck(:name)
+      names << "Uncategorized"
+      names
     end
+  end
 
-    def family_merchant_names
-      @family_merchant_names ||= family.merchants.pluck(:name)
-    end
+  def family_merchant_names
+    @family_merchant_names ||= family.merchants.pluck(:name)
+  end
 
-    def family_tag_names
-      @family_tag_names ||= family.tags.pluck(:name)
-    end
+  def family_tag_names
+    @family_tag_names ||= family.tags.pluck(:name)
+  end
 
-    def family
-      user.family
-    end
+  def family
+    user.family
+  end
 
-    # To save tokens, we provide the AI metadata about the series and a flat array of
-    # raw, formatted values which it can infer dates from
-    def to_ai_time_series(series)
-      {
-        start_date: series.start_date,
-        end_date: series.end_date,
-        interval: series.interval,
-        values: series.values.map { |v| v.trend.current.format }
-      }
-    end
+  # To save tokens, we provide the AI metadata about the series and a flat array of
+  # raw, formatted values which it can infer dates from
+  def to_ai_time_series(series)
+    {
+      start_date: series.start_date,
+      end_date: series.end_date,
+      interval: series.interval,
+      values: series.values.map { |v| v.trend.current.format }
+    }
+  end
 end

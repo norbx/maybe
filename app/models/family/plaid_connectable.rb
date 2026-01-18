@@ -42,7 +42,7 @@ module Family::PlaidConnectable
   end
 
   private
-    def plaid(region)
-      Provider::Registry.plaid_provider_for_region(region)
-    end
+  def plaid(region)
+    Provider::Registry.plaid_provider_for_region(region)
+  end
 end

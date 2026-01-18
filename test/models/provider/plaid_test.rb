@@ -70,11 +70,11 @@ class Provider::PlaidTest < ActiveSupport::TestCase
   end
 
   private
-    def get_access_token
-      VCR.use_cassette("plaid/access_token") do
-        public_token = @plaid.create_public_token
-        exchange_response = @plaid.exchange_public_token(public_token)
-        exchange_response.access_token
-      end
+  def get_access_token
+    VCR.use_cassette("plaid/access_token") do
+      public_token = @plaid.create_public_token
+      exchange_response = @plaid.exchange_public_token(public_token)
+      exchange_response.access_token
     end
+  end
 end

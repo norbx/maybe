@@ -25,7 +25,7 @@ class Balance < ApplicationRecord
 
   private
 
-    def favorable_direction
-      flows_factor == -1 ? "down" : "up"
-    end
+  def favorable_direction
+    flows_factor == -1 ? "down" : "up"
+  end
 end

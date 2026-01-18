@@ -80,15 +80,15 @@ class Trend
   end
 
   private
-    def red_hex
-      "var(--color-destructive)"
-    end
+  def red_hex
+    "var(--color-destructive)"
+  end
 
-    def green_hex
-      "var(--color-success)"
-    end
+  def green_hex
+    "var(--color-success)"
+  end
 
-    def gray_hex
-      "var(--color-gray)"
-    end
+  def gray_hex
+    "var(--color-gray)"
+  end
 end

@@ -14,19 +14,19 @@ class Holding::PortfolioSnapshot
   end
 
   private
-    def build_portfolio
-      # Start with all securities from trades initialized to 0
-      portfolio = account.trades
-        .pluck(:security_id)
-        .uniq
-        .each_with_object({}) { |security_id, hash| hash[security_id] = 0 }
+  def build_portfolio
+    # Start with all securities from trades initialized to 0
+    portfolio = account.trades
+      .pluck(:security_id)
+      .uniq
+      .each_with_object({}) { |security_id, hash| hash[security_id] = 0 }
 
-      # Get the most recent holding for each security and update quantities
-      account.holdings
-        .select("DISTINCT ON (security_id) security_id, qty")
-        .order(:security_id, date: :desc)
-        .each { |holding| portfolio[holding.security_id] = holding.qty }
+    # Get the most recent holding for each security and update quantities
+    account.holdings
+      .select("DISTINCT ON (security_id) security_id, qty")
+      .order(:security_id, date: :desc)
+      .each { |holding| portfolio[holding.security_id] = holding.qty }
 
-      portfolio
-    end
+    portfolio
+  end
 end

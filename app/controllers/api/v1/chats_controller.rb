@@ -60,25 +60,25 @@ class Api::V1::ChatsController < Api::V1::BaseController
 
   private
 
-    def ensure_read_scope
-      authorize_scope!(:read)
-    end
+  def ensure_read_scope
+    authorize_scope!(:read)
+  end
 
-    def ensure_write_scope
-      authorize_scope!(:write)
-    end
+  def ensure_write_scope
+    authorize_scope!(:write)
+  end
 
-    def set_chat
-      @chat = Current.user.chats.find(params[:id])
-    rescue ActiveRecord::RecordNotFound
-      render json: { error: "Chat not found" }, status: :not_found
-    end
+  def set_chat
+    @chat = Current.user.chats.find(params[:id])
+  rescue ActiveRecord::RecordNotFound
+    render json: { error: "Chat not found" }, status: :not_found
+  end
 
-    def chat_params
-      params.permit(:title, :message, :model)
-    end
+  def chat_params
+    params.permit(:title, :message, :model)
+  end
 
-    def update_chat_params
-      params.permit(:title)
-    end
+  def update_chat_params
+    params.permit(:title)
+  end
 end

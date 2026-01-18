@@ -60,15 +60,15 @@ class Rule::Condition < ApplicationRecord
   end
 
   private
-    def build_compound_scope(scope)
-      if operator == "or"
-        combined_scope = sub_conditions
-          .map { |sub| sub.apply(scope) }
-          .reduce { |acc, s| acc.or(s) }
+  def build_compound_scope(scope)
+    if operator == "or"
+      combined_scope = sub_conditions
+        .map { |sub| sub.apply(scope) }
+        .reduce { |acc, s| acc.or(s) }
 
-        combined_scope || scope
-      else
-        sub_conditions.reduce(scope) { |s, sub| sub.apply(s) }
-      end
+      combined_scope || scope
+    else
+      sub_conditions.reduce(scope) { |s, sub| sub.apply(s) }
     end
+  end
 end

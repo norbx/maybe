@@ -16,42 +16,42 @@ class Valuation::Name
   end
 
   private
-    attr_reader :valuation_kind, :accountable_type
+  attr_reader :valuation_kind, :accountable_type
 
-    def opening_anchor_name
-      case accountable_type
-      when "Property", "Vehicle"
-        "Original purchase price"
-      when "Loan"
-        "Original principal"
-      when "Investment", "Crypto", "OtherAsset"
-        "Opening account value"
-      else
-        "Opening balance"
-      end
+  def opening_anchor_name
+    case accountable_type
+    when "Property", "Vehicle"
+      "Original purchase price"
+    when "Loan"
+      "Original principal"
+    when "Investment", "Crypto", "OtherAsset"
+      "Opening account value"
+    else
+      "Opening balance"
     end
+  end
 
-    def current_anchor_name
-      case accountable_type
-      when "Property", "Vehicle"
-        "Current market value"
-      when "Loan"
-        "Current loan balance"
-      when "Investment", "Crypto", "OtherAsset"
-        "Current account value"
-      else
-        "Current balance"
-      end
+  def current_anchor_name
+    case accountable_type
+    when "Property", "Vehicle"
+      "Current market value"
+    when "Loan"
+      "Current loan balance"
+    when "Investment", "Crypto", "OtherAsset"
+      "Current account value"
+    else
+      "Current balance"
     end
+  end
 
-    def recon_name
-      case accountable_type
-      when "Property", "Investment", "Vehicle", "Crypto", "OtherAsset"
-        "Manual value update"
-      when "Loan"
-        "Manual principal update"
-      else
-        "Manual balance update"
-      end
+  def recon_name
+    case accountable_type
+    when "Property", "Investment", "Vehicle", "Crypto", "OtherAsset"
+      "Manual value update"
+    when "Loan"
+      "Manual principal update"
+    else
+      "Manual balance update"
     end
+  end
 end

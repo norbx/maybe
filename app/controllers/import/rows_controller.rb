@@ -11,12 +11,12 @@ class Import::RowsController < ApplicationController
   end
 
   private
-    def row_params
-      params.require(:import_row).permit(:type, :account, :date, :qty, :ticker, :price, :amount, :currency, :name, :category, :tags, :entity_type, :notes)
-    end
+  def row_params
+    params.require(:import_row).permit(:type, :account, :date, :qty, :ticker, :price, :amount, :currency, :name, :category, :tags, :entity_type, :notes)
+  end
 
-    def set_import_row
-      @import = Current.family.imports.find(params[:import_id])
-      @row = @import.rows.find(params[:id])
-    end
+  def set_import_row
+    @import = Current.family.imports.find(params[:import_id])
+    @row = @import.rows.find(params[:id])
+  end
 end

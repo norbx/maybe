@@ -30,60 +30,60 @@ class Account::ReconciliationManager
   end
 
   private
-    # Returns before -> after OR error message
-    ReconciliationResult = Struct.new(
-      :success?,
-      :old_cash_balance,
-      :old_balance,
-      :new_cash_balance,
-      :new_balance,
-      :error_message,
-      keyword_init: true
+  # Returns before -> after OR error message
+  ReconciliationResult = Struct.new(
+    :success?,
+    :old_cash_balance,
+    :old_balance,
+    :new_cash_balance,
+    :new_balance,
+    :error_message,
+    keyword_init: true
+  )
+
+  def prepare_reconciliation(balance, date, existing_valuation)
+    valuation_record = existing_valuation ||
+                       account.entries.valuations.find_by(date: date) || # In case of conflict, where existing valuation is not passed as arg, but one exists
+                       account.entries.build(
+                                name: Valuation.build_reconciliation_name(account.accountable_type),
+                                entryable: Valuation.new(kind: "reconciliation")
+                              )
+
+    valuation_record.assign_attributes(
+      date: date,
+      amount: balance,
+      currency: account.currency
     )
 
-    def prepare_reconciliation(balance, date, existing_valuation)
-      valuation_record = existing_valuation ||
-                         account.entries.valuations.find_by(date: date) || # In case of conflict, where existing valuation is not passed as arg, but one exists
-                         account.entries.build(
-                                  name: Valuation.build_reconciliation_name(account.accountable_type),
-                                  entryable: Valuation.new(kind: "reconciliation")
-                                )
+    valuation_record
+  end
 
-      valuation_record.assign_attributes(
-        date: date,
-        amount: balance,
-        currency: account.currency
-      )
+  def derived_cash_balance(date:, total_balance:)
+    balance_components_for_reconciliation_date = get_balance_components_for_date(date)
 
-      valuation_record
+    return nil unless balance_components_for_reconciliation_date[:balance] && balance_components_for_reconciliation_date[:cash_balance]
+
+    # We calculate the existing non-cash balance, which for investments would represents "holdings" for the date of reconciliation
+    # Since the user is setting "total balance", we have to subtract the existing non-cash balance from the total balance to get the new cash balance
+    existing_non_cash_balance = balance_components_for_reconciliation_date[:balance] - balance_components_for_reconciliation_date[:cash_balance]
+
+    total_balance - existing_non_cash_balance
+  end
+
+  def old_balance_components(reconciliation_date:, existing_valuation_entry: nil)
+    if existing_valuation_entry
+      get_balance_components_for_date(existing_valuation_entry.date)
+    else
+      get_balance_components_for_date(reconciliation_date)
     end
+  end
 
-    def derived_cash_balance(date:, total_balance:)
-      balance_components_for_reconciliation_date = get_balance_components_for_date(date)
+  def get_balance_components_for_date(date)
+    balance_record = account.balances.find_by(date: date, currency: account.currency)
 
-      return nil unless balance_components_for_reconciliation_date[:balance] && balance_components_for_reconciliation_date[:cash_balance]
-
-      # We calculate the existing non-cash balance, which for investments would represents "holdings" for the date of reconciliation
-      # Since the user is setting "total balance", we have to subtract the existing non-cash balance from the total balance to get the new cash balance
-      existing_non_cash_balance = balance_components_for_reconciliation_date[:balance] - balance_components_for_reconciliation_date[:cash_balance]
-
-      total_balance - existing_non_cash_balance
-    end
-
-    def old_balance_components(reconciliation_date:, existing_valuation_entry: nil)
-      if existing_valuation_entry
-        get_balance_components_for_date(existing_valuation_entry.date)
-      else
-        get_balance_components_for_date(reconciliation_date)
-      end
-    end
-
-    def get_balance_components_for_date(date)
-      balance_record = account.balances.find_by(date: date, currency: account.currency)
-
-      {
-        cash_balance: balance_record&.end_cash_balance,
-        balance: balance_record&.end_balance
-      }
-    end
+    {
+      cash_balance: balance_record&.end_cash_balance,
+      balance: balance_record&.end_balance
+    }
+  end
 end

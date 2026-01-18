@@ -224,30 +224,30 @@ class PlaidAccount::ProcessorTest < ActiveSupport::TestCase
   end
 
   private
-    def expect_investment_product_processor_calls
-      PlaidAccount::Investments::TransactionsProcessor.any_instance.expects(:process).once
-      PlaidAccount::Investments::HoldingsProcessor.any_instance.expects(:process).once
-    end
+  def expect_investment_product_processor_calls
+    PlaidAccount::Investments::TransactionsProcessor.any_instance.expects(:process).once
+    PlaidAccount::Investments::HoldingsProcessor.any_instance.expects(:process).once
+  end
 
-    def expect_depository_product_processor_calls
-      PlaidAccount::Transactions::Processor.any_instance.expects(:process).once
-    end
+  def expect_depository_product_processor_calls
+    PlaidAccount::Transactions::Processor.any_instance.expects(:process).once
+  end
 
-    def expect_no_investment_balance_calculator_calls
-      PlaidAccount::Investments::BalanceCalculator.any_instance.expects(:balance).never
-      PlaidAccount::Investments::BalanceCalculator.any_instance.expects(:cash_balance).never
-    end
+  def expect_no_investment_balance_calculator_calls
+    PlaidAccount::Investments::BalanceCalculator.any_instance.expects(:balance).never
+    PlaidAccount::Investments::BalanceCalculator.any_instance.expects(:cash_balance).never
+  end
 
-    def expect_no_liability_processor_calls
-      PlaidAccount::Liabilities::CreditProcessor.any_instance.expects(:process).never
-      PlaidAccount::Liabilities::MortgageProcessor.any_instance.expects(:process).never
-      PlaidAccount::Liabilities::StudentLoanProcessor.any_instance.expects(:process).never
-    end
+  def expect_no_liability_processor_calls
+    PlaidAccount::Liabilities::CreditProcessor.any_instance.expects(:process).never
+    PlaidAccount::Liabilities::MortgageProcessor.any_instance.expects(:process).never
+    PlaidAccount::Liabilities::StudentLoanProcessor.any_instance.expects(:process).never
+  end
 
-    def expect_default_subprocessor_calls
-      expect_depository_product_processor_calls
-      expect_investment_product_processor_calls
-      expect_no_investment_balance_calculator_calls
-      expect_no_liability_processor_calls
-    end
+  def expect_default_subprocessor_calls
+    expect_depository_product_processor_calls
+    expect_investment_product_processor_calls
+    expect_no_investment_balance_calculator_calls
+    expect_no_liability_processor_calls
+  end
 end

@@ -61,13 +61,13 @@ class Holding < ApplicationRecord
   end
 
   private
-    def calculate_trend
-      return nil unless amount_money
+  def calculate_trend
+    return nil unless amount_money
 
-      start_amount = qty * avg_cost
+    start_amount = qty * avg_cost
 
-      Trend.new \
-        current: amount_money,
-        previous: start_amount
-    end
+    Trend.new \
+      current: amount_money,
+      previous: start_amount
+  end
 end
