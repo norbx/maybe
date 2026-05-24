@@ -12,6 +12,7 @@ gem "solid_cache", "~> 1.0"
 # Deployment
 gem "puma", ">= 5.0"
 gem "bootsnap", require: false
+gem "kamal", "~> 2.11"
 
 # Assets
 gem "importmap-rails"
