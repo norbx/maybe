@@ -65,6 +65,7 @@ env:
 #
 aliases:
   console: app exec --reuse -i "bin/rails console"
+  backup: accessory exec --reuse db "pg_dump -U maybe -Fc maybe_production"
 #   shell: app exec --interactive --reuse "bash"
 
 # Use a different ssh user than root
